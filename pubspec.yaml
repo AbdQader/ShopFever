@@ -8,6 +8,7 @@ environment:
 dependencies: 
   cupertino_icons: ^1.0.2
   get: 4.3.6
+  logger: 1.0.0
   flutter: 
     sdk: flutter
 
