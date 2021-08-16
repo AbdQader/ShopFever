@@ -9,64 +9,37 @@ import 'app_exceptions.dart';
 
 class BaseClient
 {
-  Future<dynamic> get(String url) async {
-    try {
-      var response = await GetConnect().httpClient.get(url).timeout(Duration(seconds: 20));
+  //timeout for http request (max time until http done or error will be thrown)
+  static const duration = Duration(seconds: 10);
+
+  static Future<dynamic> get(String url) async {
+      var response = await GetConnect().httpClient.get(url).timeout(duration);
       return _processResponse(response);
-    } on SocketException {
-      throw FetchDataException('No internet connection');
-    } on TimeoutException {
-      throw ApiNotRespondingException('Api not responding');
-    } on UnauthorizedException {
-      throw UnauthorizedException('Unauthorized request');
-    } on NotFoundException {
-      throw UnauthorizedException('Url not founded');
-    } on BadRequestException {
-      throw BadRequestException('Invalid parameters');
-    }catch(error){
-      Logger().e('Error => ${error}');
-      throw ApiNotRespondingException('No Internet connection');
-    }
   }
 
 
-  Future<dynamic> post(String url, {dynamic payload,Map<String, String>? headers,}) async {
-    try {//ss
-      var response = await GetConnect().httpClient.post(url,body: payload,headers: headers).timeout(Duration(seconds: 20));
-      Logger().e('Response => ${response.body}');
+  static Future<dynamic> post(String url, {dynamic payload,Map<String, String>? headers,}) async {
+      var response = await GetConnect().httpClient.post(url,body: payload,headers: headers).timeout(duration);
       return _processResponse(response);
-    } on SocketException {
-      throw FetchDataException('No internet connection');
-    } on TimeoutException {
-      throw ApiNotRespondingException('Api not responding');
-    } on UnauthorizedException {
-      throw UnauthorizedException('Unauthorized request');
-    } on NotFoundException {
-      throw NotFoundException('Url not founded');
-    } on BadRequestException {
-      throw BadRequestException('Invalid parameters');
-    }catch(error){
-      throw ApiNotRespondingException('No Internet connection');
-    }
   }
 
 
-  dynamic _processResponse(Response response){
+  static dynamic _processResponse(Response response){
     switch(response.statusCode){
       case 200:
       case 201:
       case 204:
         return response.body;
       case 400:
-        throw BadRequestException();
+        throw BadRequestException(response.body['message'] ?? 'Invalid parameters');
       case 404:
-        throw NotFoundException();
+        throw NotFoundException(response.body['message'] ?? 'Url not founded');
       case 401:
       case 403:
-      throw UnauthorizedException();
+      throw UnauthorizedException(response.body['message'] ?? 'Unauthorized request');
       case 500:
       default:
-      throw FetchDataException();
+      throw FetchDataException(response.body['message'] ?? 'No internet connection');
     }
   }
 }
