@@ -126,22 +126,7 @@ class AuthController extends GetxController {
       {
         // print('abd => verifyOTP: credential: ${credential.user.toString()}');
         // Get.toNamed(AppPages.REGISTER);
-        try{
-          var response = await BaseClient.post(LOGIN_URL,body: {
-            "phone" : "05959515630"
-          }.cast<String,dynamic>()
-              ,headers: {
-                "content-type" : "application/json"
-              });
-          Logger().e(response);
-        }catch(error){
-          Logger().e('Error => ${error}');
-          //error
-          if(error is UnauthorizedException)
-            Get.toNamed(AppPages.REGISTER);
-          else
-            ErrorHandler.handleError(error);
-        }
+        loginToApi();
       } else {
         Get.snackbar('Current User Null', 'Current User Is Null');
       }
@@ -259,6 +244,25 @@ class AuthController extends GetxController {
         );
       },
     );
+  }
+
+  void loginToApi() async {
+    try{
+      var response = await BaseClient.post(LOGIN_URL,body: {
+        "phone" : "05959515630"
+      }.cast<String,dynamic>()
+          ,headers: {
+            "content-type" : "application/json"
+          });
+      Logger().e(response);
+    }catch(error){
+      Logger().e('Error => ${error}');
+      //error
+      if(error is UnauthorizedException)
+        Get.toNamed(AppPages.REGISTER);
+      else
+        ErrorHandler.handleError(error);
+    }
   }
 
 }
