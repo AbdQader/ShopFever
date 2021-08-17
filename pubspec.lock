@@ -149,6 +149,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.3.6"
+<<<<<<< HEAD
   http:
     dependency: transitive
     description:
@@ -198,6 +199,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.3"
+=======
+  logger:
+    dependency: "direct main"
+    description:
+      name: logger
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
+>>>>>>> emad_branch
   matcher:
     dependency: transitive
     description:
