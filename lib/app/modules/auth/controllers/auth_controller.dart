@@ -250,10 +250,10 @@ class AuthController extends GetxController {
     try{
       var response = await BaseClient.post(LOGIN_URL,body: {
         "phone" : "05959515630"
-      }.cast<String,dynamic>()
-          ,headers: {
-            "content-type" : "application/json"
-          });
+      }
+      ,headers: {
+        "content-type" : "application/json"
+      });
       Logger().e(response);
     }catch(error){
       Logger().e('Error => ${error}');
