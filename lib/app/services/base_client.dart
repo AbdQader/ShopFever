@@ -17,8 +17,8 @@ class BaseClient
   }
 
 
-  static Future<dynamic> post(String url, {dynamic payload,Map<String, String>? headers,}) async {
-      var response = await GetConnect().httpClient.post(url,body: payload,headers: headers).timeout(duration);
+  static Future<dynamic> post(String url, {dynamic body,Map<String, String>? headers,}) async {
+      var response = await GetConnect().httpClient.post(url,body: body,headers: headers).timeout(duration);
       return _processResponse(response);
   }
 

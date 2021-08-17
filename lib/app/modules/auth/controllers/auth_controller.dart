@@ -3,8 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:logger/logger.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 import 'package:custom_timer/custom_timer.dart';
+import 'package:shop_fever/app/services/app_exceptions.dart';
+import 'package:shop_fever/app/services/base_client.dart';
+import 'package:shop_fever/app/services/error_handler.dart';
+import 'package:shop_fever/app/utils/constants.dart';
 import '../../../utils/components.dart';
 import '/app/routes/app_pages.dart';
 
@@ -119,8 +124,24 @@ class AuthController extends GetxController {
       );
       if (credential.user != null)
       {
-        print('abd => verifyOTP: credential: ${credential.user.toString()}');
-        Get.toNamed(AppPages.REGISTER);
+        // print('abd => verifyOTP: credential: ${credential.user.toString()}');
+        // Get.toNamed(AppPages.REGISTER);
+        try{
+          var response = await BaseClient.post(LOGIN_URL,body: {
+            "phone" : "05959515630"
+          }.cast<String,dynamic>()
+              ,headers: {
+                "content-type" : "application/json"
+              });
+          Logger().e(response);
+        }catch(error){
+          Logger().e('Error => ${error}');
+          //error
+          if(error is UnauthorizedException)
+            Get.toNamed(AppPages.REGISTER);
+          else
+            ErrorHandler.handleError(error);
+        }
       } else {
         Get.snackbar('Current User Null', 'Current User Is Null');
       }
@@ -164,6 +185,7 @@ class AuthController extends GetxController {
                   fieldsCount: 6,
                   controller: codeController,
                   onSubmit: (String code) {
+                    Logger().e('On SUMBIT');
                     _verifyOTP(code);
                     Get.focusScope!.unfocus();
                   },

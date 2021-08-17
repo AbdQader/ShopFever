@@ -24,9 +24,7 @@ void main() async {
         ),
         accentColor: Color(0xFF57bf72),
       ),
-      initialRoute: FirebaseAuth.instance.currentUser != null
-        ? AppPages.INITIAL
-        : AppPages.LOGIN,
+      initialRoute: AppPages.LOGIN,
       getPages: AppPages.routes,
     ),
   );
