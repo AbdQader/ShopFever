@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:shop_fever/app/components/category_item.dart';
+import 'package:shop_fever/app/components/close_product_item.dart';
+import 'package:shop_fever/app/components/recently_added_product_item.dart';
+import 'package:shop_fever/app/components/special_product_item.dart';
+import 'package:shop_fever/app/components/user_item.dart';
 import 'package:shop_fever/app/routes/app_pages.dart';
 import '../controllers/home_controller.dart';
 import '../../../utils/components.dart';
@@ -9,6 +14,7 @@ class HomeView extends GetView<HomeController> {
   final String userImage = 'https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80';
   final String productImage = 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZHVjdHxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80';
   final String pImage = 'https://www.weddingear.com/media/catalog/product/cache/1/thumbnail/600x/17f82f742ffe127f42dca9de82fb58b1/b/r/bridesmaid-gift-ideas-personalized-tumbler-25.jpg';
+  final String photo = 'https://cdn0.iconfinder.com/data/icons/transportation-icons-rounded/110/Old-Car-2-512.png';
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -44,84 +50,100 @@ class HomeView extends GetView<HomeController> {
             ),
           ],
         ),
-        body: Padding(
-          //padding: const EdgeInsets.all(10.0),
-          padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-          child: ListView(
-            physics: BouncingScrollPhysics(),
-            children: [
-              SizedBox(
-                height: 120.0,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 10,
-                  itemBuilder: (BuildContext context, int index) {
-                    return buildCategory(
-                      title: 'أخترنا لك',
-                      icon: Icons.favorite,
-                      color: Colors.red,
-                    );
-                  },
-                ),
-              ),
-              buildDivider(),
-              buildListHeader('مشتركين', 'مميزين'),
-              const SizedBox(height: 5.0),
-              SizedBox(
-                height: 235.0,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 10,
-                  itemBuilder: (BuildContext context, int index) {
-                    return buildUser(
-                      username: 'محمد أحمد',
-                      userImage: userImage,
-                      productImage: productImage,
-                      productsCount: 17,
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 10.0),
-              buildDivider(),
-              buildListHeader('منتجات', 'خاصة'),
-              SizedBox(
-                height: 320.0,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 10,
-                  itemBuilder: (BuildContext context, int index) {
-                    return buildSpecialProduct(
-                      title: 'عصير فاخر',
-                      image: pImage,
-                      price: 79.9
-                    );
-                  },
-                ),
-              ),
-              buildDivider(),
-              buildListHeader('منتجات', 'قريبة منك'),
-              Container(
-                height: 620.0,
-                margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200,
-                    childAspectRatio: 2/3.2,
-                    crossAxisSpacing: 10.0,
-                    mainAxisSpacing: 10.0,
+        body: GetBuilder<HomeController>(
+          builder: (controller) => Padding(
+            padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
+            child: ListView(
+              physics: BouncingScrollPhysics(),
+              children: [
+                SizedBox(
+                  height: 120.0,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    physics: BouncingScrollPhysics(),
+                    itemCount: controller.categories.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return CategoryItem(
+                        categoryModel: controller.categories[index],
+                      );
+                    },
                   ),
-                  itemCount: 10,
-                  itemBuilder: (BuildContext context, int index) {
-                    return buildCloseProduct(
-                      title: 'عصير فاخر',
-                      image: pImage,
-                      price: 89.9
-                    );
-                  },
                 ),
-              ),
-            ],
+                buildDivider(),
+                buildListHeader('مشتركين', 'مميزين'),
+                const SizedBox(height: 5.0),
+                SizedBox(
+                  height: 235.0,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    physics: BouncingScrollPhysics(),
+                    itemCount: 10,
+                    itemBuilder: (BuildContext context, int index) {
+                      return UserItem(
+                        username: 'محمد أحمد',
+                        userImage: userImage,
+                        productImage: productImage,
+                        productsCount: 17,
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 10.0),
+                buildDivider(),
+                buildListHeader('منتجات', 'خاصة'),
+                SizedBox(
+                  height: 320.0,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    physics: BouncingScrollPhysics(),
+                    itemCount: 10,
+                    itemBuilder: (BuildContext context, int index) {
+                      return SpecialProductItem(
+                        title: 'عصير فاخر',
+                        image: pImage,
+                        price: 79.9
+                      );
+                    },
+                  ),
+                ),
+                buildDivider(),
+                buildListHeader('منتجات', 'اضيفت حديثا'),
+                SizedBox(
+                  height: 120.0,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    physics: BouncingScrollPhysics(),
+                    itemCount: 10,
+                    itemBuilder: (BuildContext context, int index) {
+                      return RecentlyAddedProductItem(image: pImage);
+                    },
+                  ),
+                ),
+                buildDivider(),
+                buildListHeader('منتجات', 'قريبة منك'),
+                Container(
+                  height: 620.0,
+                  margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: GridView.builder(
+                    physics: BouncingScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 200,
+                      childAspectRatio: 2/3.2,
+                      crossAxisSpacing: 10.0,
+                      mainAxisSpacing: 10.0,
+                    ),
+                    itemCount: 10,
+                    itemBuilder: (BuildContext context, int index) {
+                      return CloseProductItem(
+                        title: 'عصير فاخر',
+                        image: pImage,
+                        price: 89.9
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         drawer: buildDrawer(),
@@ -146,194 +168,6 @@ class HomeView extends GetView<HomeController> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget buildCategory({
-    required String title,
-    required Color color,
-    required IconData icon
-  }) {
-    return Column(
-      children: [
-        Container(
-          width: 70.0,
-          height: 70.0,
-          margin: EdgeInsets.symmetric(horizontal: 5.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(25.0),
-            color: color
-          ),
-          child: Icon(icon, size: 30, color: Colors.white),
-        ),
-        const SizedBox(height: 5.0),
-        buildText(
-          text: title,
-          size: 16.0,
-          weight: FontWeight.bold,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ],
-    );
-  }
-
-  Widget buildUser({
-    required String username,
-    required String userImage,
-    required String productImage,
-    required int productsCount
-  }) {
-    return Stack(
-      children: [
-        Container(
-          width: 160.0,
-          height: 230.0,
-          margin: const EdgeInsets.symmetric(horizontal: 5.0),
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: NetworkImage(productImage),
-              fit: BoxFit.cover,
-            ),
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              buildText(
-                text: '$productsCount',
-                size: 22.0,
-                color: Colors.white,
-                weight: FontWeight.bold,
-              ),
-              const SizedBox(height: 5.0),
-              buildText(
-                text: username,
-                size: 22.0,
-                color: Colors.white,
-                weight: FontWeight.bold,
-              ),
-              const SizedBox(height: 10.0),
-            ],
-          ),
-        ),
-        Positioned(
-          top: 5,
-          left: 10,
-          child: Stack(
-            children: [
-              CircleAvatar(
-                radius: 32.0,
-                backgroundColor: Colors.white,
-                child: CircleAvatar(
-                  radius: 30.0,
-                  backgroundImage: NetworkImage(userImage),
-                ),
-              ),
-            ],
-          )
-        ),
-      ],
-    );
-  }
-
-  Widget buildSpecialProduct({
-    required String title,
-    required String image,
-    required double price,
-  }) {
-    return Column(
-      children: [
-        Card(
-          elevation: 3.0,
-          child: Container(
-            width: 190.0,
-            height: 300.0,
-            padding: EdgeInsets.all(8.0),
-            clipBehavior: Clip.antiAliasWithSaveLayer,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10.0),
-                  child: Image(
-                    height: 220,
-                    image: NetworkImage(image),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                const SizedBox(height: 5.0),
-                buildText(
-                  text: title,
-                  size: 20.0,
-                  weight: FontWeight.bold
-                ),
-                buildText(
-                  text: '$price ILS',
-                  size: 18.0,
-                  color: Get.theme.accentColor,
-                  weight: FontWeight.bold
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget buildCloseProduct({
-    required String title,
-    required String image,
-    required double price,
-  }) {
-    return Column(
-      children: [
-        Container(
-          width: 190.0,
-          height: 290.0,
-          clipBehavior: Clip.antiAliasWithSaveLayer,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
-            color: Colors.green[50],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Image(
-                image: NetworkImage(image),
-                fit: BoxFit.cover,
-                height: 220,
-              ),
-              const SizedBox(height: 5.0),
-              buildText(
-                text: ' $price ILS',
-                size: 18.0,
-                color: Get.theme.accentColor,
-              ),
-              buildText(
-                text: ' عصير فاخر',
-                size: 20.0,
-              ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //   children: [
-              //     Icon(Icons.location_on_outlined, size: 12.0),
-              //     buildText(text: '83.4KM', size: 12.0),
-              //     const SizedBox(width: 5.0),
-              //     Icon(Icons.access_time, size: 12.0),
-              //     buildText(text: '1 شهر', size: 12.0),
-              //     const SizedBox(width: 5.0),
-              //     Icon(Icons.remove_red_eye_outlined, size: 12.0),
-              //     buildText(text: '16.4KM', size: 12.0),
-              //   ],
-              // ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 

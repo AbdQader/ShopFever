@@ -31,6 +31,7 @@ class ErrorHandler {
   }
 
   static showErrorSnackbar({required String title, required String message}) {
+    print('abd => showErrorSnackbar: $message');
     Get.snackbar(title, message);
   }
 }

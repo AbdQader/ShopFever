@@ -67,7 +67,7 @@ class AuthController extends GetxController {
     // Check form validation
     if (registerFormKey.currentState!.validate()) {
       registerFormKey.currentState!.save();
-      _register();
+      _registerToApi();
     }
   }
 
@@ -76,25 +76,20 @@ class AuthController extends GetxController {
     try {
       _isLoading.value = true;
       await _auth.verifyPhoneNumber(
-        //timeout: const Duration(seconds: 60),
         phoneNumber: countryCode + phoneNumberController.text.trim(),
         verificationCompleted: (phoneAuthCredential) {
-          print('abd => verificationCompleted: ${phoneAuthCredential.smsCode}');
           _isLoading.value = false;
         },
         verificationFailed: (error) {
-          print('abd => verificationFailed: ${error.message}');
           showAlertDialog('رقم الهاتف غير صالح', 'تحقق من رقم الهاتف ثم حاول مجدداً');
           _isLoading.value = false;
         },
         codeSent: (verificationId, forceResendingToken) {
-          print('abd => codeSent: $verificationId || $forceResendingToken');
           _isLoading.value = false;
           this.verificationId = verificationId;
           showBottomSheet();
         },
         codeAutoRetrievalTimeout: (verificationId) {
-          print('abd => codeAutoRetrievalTimeout: $verificationId');
           this.verificationId = verificationId;
         },
       );
@@ -102,15 +97,6 @@ class AuthController extends GetxController {
       print('abd => catch: $error');
       _isLoading.value = false;
     }
-  }
-
-  // This function to login the user using phone number
-  void _register() {
-    _isLoading.value = true;
-    print('abd => Phone Number: ${countryCode + phoneNumberController.text.trim()}');
-    print('abd => User Name: ${usernameController.text.trim()}');
-    print('abd => User Image: ${getPickedImage.toString()}');
-    _isLoading.value = false;
   }
 
   // This function to verify the phone number "OTP"
@@ -122,18 +108,76 @@ class AuthController extends GetxController {
           smsCode: smsCode
         )
       );
+      // If the user credential != null, Call "_loginToApi" fun
       if (credential.user != null)
-      {
-        // print('abd => verifyOTP: credential: ${credential.user.toString()}');
-        // Get.toNamed(AppPages.REGISTER);
-        loginToApi();
-      } else {
-        Get.snackbar('Current User Null', 'Current User Is Null');
-      }
+        _loginToApi();
+
     } catch (error) {
       print('abd => verifyOTP: catch: $error');
       showAlertDialog('الرمز غير صحيح', 'تحقق من الرمز ثم حاول مجدداً');
       codeController.clear();
+    }
+  }
+
+  // Login the user in API
+  void _loginToApi() async {
+    try {
+      var response = await BaseClient.post(
+        LOGIN_URL,
+        body: {
+          'phone' : countryCode + phoneNumberController.text.trim()
+        },
+        headers: {
+          'content-type': 'application/json'
+        }
+      );
+
+      // When Login Success
+      if (response['status'] == 'Success')
+        Get.toNamed(AppPages.INITIAL);
+      
+      Logger().e('Login => $response');
+      Logger().e('Login: Status: => ${response['status']}');
+    } catch (error) {
+      Logger().e('Error => ${error}');
+      // Error
+      if (error is UnauthorizedException)
+        Get.toNamed(AppPages.REGISTER);
+      else
+        ErrorHandler.handleError(error);
+    }
+  }
+
+  // Register the user in API
+  void _registerToApi() async {
+    try {
+      _isLoading.value = true;
+      var response = await BaseClient.post(
+        REGISTER_URL,
+        body: FormData({
+          'name': usernameController.text.trim(),
+          'phone': countryCode + phoneNumberController.text.trim(),
+          'photo': MultipartFile(getPickedImage, filename: DateTime.now().millisecondsSinceEpoch.toString()),
+        }),
+        headers: {
+          'Accept': 'multipart/form-data',
+        }
+      );
+
+      // When Register Success
+      if (response['status'] == 'Success')
+        Get.toNamed(AppPages.INITIAL);
+
+      // Stop Loading
+      _isLoading.value = false;
+
+      Logger().e('Register => $response');
+      Logger().e('Register: Status: => ${response['status']}');
+    } catch (error) {
+      _isLoading.value = false;
+      Logger().e('Error => ${error}');
+      // Error
+      ErrorHandler.handleError(error);
     }
   }
 
@@ -149,7 +193,6 @@ class AuthController extends GetxController {
 
   // For bottom sheet
   void showBottomSheet() {
-    //startTimer();
     Get.bottomSheet(
       Directionality(
         textDirection: TextDirection.rtl,
@@ -170,7 +213,6 @@ class AuthController extends GetxController {
                   fieldsCount: 6,
                   controller: codeController,
                   onSubmit: (String code) {
-                    Logger().e('On SUMBIT');
                     _verifyOTP(code);
                     Get.focusScope!.unfocus();
                   },
@@ -232,7 +274,7 @@ class AuthController extends GetxController {
   // For CustomTimer
   Widget buildCustomTimer() {
     return CustomTimer(
-      from: Duration(seconds: 5),
+      from: Duration(seconds: 30),
       to: Duration(seconds: 0),
       onBuildAction: CustomTimerAction.auto_start,
       builder: (CustomTimerRemainingTime remaining) {
@@ -244,25 +286,6 @@ class AuthController extends GetxController {
         );
       },
     );
-  }
-
-  void loginToApi() async {
-    try{
-      var response = await BaseClient.post(LOGIN_URL,body: {
-        "phone" : "05959515630"
-      }
-      ,headers: {
-        "content-type" : "application/json"
-      });
-      Logger().e(response);
-    }catch(error){
-      Logger().e('Error => ${error}');
-      //error
-      if(error is UnauthorizedException)
-        Get.toNamed(AppPages.REGISTER);
-      else
-        ErrorHandler.handleError(error);
-    }
   }
 
 }

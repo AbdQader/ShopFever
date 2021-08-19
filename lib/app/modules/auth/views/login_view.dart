@@ -50,7 +50,6 @@ class LoginView extends GetView<AuthController> {
                         onChanged: (code) {
                           controller.countryCode = code.dialCode!;
                         },
-                        //onInit: (code) => print("on init ${code!.name} ${code.dialCode} ${code.name}"),
                         searchDecoration: InputDecoration(
                           fillColor: Colors.grey[200],
                           filled: true,

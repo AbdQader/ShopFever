@@ -11,8 +11,13 @@ class BaseClient
   //timeout for http request (max time until http done or error will be thrown)
   static const duration = Duration(seconds: 10);
 
-  static Future<dynamic> get(String url) async {
-      var response = await GetConnect().httpClient.get(url).timeout(duration);
+  // static Future<dynamic> get(String url) async {
+  //     var response = await GetConnect().httpClient.get(url).timeout(duration);
+  //     return _processResponse(response);
+  // }
+
+  static Future<dynamic> get(String url, {Map<String, String>? headers}) async {
+      var response = await GetConnect().httpClient.get(url, headers: headers).timeout(duration);
       return _processResponse(response);
   }
 
