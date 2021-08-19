@@ -35,18 +35,18 @@ class HomeView extends GetView<HomeController> {
           actions: [
             IconButton(
               onPressed: () {},
-              icon: Icon(Icons.search),
+              icon: const Icon(Icons.search),
             ),
             IconButton(
               onPressed: () {},
-              icon: Icon(Icons.notifications_none),
+              icon: const Icon(Icons.notifications_none),
             ),
             IconButton(
               onPressed: () {
                 FirebaseAuth.instance.signOut();
                 Get.offAllNamed(AppPages.LOGIN);
               },
-              icon: Icon(Icons.logout),
+              icon: const Icon(Icons.logout),
             ),
           ],
         ),
@@ -122,9 +122,9 @@ class HomeView extends GetView<HomeController> {
                 buildDivider(),
                 buildListHeader('منتجات', 'قريبة منك'),
                 Container(
-                  height: 620.0,
                   margin: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: GridView.builder(
+                    shrinkWrap: true,
                     physics: BouncingScrollPhysics(),
                     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: 200,
@@ -162,7 +162,7 @@ class HomeView extends GetView<HomeController> {
                 color: Colors.white,
                 weight: FontWeight.bold,
               ),
-              icon: Icon(Icons.add, color: Colors.white),
+              icon: const Icon(Icons.add, color: Colors.white),
               onPressed: () {},
             ),
           ),
@@ -208,8 +208,8 @@ class HomeView extends GetView<HomeController> {
             width: double.infinity,
             color: Colors.white,
             child: IconButton(
-              icon: Icon(Icons.close, size: 30.0),
-              padding: EdgeInsets.only(top: 40.0, left: 10.0),
+              icon: const Icon(Icons.close, size: 30.0),
+              padding: const EdgeInsets.only(top: 40.0, left: 10.0),
               alignment: Alignment.topLeft,
               onPressed: () {
                 Get.back();
@@ -249,9 +249,7 @@ class HomeView extends GetView<HomeController> {
     required String image,
   }) {
     return ListTile(
-      onTap: () {
-        print('abd => AS: Profile Pressed');
-      },
+      onTap: () {},
       title: buildText(
         text: title,
         size: 24.0,
@@ -259,7 +257,7 @@ class HomeView extends GetView<HomeController> {
       ),
       subtitle: buildText(text: 'الدخول الى صفحتي'),
       //contentPadding: EdgeInsets.only(top: 60.0, bottom: 0.0),
-      contentPadding: EdgeInsets.only(bottom: 20.0),
+      contentPadding: const EdgeInsets.only(bottom: 20.0),
       tileColor: Colors.white,
       leading: CircleAvatar(
         radius: 50.0,

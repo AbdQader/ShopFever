@@ -24,7 +24,7 @@ void main() async {
         ),
         accentColor: Color(0xFF57bf72),
       ),
-      initialRoute: AppPages.INITIAL,
+      initialRoute: AppPages.PROFILE,
       getPages: AppPages.routes,
     ),
   );

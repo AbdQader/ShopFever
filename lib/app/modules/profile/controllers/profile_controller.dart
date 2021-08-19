@@ -1,20 +1,20 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ProfileController extends GetxController {
-  //TODO: Implement ProfileController
+class ProfileController extends GetxController with SingleGetTickerProviderMixin {
 
-  final count = 0.obs;
+  late final TabController tabController;
+
   @override
   void onInit() {
     super.onInit();
+    tabController = TabController(length: 2, vsync: this);
   }
 
   @override
-  void onReady() {
-    super.onReady();
+  void onClose() {
+    tabController.dispose();
+    super.onClose();
   }
 
-  @override
-  void onClose() {}
-  void increment() => count.value++;
 }
