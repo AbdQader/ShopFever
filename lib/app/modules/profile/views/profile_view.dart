@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shop_fever/app/routes/app_pages.dart';
 import 'package:shop_fever/app/utils/components.dart';
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
   final String profile = 'https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80';
   final String cover = 'https://timelinecovers.pro/facebook-cover/download/blue-bubbles-facebook-cover.jpg';
-  final String pImage = 'https://www.weddingear.com/media/catalog/product/cache/1/thumbnail/600x/17f82f742ffe127f42dca9de82fb58b1/b/r/bridesmaid-gift-ideas-personalized-tumbler-25.jpg';
+  final String photo = 'https://www.weddingear.com/media/catalog/product/cache/1/thumbnail/600x/17f82f742ffe127f42dca9de82fb58b1/b/r/bridesmaid-gift-ideas-personalized-tumbler-25.jpg';
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -20,9 +21,10 @@ class ProfileView extends GetView<ProfileController> {
           title: Text('الملف الشخصي'),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () {},
+            onPressed: () => Get.back(),
           ),
           actions: [
+            // TODO: show this if that's my profile
             IconButton(
               onPressed: () {},
               icon: const Icon(
@@ -31,10 +33,10 @@ class ProfileView extends GetView<ProfileController> {
               ),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () => showBottomSheet(),
               icon: const Icon(
-                //Icons.shortcut_outlined,
-                Icons.more_vert,
+                //Icons.shortcut_outlined, // if other user profile
+                Icons.more_vert, // if it's my profile
                 color: Colors.white
               ),
             ),
@@ -138,7 +140,7 @@ class ProfileView extends GetView<ProfileController> {
         floatingActionButton: Align(
           alignment: Alignment.bottomCenter,
           child: Container(
-            width: 180.0,
+            width: 150.0,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20.0),
               color: Get.theme.accentColor,
@@ -159,6 +161,7 @@ class ProfileView extends GetView<ProfileController> {
     );
   }
 
+  // For Tab Bar
   Widget buildTabBar() {
     return Column(
       children: [
@@ -213,7 +216,7 @@ class ProfileView extends GetView<ProfileController> {
                 itemBuilder: (BuildContext context, int index) {
                   return buildProfileProduct(
                     title: 'عصير فاخر',
-                    image: pImage,
+                    image: photo,
                     price: 79.9
                   );
                 },
@@ -227,6 +230,7 @@ class ProfileView extends GetView<ProfileController> {
     );
   }
 
+  // For Rating Bar
   Widget buildStarRating({
     required int starCount,
     required double rating,
@@ -266,6 +270,7 @@ class ProfileView extends GetView<ProfileController> {
     );
   }
 
+  // For Profile Product
   Widget buildProfileProduct({
     required String title,
     required String image,
@@ -329,6 +334,79 @@ class ProfileView extends GetView<ProfileController> {
         ],
       ),
     );
+  }
+
+  // For Profile Settings
+  void showBottomSheet() {
+    Get.bottomSheet(
+      Directionality(
+        textDirection: TextDirection.rtl,
+        child: Wrap(
+          children: [
+            ListTile(
+              onTap: () => Get.back(),
+              title: buildText(
+                text: 'ادارة صفحتي',
+                size: 24.0,
+                weight: FontWeight.bold
+              ),
+              trailing: const Icon(
+                Icons.close,
+                size: 35.0,
+                color: Colors.black
+              ),
+            ),
+            buildListTile(
+              title: 'تعديل معلوماتي',
+              icon: Icons.edit_outlined,
+              onPressed: () {}
+            ),
+            buildListTile(
+              title: 'السلع والصفحات المفضلة',
+              icon: Icons.favorite_border,
+              onPressed: () => Get.toNamed(AppPages.FAVORITES)
+            ),
+            buildListTile(
+              title: 'ترقية الصفحة',
+              icon: Icons.local_fire_department_outlined,
+              onPressed: () {}
+            ),
+          ],
+        ),
+      ),
+      backgroundColor: Colors.white,
+      barrierColor: Colors.black87,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(15.0),
+          topRight: Radius.circular(15.0)
+        ),
+      )
+    );
+  }
+
+  // For ListTile
+  Widget buildListTile({
+    required String title,
+    required IconData icon,
+    required Function onPressed
+  }) {
+    return ListTile(
+      onTap: onPressed(),
+      title: buildText(
+        text: title,
+        size: 20.0,
+      ),
+      leading: Icon(
+        icon,
+        size: 25.0,
+      ),
+      shape: Border(
+        top: BorderSide(color: Colors.grey[300]!, width: 1.0)
+      ),
+      //contentPadding: EdgeInsets.fromLTRB(16.0, 5.0, 16.0, 5.0),
+    );
+    
   }
 
 }

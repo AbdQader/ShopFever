@@ -50,7 +50,7 @@ class HomeView extends GetView<HomeController> {
             ),
           ],
         ),
-        body: GetBuilder<HomeController>(
+        body: MixinBuilder<HomeController>(
           builder: (controller) => Padding(
             padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
             child: ListView(
@@ -77,13 +77,10 @@ class HomeView extends GetView<HomeController> {
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     physics: BouncingScrollPhysics(),
-                    itemCount: 10,
+                    itemCount: controller.users.length,
                     itemBuilder: (BuildContext context, int index) {
                       return UserItem(
-                        username: 'محمد أحمد',
-                        userImage: userImage,
-                        productImage: productImage,
-                        productsCount: 17,
+                        userModel: controller.users[index]
                       );
                     },
                   ),
@@ -115,7 +112,7 @@ class HomeView extends GetView<HomeController> {
                     physics: BouncingScrollPhysics(),
                     itemCount: 10,
                     itemBuilder: (BuildContext context, int index) {
-                      return RecentlyAddedProductItem(image: pImage);
+                      return RecentlyAddedProductItem(image: productImage);
                     },
                   ),
                 ),
@@ -249,7 +246,7 @@ class HomeView extends GetView<HomeController> {
     required String image,
   }) {
     return ListTile(
-      onTap: () {},
+      onTap: () => Get.toNamed(AppPages.PROFILE),
       title: buildText(
         text: title,
         size: 24.0,

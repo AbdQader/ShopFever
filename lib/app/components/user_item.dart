@@ -1,19 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:shop_fever/app/data/models/user_model.dart';
 import 'package:shop_fever/app/utils/components.dart';
 
 class UserItem extends StatelessWidget {
 
-  final String username;
-  final String userImage;
-  final String productImage;
-  final int productsCount;
+  final UserModel userModel;
 
-  const UserItem({
-    required this.username,
-    required this.userImage,
-    required this.productImage,
-    required this.productsCount
-  });
+  const UserItem({required this.userModel});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +20,7 @@ class UserItem extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 5.0),
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: NetworkImage(productImage),
+                image: NetworkImage(userModel.productPhoto!),
                 fit: BoxFit.cover,
               ),
               borderRadius: BorderRadius.circular(20.0),
@@ -36,14 +29,14 @@ class UserItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 buildText(
-                  text: '$productsCount',
+                  text: userModel.productsCount.toString(),
                   size: 22.0,
                   color: Colors.white,
                   weight: FontWeight.bold,
                 ),
                 const SizedBox(height: 5.0),
                 buildText(
-                  text: username,
+                  text: userModel.name,
                   size: 22.0,
                   color: Colors.white,
                   weight: FontWeight.bold,
@@ -62,7 +55,7 @@ class UserItem extends StatelessWidget {
                   backgroundColor: Colors.white,
                   child: CircleAvatar(
                     radius: 30.0,
-                    backgroundImage: NetworkImage(userImage),
+                    backgroundImage: NetworkImage(userModel.photo),
                   ),
                 ),
               ],
