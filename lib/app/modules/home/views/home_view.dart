@@ -144,25 +144,11 @@ class HomeView extends GetView<HomeController> {
           ),
         ),
         drawer: buildDrawer(),
-        floatingActionButton: Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-            width: 180.0,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.0),
-              color: Get.theme.accentColor,
-            ),
-            child: TextButton.icon(
-              label: buildText(
-                text: 'انشر سلعة جديدة',
-                size: 19.0,
-                color: Colors.white,
-                weight: FontWeight.bold,
-              ),
-              icon: const Icon(Icons.add, color: Colors.white),
-              onPressed: () {},
-            ),
-          ),
+        floatingActionButton: buildFloatingActionButton(
+          title: 'انشر سلعة جديدة',
+          icon: Icons.add,
+          width: 180.0,
+          onPressed: () {}
         ),
       ),
     );

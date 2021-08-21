@@ -184,3 +184,32 @@ Widget buildListTile({
     ),
   );
 }
+
+// For FloatingActionButton
+Widget buildFloatingActionButton({
+  required String title,
+  required IconData icon,
+  required double width,
+  required Function onPressed,
+}) {
+  return Align(
+    alignment: Alignment.bottomCenter,
+    child: Container(
+      width: width,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20.0),
+        color: Get.theme.accentColor,
+      ),
+      child: TextButton.icon(
+        label: buildText(
+          text: title,
+          size: 19.0,
+          color: Colors.white,
+          weight: FontWeight.bold,
+        ),
+        icon: Icon(icon, color: Colors.white),
+        onPressed: onPressed(),
+      ),
+    ),
+  );
+}

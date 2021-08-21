@@ -2,10 +2,10 @@ name: shop_fever
 version: 1.0.0+1
 publish_to: none
 description: A new Flutter project.
-environment:
+environment: 
   sdk: '>=2.12.0 <3.0.0'
 
-dependencies:
+dependencies: 
   cupertino_icons: ^1.0.3
   get: 4.3.8
   image_picker: 0.8.3+2
@@ -14,13 +14,16 @@ dependencies:
   pinput: 1.2.0
   country_code_picker: ^2.0.2
   custom_timer: ^0.0.6
-  logger:
-  flutter:
+  logger: any
+  carousel_slider: 4.0.0
+  dots_indicator: 2.0.0
+  flutter: 
     sdk: flutter
 
-dev_dependencies:
-  flutter_test:
+dev_dependencies: 
+  flutter_test: 
     sdk: flutter
 
-flutter:
+flutter: 
   uses-material-design: true
+

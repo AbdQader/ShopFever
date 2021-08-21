@@ -137,25 +137,11 @@ class ProfileView extends GetView<ProfileController> {
             )
           ],
         ),
-        floatingActionButton: Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-            width: 150.0,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.0),
-              color: Get.theme.accentColor,
-            ),
-            child: TextButton.icon(
-              label: buildText(
-                text: 'تواصل معي',
-                size: 19.0,
-                color: Colors.white,
-                weight: FontWeight.bold,
-              ),
-              icon: Icon(Icons.phone, color: Colors.white),
-              onPressed: () {},
-            ),
-          ),
+        floatingActionButton: buildFloatingActionButton(
+          title: 'تواصل معي',
+          icon: Icons.phone,
+          width: 150.0,
+          onPressed: () {}
         ),
       ),
     );
