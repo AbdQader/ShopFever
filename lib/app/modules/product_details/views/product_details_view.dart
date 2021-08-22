@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:shop_fever/app/utils/components.dart';
@@ -7,6 +9,7 @@ import '../controllers/product_details_controller.dart';
 
 class ProductDetailsView extends GetView<ProductDetailsController> {
   final String desc = 'هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها التطبيق. إذا كنت تحتاج إلى عدد أكبر من الفقرات يتيح لك مولد النص العربى زيادة عدد الفقرات كما تريد، النص لن يبدو مقسما ولا يحوي أخطاء لغوية، مولد النص العربى مفيد لمصممي المواقع على وجه الخصوص، حيث يحتاج العميل فى كثير من الأحيان أن يطلع على صورة حقيقية لتصميم الموقع.';
+  final String profile = 'https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80';
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -165,6 +168,10 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                             ),
                           ),
                         ),
+                        buildGoogleMap(),
+                        const Divider(height: 40.0, color: Colors.grey),
+                        buildListTile(),
+                        const SizedBox(height: 60.0)
                       ],
                     ),
                   ),
@@ -297,6 +304,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
     );
   }
 
+  // For TableRow
   TableRow buildTableRow({
     required String title,
     required String value,
@@ -329,6 +337,98 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
           ),
         ),
       ]
+    );
+  }
+
+  // For GoogleMap
+  Widget buildGoogleMap() {
+    Completer<GoogleMapController> _controller = Completer();
+    final CameraPosition _cameraPosition = CameraPosition(
+      target: LatLng(31.5000, 34.4667),
+      zoom: 14.4746,
+    );
+    return Container(
+      width: double.infinity,
+      height: 300.0,
+      padding: const EdgeInsets.all(10.0),
+      child: GoogleMap(
+        //mapType: MapType.hybrid,
+        initialCameraPosition: _cameraPosition,
+        // onMapCreated: (GoogleMapController controller) {
+        //   _controller.complete(controller);
+        // },
+      ),
+    );
+  }
+
+  // For ListTile
+  Widget buildListTile() {
+    return ListTile(
+      leading: CircleAvatar(
+        radius: 30.0,
+        backgroundImage: NetworkImage(profile),
+      ),
+      title: buildText(
+        text: 'بضان ابن بضان',
+        size: 20.0,
+      ),
+      subtitle: Column(
+        children: [
+          buildStarRating(
+            starCount: 5,
+            rating: 2.5,
+            onRatingChanged: (rating) {},
+            color: Colors.amber
+          ),
+          Row(
+            children: [
+              Icon(Icons.location_on_outlined, color: Colors.grey),
+              SizedBox(width: 5.0),
+              buildText(text: 'فلسطين', size: 18.0)
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // For Rating Bar
+  Widget buildStarRating({
+    required int starCount,
+    required double rating,
+    required Function(double rating) onRatingChanged,
+    required Color color,
+  }) {
+    Widget buildStar(int index) {
+      Icon icon;
+      if (index >= rating) {
+        icon = new Icon(
+          Icons.star_border,
+          size: 30.0,
+          color: Colors.amber,
+        );
+      }
+      else if (index > rating - 1 && index < rating) {
+        icon = Icon(
+          Icons.star_half,
+          size: 30.0,
+          color: color,
+        );
+      } else {
+        icon = Icon(
+          Icons.star,
+          size: 30.0,
+          color: color,
+        );
+      }
+      return InkResponse(
+        onTap: () => onRatingChanged(index + 1.0),
+        child: icon,
+      );
+    }
+
+    return Row(
+      children: List.generate(starCount, (index) => buildStar(index))
     );
   }
 
