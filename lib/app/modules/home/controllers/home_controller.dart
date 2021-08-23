@@ -103,6 +103,7 @@ class HomeController extends GetxController {
     try{
       var url = 'https://jsonplaceholder.typicode.com/todosx/1';
       var response = await BaseClient.get(url);
+      Logger().e(response);
     }catch(error){ //if any type of error happen
       //this class will only show snackbar with the error
       //u can change it and handle error as u want

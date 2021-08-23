@@ -24,7 +24,7 @@ class ProfileView extends GetView<ProfileController> {
             onPressed: () => Get.back(),
           ),
           actions: [
-            // TODO: show this if that's my profile
+            // show this if that's my profile
             IconButton(
               onPressed: () {},
               icon: const Icon(
@@ -42,100 +42,101 @@ class ProfileView extends GetView<ProfileController> {
             ),
           ],
         ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 250.0,
-              child: Stack(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    height: 200.0,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(cover),
-                        fit: BoxFit.cover,
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 250.0,
+                child: Stack(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      height: 200.0,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(cover),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
-                  ),
-                  Positioned(
-                    top: 160.0,
-                    right: 30.0,
-                    child: CircleAvatar(
-                      radius: 40.0,
-                      backgroundImage: NetworkImage(profile),
+                    Positioned(
+                      top: 160.0,
+                      right: 30.0,
+                      child: CircleAvatar(
+                        radius: 40.0,
+                        backgroundImage: NetworkImage(profile),
+                      ),
                     ),
-                  ),
-                  Positioned(
-                    top: 200.0,
-                    right: 150.0,
-                    child: buildText(
-                      text: 'محمد احمد',
-                      size: 24.0,
-                      color: Colors.black,
-                      weight: FontWeight.bold
+                    Positioned(
+                      top: 200.0,
+                      right: 150.0,
+                      child: buildText(
+                        text: 'محمد احمد',
+                        size: 24.0,
+                        color: Colors.black,
+                        weight: FontWeight.bold
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0, right: 40.0),
-              child: Row(
-                children: [
-                  TextButton.icon(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.favorite_border,
-                      size: 30.0,
-                      color: Get.theme.accentColor,
-                    ),
-                    label: buildText(
-                      text: '0',
-                      size: 25.0,
-                      color: Get.theme.accentColor,
-                    )
-                  ),
-                  const Spacer(),
-                  buildStarRating(
-                    starCount: 5,
-                    rating: 0.0,
-                    onRatingChanged: (rating) {},
-                    color: Colors.amber,
-                  ),
-                  const SizedBox(width: 5.0),
-                  buildText(
-                    text: '(0)',
-                    size: 20.0,
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 20.0),
-              padding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 20.0),
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: Colors.grey[200]!),
-                  bottom: BorderSide(color: Colors.grey[200]!)
+                  ],
                 ),
               ),
-              child: Row(
-                children: [
-                  const Icon(Icons.shopping_cart, color: Colors.black45),
-                  buildText(text: '  عدد السلع التي تم بيعها  ', size: 20.0),
-                  buildText(text: '(7)', size: 20.0)
-                ],
+              Padding(
+                padding: const EdgeInsets.only(left: 20.0, right: 40.0),
+                child: Row(
+                  children: [
+                    TextButton.icon(
+                      onPressed: () {},
+                      icon: Icon(
+                        Icons.favorite_border,
+                        size: 30.0,
+                        color: Get.theme.accentColor,
+                      ),
+                      label: buildText(
+                        text: '0',
+                        size: 25.0,
+                        color: Get.theme.accentColor,
+                      )
+                    ),
+                    const Spacer(),
+                    buildStarRating(
+                      starCount: 5,
+                      rating: 0.0,
+                      onRatingChanged: (rating) {},
+                      color: Colors.amber,
+                    ),
+                    const SizedBox(width: 5.0),
+                    buildText(
+                      text: '(0)',
+                      size: 20.0,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: Padding(
+              Container(
+                margin: const EdgeInsets.only(top: 20.0),
+                padding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 20.0),
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(color: Colors.grey[200]!),
+                    bottom: BorderSide(color: Colors.grey[200]!)
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.shopping_cart, color: Colors.black45),
+                    buildText(text: '  عدد السلع التي تم بيعها  ', size: 20.0),
+                    buildText(text: '(7)', size: 20.0)
+                  ],
+                ),
+              ),
+              Container(
+                height: 680.0,
                 padding: const EdgeInsets.only(top: 10.0),
                 child: buildTabBar()
-              )
-            )
-          ],
+              ),
+            ],
+          ),
         ),
         floatingActionButton: buildFloatingActionButton(
           title: 'تواصل معي',
@@ -173,7 +174,7 @@ class ProfileView extends GetView<ProfileController> {
                 child: Tab(
                   child: Column(
                     children: [
-                      Icon(Icons.add, size: 30.0,),
+                      Icon(Icons.add, size: 30.0),
                       buildText(text: 'المزيد', size: 20.0),
                     ],
                   ),
@@ -345,17 +346,20 @@ class ProfileView extends GetView<ProfileController> {
             buildListTile(
               title: 'تعديل معلوماتي',
               icon: Icons.edit_outlined,
-              onPressed: () {}
+              onPressed: () => Get.back(),
             ),
             buildListTile(
               title: 'السلع والصفحات المفضلة',
               icon: Icons.favorite_border,
-              onPressed: () => Get.toNamed(AppPages.FAVORITES)
+              onPressed: () {
+                Get.back();
+                Get.toNamed(AppPages.FAVORITES);
+              }
             ),
             buildListTile(
               title: 'ترقية الصفحة',
               icon: Icons.local_fire_department_outlined,
-              onPressed: () {}
+              onPressed: () => Get.back(),
             ),
           ],
         ),
@@ -375,10 +379,10 @@ class ProfileView extends GetView<ProfileController> {
   Widget buildListTile({
     required String title,
     required IconData icon,
-    required Function onPressed
+    required Function() onPressed
   }) {
     return ListTile(
-      onTap: onPressed(),
+      onTap: onPressed,
       title: buildText(
         text: title,
         size: 20.0,

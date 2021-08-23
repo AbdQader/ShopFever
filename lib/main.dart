@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'app/routes/app_pages.dart';
 
@@ -24,7 +23,7 @@ void main() async {
         ),
         accentColor: Color(0xFF57bf72),
       ),
-      initialRoute: AppPages.PRODUCT_DETAILS,
+      initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
     ),
   );

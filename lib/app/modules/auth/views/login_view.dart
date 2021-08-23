@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-//import 'package:image_picker/image_picker.dart';
-import 'package:pinput/pin_put/pin_put.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import '../controllers/auth_controller.dart';
 import '../../../utils/components.dart';

@@ -1,6 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.aasharef.shop_fever">
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
    <application
         android:label="shop_fever"
        android:usesCleartextTraffic="true"
@@ -42,6 +43,6 @@
 
         <meta-data
               android:name="com.google.android.geo.API_KEY"
-              android:value="AIzaSyAy3rYIXrXHwm7lfhR97bEhZjse_4zVyy4" />
+              android:value="AIzaSyC3z9hOfnk331AlGO6JBidrNzQJND91oqo" />
     </application>
 </manifest>
