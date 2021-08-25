@@ -6,6 +6,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 import 'package:custom_timer/custom_timer.dart';
+import 'package:shop_fever/app/data/local/my_hive.dart';
+import 'package:shop_fever/app/data/local/sharedPref.dart';
+import 'package:shop_fever/app/data/models/user_model.dart';
 import 'package:shop_fever/app/services/app_exceptions.dart';
 import 'package:shop_fever/app/services/base_client.dart';
 import 'package:shop_fever/app/services/error_handler.dart';
@@ -131,11 +134,9 @@ class AuthController extends GetxController {
           'content-type': 'application/json'
         }
       );
-
-      // TODO: Here When User Login & Go To Home Screen
       // When Login Success
       if (response['status'] == 'Success')
-        Get.toNamed(AppPages.INITIAL);
+        saveUserToLocal(UserModel.fromJson(response['user']));
       
       Logger().e('Login => $response');
       Logger().e('Login: Status: => ${response['status']}');
@@ -168,7 +169,7 @@ class AuthController extends GetxController {
       // TODO: Here When User Register & Go To Home Screen
       // When Register Success
       if (response['status'] == 'Success')
-        Get.toNamed(AppPages.INITIAL);
+        saveUserToLocal(UserModel.fromJson(response['user']));
 
       // Stop Loading
       _isLoading.value = false;
@@ -288,6 +289,15 @@ class AuthController extends GetxController {
         );
       },
     );
+  }
+
+
+  //TODO bla bla bla
+  ///save user to local db and set it as logged in sharedPref
+  Future<void> saveUserToLocal(UserModel user) async {
+    MyHive.saveUser(user);
+    SharedPref.setUserAsLogged();
+    Get.toNamed(Routes.HOME);
   }
 
 }
