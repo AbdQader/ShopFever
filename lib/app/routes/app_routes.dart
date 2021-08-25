@@ -10,6 +10,7 @@ abstract class Routes {
   static const PROFILE = _Paths.PROFILE;
   static const FAVORITES = _Paths.FAVORITES;
   static const PRODUCT_DETAILS = _Paths.PRODUCT_DETAILS;
+  static const ADD_PRODUCT = _Paths.ADD_PRODUCT;
 }
 
 abstract class _Paths {
@@ -19,4 +20,5 @@ abstract class _Paths {
   static const PROFILE = '/profile';
   static const FAVORITES = '/favorites';
   static const PRODUCT_DETAILS = '/product-details';
+  static const ADD_PRODUCT = '/add-product';
 }

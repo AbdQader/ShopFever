@@ -83,6 +83,7 @@ Widget buildFormField({
   bool isPassword = false,
   IconData? prefix,
   Widget? suffix,
+  int? lines
 }) {
   return TextFormField(
     controller: controller,
@@ -90,6 +91,7 @@ Widget buildFormField({
     obscureText: isPassword,
     style: TextStyle(fontSize: 20.0, height: 1.1),
     validator: (value) => validate(value),
+    maxLines: lines,
     decoration: InputDecoration(
       hintText: hint,
       fillColor: Colors.grey[200],
@@ -102,6 +104,39 @@ Widget buildFormField({
         borderSide: BorderSide.none
       ),
     ),    
+  );
+}
+
+// For DropdownButtonFormField
+Widget buildDropdownButton({
+  required String hint,
+  required Function validate,
+  required Function onChanged,
+  required List<String> items
+}) {
+  return Container(
+    width: double.infinity,
+    child: DropdownButtonFormField<String>(
+      style: TextStyle(fontSize: 20.0, height: 1.1, color: Colors.grey[700]),
+      validator: (value) => validate(value),
+      //value: value,
+      hint: Text(hint),
+      isExpanded: true,
+      items: items.map((category) => DropdownMenuItem<String>(
+        child: buildText(text: category, color: Colors.black),
+        value: category
+      )).toList(),
+      onChanged: (value) => onChanged(value),
+      decoration: InputDecoration(
+        fillColor: Colors.grey[200],
+        filled: true,
+        isDense: true,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15.0),
+          borderSide: BorderSide.none
+        ),
+      )
+    ),
   );
 }
 
