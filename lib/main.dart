@@ -39,7 +39,7 @@ void main() async {
         ),
         accentColor: Color(0xFF57bf72),
       ),
-      initialRoute: AppPages.INITIAL,
+      initialRoute: SharedPref.isUserLogged() ? AppPages.INITIAL : AppPages.LOGIN,
       getPages: AppPages.routes,
     ),
   );

@@ -125,6 +125,7 @@ class AuthController extends GetxController {
   // Login the user in API
   void _loginToApi() async {
     try {
+      Logger().e('CD => ${countryCode} | PN => ${phoneNumberController.text}');
       var response = await BaseClient.post(
         LOGIN_URL,
         body: {
@@ -135,6 +136,7 @@ class AuthController extends GetxController {
         }
       );
       // When Login Success
+      Logger().e('User => ${response['user'].runtimeType}');
       if (response['status'] == 'Success')
         saveUserToLocal(UserModel.fromJson(response['user']));
       

@@ -40,7 +40,7 @@ class AppPages {
     GetPage(
       name: _Paths.REGISTER,
       page: () => RegisterView(),
-      //binding: AuthBinding(),
+      binding: AuthBinding(),
     ),
     GetPage(
       name: _Paths.PROFILE,

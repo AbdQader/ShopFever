@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import 'package:logger/logger.dart';
 import 'package:shop_fever/app/utils/constants.dart';
 
 part 'user_model.g.dart';
@@ -9,7 +10,7 @@ part 'user_model.g.dart';
 @HiveType(typeId : 1)
 class UserModel {
   @HiveField(0)
-  final String id;
+  final String token;
   @HiveField(1)
   final String name;
   @HiveField(2)
@@ -22,7 +23,7 @@ class UserModel {
   final int? productsCount;
 
   const UserModel({
-    required this.id,
+    required this.token,
     required this.name,
     required this.photo,
     required this.phone,
@@ -30,17 +31,23 @@ class UserModel {
     this.productPhoto
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-    id: json[ID],
-    name: json[NAME],
-    photo: json[PHOTO],
-    phone: json[PHONE],
-    productsCount: json[PRODUCTS_COUNT],
-    productPhoto: json[PRODUCT_PHOTO][0]
-  );
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    var photo = null;
+    try{
+      photo= json[PRODUCT_PHOTO][0];
+    }catch(error){}
+    return UserModel(
+        name: json[NAME],
+        token: json[TOKEN],
+        photo: json[PHOTO],
+        phone: json[PHONE],
+        productsCount: json[PRODUCTS_COUNT],
+        productPhoto: photo
+    );
+  }
 
   Map<String, dynamic> toJson() => {
-    ID: id,
+    TOKEN: token,
     NAME: name,
     PHONE: phone,
     PHOTO: photo,

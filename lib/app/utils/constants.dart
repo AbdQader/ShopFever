@@ -11,7 +11,8 @@ const String SPECIAL_PRODUCTS_URL = '${BASE_URL}/api/v1/products/special';
 const String FAVORITE_PRODUCTS_URL = '${BASE_URL}/api/v1/products/favourite';
 
 // Models Variables
-const String ID = '_id';
+const String ID = "_id";
+const String TOKEN = 'token';
 const String NAME = 'name';
 const String PHOTO = 'photo';
 const String PHONE = 'phone';
