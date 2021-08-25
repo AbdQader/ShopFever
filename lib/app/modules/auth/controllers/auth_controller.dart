@@ -132,6 +132,7 @@ class AuthController extends GetxController {
         }
       );
 
+      // TODO: Here When User Login & Go To Home Screen
       // When Login Success
       if (response['status'] == 'Success')
         Get.toNamed(AppPages.INITIAL);
@@ -164,6 +165,7 @@ class AuthController extends GetxController {
         }
       );
 
+      // TODO: Here When User Register & Go To Home Screen
       // When Register Success
       if (response['status'] == 'Success')
         Get.toNamed(AppPages.INITIAL);
