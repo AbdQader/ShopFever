@@ -22,7 +22,7 @@ class MyHive
   }
 
   ///get current user if it exist or return null
-  static Future<UserModel?> getCurrentOrder() async{
+  static Future<UserModel?> getCurrentUser() async{
     var box = await getInstanceOfUserBox();
     try{
       return await box.getAt(0);

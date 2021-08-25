@@ -4,7 +4,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hive/hive.dart';
+import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shop_fever/app/data/local/my_hive.dart';
 import 'package:shop_fever/app/data/models/user_model.dart';
 import 'app/data/local/sharedPref.dart';
 import 'app/routes/app_pages.dart';
@@ -18,6 +20,9 @@ void main() async {
   //init local database
   var directory = await getApplicationDocumentsDirectory();
   Hive..init(directory.path)..registerAdapter(UserModelAdapter());
+  //TODO FOR TESTING after you login
+  Logger().e('Is user logged => ${SharedPref.isUserLogged()}');
+  Logger().e('Current user => ${(await MyHive.getCurrentUser())}');
   runApp(
     GetMaterialApp(
       debugShowCheckedModeBanner: false,
