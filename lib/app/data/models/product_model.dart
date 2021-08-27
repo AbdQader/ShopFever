@@ -1,6 +1,6 @@
 class ProductModel {
 
-  final List<String> photos;
+  final List<dynamic> photos;
   final String publishDate;
   final bool sold;
   final String id;

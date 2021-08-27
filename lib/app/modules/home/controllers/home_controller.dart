@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
 import 'package:location/location.dart';
 import 'package:logger/logger.dart';
@@ -10,7 +12,6 @@ import 'package:shop_fever/app/services/error_handler.dart';
 import 'package:shop_fever/app/utils/constants.dart';
 
 class HomeController extends GetxController {
-
   // For Current User
   UserModel? _currentUser;
 
@@ -22,18 +23,22 @@ class HomeController extends GetxController {
 
   // For Categories
   List<CategoryModel> _categories = [];
+
   List<CategoryModel> get categories => _categories;
 
   // For Special Users
   Rx<List<UserModel>> _users = Rx<List<UserModel>>([]);
+
   List<UserModel> get users => _users.value;
 
   // For Special Products
   Rx<List<ProductModel>> _specialProducts = Rx<List<ProductModel>>([]);
+
   List<ProductModel> get specialProducts => _specialProducts.value;
 
   // For Close Products
   Rx<List<ProductModel>> _closeProducts = Rx<List<ProductModel>>([]);
+
   List<ProductModel> get closeProducts => _closeProducts.value;
 
   @override
@@ -58,47 +63,43 @@ class HomeController extends GetxController {
   void getUserLocation() async {
     // check if the service is enabled
     _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled)
-    {
+    if (!_serviceEnabled) {
       _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled)
-        return;
+      if (!_serviceEnabled) return;
     }
 
     // check if the permission is granted
     _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied)
-    {
+    if (_permissionGranted == PermissionStatus.denied) {
       _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted)
-        return;
+      if (_permissionGranted != PermissionStatus.granted) return;
     }
 
     _locationData = await location.getLocation();
-    if (_locationData.latitude == null)
-    {
+    if (_locationData.latitude == null) {
       Logger().e('_locationData.latitude is null');
     } else {
-      Logger().e('GetUserLocation: lat = ${_locationData.latitude!} || lon = ${_locationData.longitude!}');
-      await updateUserLocation(_locationData.latitude!, _locationData.longitude!);
+      Logger().e(
+          'GetUserLocation: lat = ${_locationData.latitude!} || lon = ${_locationData.longitude!}');
+      await updateUserLocation(
+          _locationData.latitude!, _locationData.longitude!);
       getCloseProducts();
     }
   }
 
   // TODO to update the user location
   Future<void> updateUserLocation(double lat, double lon) async {
+    List<double> location = [lat, lon];
+    var body = {"location": location};
     try {
-      var response = await BaseClient.post(
-        USER_LOCATION_URL,
-        body: {
-          'location' : [lat, lon]
-        },
-        headers: {
-          'authorization': _currentUser!.token,
-          //'content-type': 'application/json',
-          //'Accept': 'multipart/form-data',
-        }
-      );
+      var response =
+          await BaseClient.post(USER_LOCATION_URL, body: body, headers: {
+        'authorization': _currentUser!.token,
+        'content-type': 'application/json',
+        //'Content-Type': 'application/json; charset=UTF-8'
+        //"accept": "application/json"
+        //'Accept': 'multipart/form-data',
+      });
       // When Location Updated Successfully
       if (response['status'] == 'Success')
         Logger().e('UpdateUserLocation: ${response['message']}');
@@ -111,15 +112,10 @@ class HomeController extends GetxController {
   // to fetch the categories
   void getCategories() async {
     try {
-      var response = await BaseClient.get(
-        CATEGORIES_URL,
-        headers: {
-          'authorization': _currentUser!.token
-        }
-      );
+      var response = await BaseClient.get(CATEGORIES_URL,
+          headers: {'authorization': _currentUser!.token});
       // Success
-      if (response['status'] == 'success')
-      {
+      if (response['status'] == 'success') {
         response['data']['categories'].forEach((category) {
           _categories.add(CategoryModel.fromJson(category));
         });
@@ -134,15 +130,10 @@ class HomeController extends GetxController {
   // to fetch the special users
   void getSpecialUsers() async {
     try {
-      var response = await BaseClient.get(
-        SPECIAL_USERS_URL,
-        headers: {
-          'authorization': _currentUser!.token
-        }
-      );
+      var response = await BaseClient.get(SPECIAL_USERS_URL,
+          headers: {'authorization': _currentUser!.token});
       // Success
-      if (response['status'] == 'success')
-      {
+      if (response['status'] == 'success') {
         response['users'].forEach((user) {
           _users.value.add(UserModel.fromJson(user));
         });
@@ -156,15 +147,10 @@ class HomeController extends GetxController {
   // to fetch the special products
   void getSpecialProducts() async {
     try {
-      var response = await BaseClient.get(
-        SPECIAL_PRODUCTS_URL,
-        headers: {
-          'authorization': _currentUser!.token
-        }
-      );
+      var response = await BaseClient.get(SPECIAL_PRODUCTS_URL,
+          headers: {'authorization': _currentUser!.token});
       // Success
-      if (response['status'] == 'success')
-      {
+      if (response['status'] == 'success') {
         response['products'].forEach((product) {
           _specialProducts.value.add(ProductModel.fromJson(product));
         });
@@ -176,18 +162,22 @@ class HomeController extends GetxController {
   }
 
   // to fetch the close products
-  void getCloseProducts() async {
+  Future<void> getCloseProducts() async {
     try {
-      var response = await BaseClient.get(
-        CLOSE_PRODUCTS_URL,
-        headers: {
-          'authorization': _currentUser!.token
-        }
+      var location = [
+        _locationData.latitude!,
+        _locationData.longitude!
+      ];
+      var response =
+          await BaseClient.post(CLOSE_PRODUCTS_URL,
+              body: {"location": location},
+              headers: {
+              'content-type': 'application/json',
+          'authorization': _currentUser!.token,
+      }
       );
-      Logger().e('CloseProducts Response: $response');
       // Success
-      if (response['status'] == 'success')
-      {
+      if (response['status'] == 'success') {
         response['products'].forEach((product) {
           _closeProducts.value.add(ProductModel.fromJson(product));
         });
@@ -198,5 +188,4 @@ class HomeController extends GetxController {
       ErrorHandler.handleError(error);
     }
   }
-
 }
