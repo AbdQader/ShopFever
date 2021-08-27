@@ -129,12 +129,10 @@ class HomeView extends GetView<HomeController> {
                       crossAxisSpacing: 10.0,
                       mainAxisSpacing: 10.0,
                     ),
-                    itemCount: 10,
+                    itemCount: controller.closeProducts.length,
                     itemBuilder: (BuildContext context, int index) {
                       return CloseProductItem(
-                        title: 'عصير فاخر',
-                        image: pImage,
-                        price: 89.9
+                        productModel: controller.closeProducts[index],
                       );
                     },
                   ),
@@ -148,7 +146,7 @@ class HomeView extends GetView<HomeController> {
           title: 'انشر سلعة جديدة',
           icon: Icons.add,
           width: 180.0,
-          onPressed: () {}
+          onPressed: () => Get.toNamed(AppPages.ADD_PRODUCT)
         ),
       ),
     );

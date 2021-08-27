@@ -225,7 +225,7 @@ Widget buildFloatingActionButton({
   required String title,
   required IconData icon,
   required double width,
-  required Function onPressed,
+  required Function() onPressed,
 }) {
   return Align(
     alignment: Alignment.bottomCenter,
@@ -243,7 +243,7 @@ Widget buildFloatingActionButton({
           weight: FontWeight.bold,
         ),
         icon: Icon(icon, color: Colors.white),
-        onPressed: onPressed(),
+        onPressed: onPressed,
       ),
     ),
   );

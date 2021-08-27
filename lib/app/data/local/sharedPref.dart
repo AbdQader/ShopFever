@@ -1,6 +1,5 @@
 import 'package:get_storage/get_storage.dart';
 
-//TODO simple shared pref
 class SharedPref
 {
   //keys
@@ -11,21 +10,21 @@ class SharedPref
   static final storage = GetStorage(CONTAINER_NAME);
 
   ///check if user logged in before (and go to home directly if he is)
-  static bool isUserLogged(){
-    try{
+  static bool isUserLogged() {
+    try {
       bool? hasLogged = storage.read(STORAGE_USER_LOGGED_KEY);
       return hasLogged ?? false;
-    }catch(error){
+    } catch(error) {
       return false;
     }
   }
 
   ///save user as logged
-  static bool setUserAsLogged(){
-    try{
+  static bool setUserAsLogged() {
+    try {
       storage.write(STORAGE_USER_LOGGED_KEY, true);
       return true;
-    }catch(error){
+    } catch(error) {
       return false;
     }
   }

@@ -1,7 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:shop_fever/app/data/models/user_model.dart';
 
-//TODO LOCAL DB (USER BOX)
 class MyHive
 {
   //box for user (its like table or seperated file for users)
@@ -9,7 +8,7 @@ class MyHive
 
   //to make it singleton (only init box once)
   static Future<Box> getInstanceOfUserBox() async {
-    if(userHiveBox == null){
+    if (userHiveBox == null) {
       userHiveBox = await Hive.openBox<UserModel>('notifications_box');
     }
     return userHiveBox!;
@@ -22,11 +21,11 @@ class MyHive
   }
 
   ///get current user if it exist or return null
-  static Future<UserModel?> getCurrentUser() async{
+  static Future<UserModel?> getCurrentUser() async {
     var box = await getInstanceOfUserBox();
-    try{
+    try {
       return await box.getAt(0);
-    }catch(error){
+    } catch(error) {
       return null;
     }
   }
@@ -36,4 +35,5 @@ class MyHive
     var box = await getInstanceOfUserBox();
     box.clear();
   }
+
 }

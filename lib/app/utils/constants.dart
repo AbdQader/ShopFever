@@ -8,6 +8,7 @@ const String CATEGORIES_URL = '${BASE_URL}/api/v1/categories';
 const String PRODUCTS_URL = '${BASE_URL}/api/v1/products';
 const String SPECIAL_USERS_URL = '${BASE_URL}/api/v1/users/special';
 const String SPECIAL_PRODUCTS_URL = '${BASE_URL}/api/v1/products/special';
+const String CLOSE_PRODUCTS_URL = '${BASE_URL}/api/v1/products/near';
 const String FAVORITE_PRODUCTS_URL = '${BASE_URL}/api/v1/products/favourite';
 
 // Models Variables

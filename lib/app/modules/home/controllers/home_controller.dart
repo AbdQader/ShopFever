@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:logger/logger.dart';
+import 'package:shop_fever/app/data/local/my_hive.dart';
 import 'package:shop_fever/app/data/models/category_model.dart';
 import 'package:shop_fever/app/data/models/product_model.dart';
 import 'package:shop_fever/app/data/models/user_model.dart';
@@ -8,6 +8,9 @@ import 'package:shop_fever/app/services/error_handler.dart';
 import 'package:shop_fever/app/utils/constants.dart';
 
 class HomeController extends GetxController {
+
+  // For Current User
+  UserModel? _currentUser;
 
   // For Categories
   List<CategoryModel> _categories = [];
@@ -18,27 +21,41 @@ class HomeController extends GetxController {
   List<UserModel> get users => _users.value;
 
   // For Special Products
-  Rx<List<ProductModel>> _products = Rx<List<ProductModel>>([]);
-  List<ProductModel> get products => _products.value;
+  Rx<List<ProductModel>> _specialProducts = Rx<List<ProductModel>>([]);
+  List<ProductModel> get specialProducts => _specialProducts.value;
 
-  onInit(){
-    //getData();
+  // For Close Products
+  Rx<List<ProductModel>> _closeProducts = Rx<List<ProductModel>>([]);
+  List<ProductModel> get closeProducts => _closeProducts.value;
+
+  @override
+  void onInit() async {
+    super.onInit();
+    await getCurrentUser();
     getCategories();
     getSpecialUsers();
-    super.onInit();
+    getCloseProducts();
   }
 
-  // This function to fetch the categories
+  // to get current user from local db
+  Future<void> getCurrentUser() async {
+    try {
+      _currentUser = await MyHive.getCurrentUser();
+    } catch (error) {
+      print('abd => GCU: $error');
+    }
+  }
+
+  // to fetch the categories
   void getCategories() async {
     try {
       var response = await BaseClient.get(
         CATEGORIES_URL,
         headers: {
-          'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMWQxNTc2MzRkMDhkMDAxNmNjN2I0OCIsImlhdCI6MTYyOTMwNzk0MywiZXhwIjoxNjM3MDgzOTQzfQ.3iKb-WHc70Q1nWTIyDUywmTgvJtFxdRaVTU1gEExT44'
+          'authorization': _currentUser!.token
         }
       );
-
-      Logger().e('C response: $response');
+      // Success
       if (response['status'] == 'success')
       {
         response['data']['categories'].forEach((category) {
@@ -47,21 +64,21 @@ class HomeController extends GetxController {
         update();
       }
     } catch (error) {
+      // Error
       ErrorHandler.handleError(error);
     }
   }
 
-  // This function to fetch the special users
+  // to fetch the special users
   void getSpecialUsers() async {
     try {
       var response = await BaseClient.get(
         SPECIAL_USERS_URL,
         headers: {
-          'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMWQxNTc2MzRkMDhkMDAxNmNjN2I0OCIsImlhdCI6MTYyOTMwNzk0MywiZXhwIjoxNjM3MDgzOTQzfQ.3iKb-WHc70Q1nWTIyDUywmTgvJtFxdRaVTU1gEExT44'
+          'authorization': _currentUser!.token
         }
       );
-
-      Logger().e('SU response: $response');
+      // Success
       if (response['status'] == 'success')
       {
         response['users'].forEach((user) {
@@ -69,45 +86,53 @@ class HomeController extends GetxController {
         });
       }
     } catch (error) {
+      // Error
       ErrorHandler.handleError(error);
     }
   }
 
-  // This function to fetch the special products
+  // to fetch the special products
   void getSpecialProducts() async {
     try {
       var response = await BaseClient.get(
         SPECIAL_PRODUCTS_URL,
         headers: {
-          'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMWQxNTc2MzRkMDhkMDAxNmNjN2I0OCIsImlhdCI6MTYyOTMwNzk0MywiZXhwIjoxNjM3MDgzOTQzfQ.3iKb-WHc70Q1nWTIyDUywmTgvJtFxdRaVTU1gEExT44'
+          'authorization': _currentUser!.token
         }
       );
-
-      Logger().e('SP response: $response');
+      // Success
       if (response['status'] == 'success')
       {
         response['products'].forEach((product) {
-          _products.value.add(ProductModel.fromJson(product));
+          _specialProducts.value.add(ProductModel.fromJson(product));
         });
       }
     } catch (error) {
+      // Error
       ErrorHandler.handleError(error);
     }
   }
 
-  /**
-   *  Example of making http call with base client
-   * */
-  getData() async
-  {
-    try{
-      var url = 'https://jsonplaceholder.typicode.com/todosx/1';
-      var response = await BaseClient.get(url);
-      Logger().e(response);
-    }catch(error){ //if any type of error happen
-      //this class will only show snackbar with the error
-      //u can change it and handle error as u want
+  // to fetch the close products
+  void getCloseProducts() async {
+    try {
+      var response = await BaseClient.get(
+        CLOSE_PRODUCTS_URL,
+        headers: {
+          'authorization': _currentUser!.token
+        }
+      );
+      // Success
+      if (response['status'] == 'success')
+      {
+        response['products'].forEach((product) {
+          _closeProducts.value.add(ProductModel.fromJson(product));
+        });
+      }
+    } catch (error) {
+      // Error
       ErrorHandler.handleError(error);
     }
   }
+
 }

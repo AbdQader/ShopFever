@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:logger/logger.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 import 'package:custom_timer/custom_timer.dart';
 import 'package:shop_fever/app/data/local/my_hive.dart';
@@ -125,7 +124,6 @@ class AuthController extends GetxController {
   // Login the user in API
   void _loginToApi() async {
     try {
-      Logger().e('CD => ${countryCode} | PN => ${phoneNumberController.text}');
       var response = await BaseClient.post(
         LOGIN_URL,
         body: {
@@ -136,14 +134,10 @@ class AuthController extends GetxController {
         }
       );
       // When Login Success
-      Logger().e('User => ${response['user'].runtimeType}');
       if (response['status'] == 'Success')
         saveUserToLocal(UserModel.fromJson(response['user']));
       
-      Logger().e('Login => $response');
-      Logger().e('Login: Status: => ${response['status']}');
     } catch (error) {
-      Logger().e('Error => ${error}');
       // Error
       if (error is UnauthorizedException)
         Get.toNamed(AppPages.REGISTER);
@@ -168,7 +162,6 @@ class AuthController extends GetxController {
         }
       );
 
-      // TODO: Here When User Register & Go To Home Screen
       // When Register Success
       if (response['status'] == 'Success')
         saveUserToLocal(UserModel.fromJson(response['user']));
@@ -176,11 +169,8 @@ class AuthController extends GetxController {
       // Stop Loading
       _isLoading.value = false;
 
-      Logger().e('Register => $response');
-      Logger().e('Register: Status: => ${response['status']}');
     } catch (error) {
       _isLoading.value = false;
-      Logger().e('Error => ${error}');
       // Error
       ErrorHandler.handleError(error);
     }
@@ -293,8 +283,6 @@ class AuthController extends GetxController {
     );
   }
 
-
-  //TODO bla bla bla
   ///save user to local db and set it as logged in sharedPref
   Future<void> saveUserToLocal(UserModel user) async {
     MyHive.saveUser(user);
