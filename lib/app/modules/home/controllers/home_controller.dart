@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:location/location.dart';
+import 'package:logger/logger.dart';
 import 'package:shop_fever/app/data/local/my_hive.dart';
 import 'package:shop_fever/app/data/models/category_model.dart';
 import 'package:shop_fever/app/data/models/product_model.dart';
@@ -11,6 +13,12 @@ class HomeController extends GetxController {
 
   // For Current User
   UserModel? _currentUser;
+
+  // For User Location
+  Location location = Location();
+  late bool _serviceEnabled;
+  late PermissionStatus _permissionGranted;
+  late LocationData _locationData;
 
   // For Categories
   List<CategoryModel> _categories = [];
@@ -32,9 +40,9 @@ class HomeController extends GetxController {
   void onInit() async {
     super.onInit();
     await getCurrentUser();
+    getUserLocation();
     getCategories();
     getSpecialUsers();
-    getCloseProducts();
   }
 
   // to get current user from local db
@@ -43,6 +51,60 @@ class HomeController extends GetxController {
       _currentUser = await MyHive.getCurrentUser();
     } catch (error) {
       print('abd => GCU: $error');
+    }
+  }
+
+  // to get the user location
+  void getUserLocation() async {
+    // check if the service is enabled
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled)
+    {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled)
+        return;
+    }
+
+    // check if the permission is granted
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied)
+    {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted)
+        return;
+    }
+
+    _locationData = await location.getLocation();
+    if (_locationData.latitude == null)
+    {
+      Logger().e('_locationData.latitude is null');
+    } else {
+      Logger().e('GetUserLocation: lat = ${_locationData.latitude!} || lon = ${_locationData.longitude!}');
+      await updateUserLocation(_locationData.latitude!, _locationData.longitude!);
+      getCloseProducts();
+    }
+  }
+
+  // TODO to update the user location
+  Future<void> updateUserLocation(double lat, double lon) async {
+    try {
+      var response = await BaseClient.post(
+        USER_LOCATION_URL,
+        body: {
+          'location' : [lat, lon]
+        },
+        headers: {
+          'authorization': _currentUser!.token,
+          //'content-type': 'application/json',
+          //'Accept': 'multipart/form-data',
+        }
+      );
+      // When Location Updated Successfully
+      if (response['status'] == 'Success')
+        Logger().e('UpdateUserLocation: ${response['message']}');
+    } catch (error) {
+      Logger().e('UpdateUserLocation: $error');
+      ErrorHandler.handleError(error);
     }
   }
 
@@ -122,6 +184,7 @@ class HomeController extends GetxController {
           'authorization': _currentUser!.token
         }
       );
+      Logger().e('CloseProducts Response: $response');
       // Success
       if (response['status'] == 'success')
       {
@@ -130,6 +193,7 @@ class HomeController extends GetxController {
         });
       }
     } catch (error) {
+      Logger().e('CloseProducts Error: $error');
       // Error
       ErrorHandler.handleError(error);
     }
