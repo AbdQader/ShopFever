@@ -13,15 +13,15 @@ class CategoryModel {
   });
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) => CategoryModel(
-    id: json[ID],
-    name: json[NAME],
-    photo: json[PHOTO],
+    id: json[Constants.ID],
+    name: json[Constants.NAME],
+    photo: json[Constants.PHOTO],
   );
 
   Map<String, dynamic> toJson() => {
-    ID: id,
-    NAME: name,
-    PHOTO: photo,
+    Constants.ID: id,
+    Constants.NAME: name,
+    Constants.PHOTO: photo,
   };
 
 }

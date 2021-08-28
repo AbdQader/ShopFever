@@ -8,6 +8,7 @@ import 'package:shop_fever/app/data/models/user_model.dart';
 import 'package:shop_fever/app/services/base_client.dart';
 import 'package:shop_fever/app/services/error_handler.dart';
 import 'package:shop_fever/app/utils/constants.dart';
+import 'package:shop_fever/app/utils/helperFunctions.dart';
 
 class HomeController extends GetxController {
   // For Current User
@@ -21,18 +22,22 @@ class HomeController extends GetxController {
 
   // For Categories
   List<CategoryModel> _categories = [];
+
   List<CategoryModel> get categories => _categories;
 
   // For Special Users
   Rx<List<UserModel>> _users = Rx<List<UserModel>>([]);
+
   List<UserModel> get users => _users.value;
 
   // For Special Products
   Rx<List<ProductModel>> _specialProducts = Rx<List<ProductModel>>([]);
+
   List<ProductModel> get specialProducts => _specialProducts.value;
 
   // For Close Products
   Rx<List<ProductModel>> _closeProducts = Rx<List<ProductModel>>([]);
+
   List<ProductModel> get closeProducts => _closeProducts.value;
 
   @override
@@ -70,9 +75,10 @@ class HomeController extends GetxController {
     }
 
     _locationData = await location.getLocation();
-      Logger().e('GetUserLocation: lat = ${_locationData.latitude!} || lon = ${_locationData.longitude!}');
-      await updateUserLocation(_locationData.latitude!, _locationData.longitude!);
-      getCloseProducts();
+    Logger().e(
+        'GetUserLocation: lat = ${_locationData.latitude!} || lon = ${_locationData.longitude!}');
+    await updateUserLocation(_locationData.latitude!, _locationData.longitude!);
+    getCloseProducts();
   }
 
   // to update the user location
@@ -80,17 +86,14 @@ class HomeController extends GetxController {
     List<double> location = [lat, lon];
     var body = {'location': location};
     try {
-      var response = await BaseClient.post(
-        USER_LOCATION_URL,
-        body: body,
-        headers: {
-          'authorization': _currentUser!.token,
-          'content-type': 'application/json',
-        }
-      );
+      var response = await BaseClient.post(Constants.USER_LOCATION_URL,
+          body: body,
+          headers: {
+            Constants.API_AUTHORIZATION: _currentUser!.token,
+            Constants.API_CONTENT_TYPE: Constants.API_APPLICATION_JSON,
+          });
       // When Location Updated Successfully
-      if (response['status'].toString().toLowerCase() == 'success')
-        Logger().e('UpdateUserLocation: ${response['message']}');
+      Logger().e('UpdateUserLocation: ${response['message']}');
     } catch (error) {
       Logger().e('UpdateUserLocation: $error');
       ErrorHandler.handleError(error);
@@ -100,32 +103,52 @@ class HomeController extends GetxController {
   // to fetch the categories
   void getCategories() async {
     try {
-      var response = await BaseClient.get(CATEGORIES_URL,
-          headers: {'authorization': _currentUser!.token});
+      var response = await BaseClient.get(Constants.CATEGORIES_URL,
+          headers: {Constants.API_AUTHORIZATION: _currentUser!.token});
       // Success
-      if (response['status'] == 'success') {
-        response['data']['categories'].forEach((category) {
-          _categories.add(CategoryModel.fromJson(category));
-        });
+      response['data']['categories'].forEach((category) {
+        _categories.add(CategoryModel.fromJson(category));
+      });
         update();
-      }
     } catch (error) {
       // Error
       ErrorHandler.handleError(error);
     }
+
+
+    // HelperFunctions.safeApiCall(
+    //     execute: ()
+    //     {
+    //       return BaseClient.get(Constants.CATEGORIES_URL, headers: {Constants.API_AUTHORIZATION: _currentUser!.token});
+    //     },
+    //     onSuccess: (response)
+    //     {
+    //       response['data']['categories'].forEach((category) {
+    //         _categories.add(CategoryModel.fromJson(category));
+    //       });
+    //       update();
+    //     },
+    //     onError: (error)
+    //     {
+    //       ErrorHandler.handleError(error);
+    //     },
+    //     onLoading: ()
+    //     {
+    //       //LOADING
+    //     }
+    // );
   }
 
   // to fetch the special users
   void getSpecialUsers() async {
     try {
-      var response = await BaseClient.get(SPECIAL_USERS_URL,
-          headers: {'authorization': _currentUser!.token});
+      var response = await BaseClient.get(Constants.SPECIAL_USERS_URL,
+          headers: {Constants.API_AUTHORIZATION: _currentUser!.token});
       // Success
-      if (response['status'] == 'success') {
-        response['users'].forEach((user) {
-          _users.value.add(UserModel.fromJson(user));
-        });
-      }
+      response['users'].forEach((user) {
+        _users.value.add(UserModel.fromJson(user));
+      });
+
     } catch (error) {
       // Error
       ErrorHandler.handleError(error);
@@ -135,14 +158,12 @@ class HomeController extends GetxController {
   // to fetch the special products
   void getSpecialProducts() async {
     try {
-      var response = await BaseClient.get(SPECIAL_PRODUCTS_URL,
-          headers: {'authorization': _currentUser!.token});
+      var response = await BaseClient.get(Constants.SPECIAL_PRODUCTS_URL,
+          headers: {Constants.API_AUTHORIZATION: _currentUser!.token});
       // Success
-      if (response['status'] == 'success') {
-        response['products'].forEach((product) {
+      response['products'].forEach((product) {
           _specialProducts.value.add(ProductModel.fromJson(product));
         });
-      }
     } catch (error) {
       // Error
       ErrorHandler.handleError(error);
@@ -152,25 +173,18 @@ class HomeController extends GetxController {
   // to fetch the close products
   Future<void> getCloseProducts() async {
     try {
-      var location = [
-        _locationData.latitude!,
-        _locationData.longitude!
-      ];
-      var response =
-          await BaseClient.post(CLOSE_PRODUCTS_URL,
-              body: {"location": location},
-              headers: {
-              'content-type': 'application/json',
-          'authorization': _currentUser!.token,
-      }
-      );
+      var location = [_locationData.latitude!, _locationData.longitude!];
+      var response = await BaseClient.post(Constants.CLOSE_PRODUCTS_URL, body: {
+        "location": location
+      }, headers: {
+        Constants.API_CONTENT_TYPE: Constants.API_APPLICATION_JSON,
+        Constants.API_AUTHORIZATION: _currentUser!.token,
+      });
       // Success
-      if (response['status'].toString().toLowerCase() == 'success') {
         Logger().e('Response => ${response}');
         response['products'].forEach((product) {
           _closeProducts.value.add(ProductModel.fromJson(product));
         });
-      }
     } catch (error) {
       Logger().e('CloseProducts Error: $error');
       // Error

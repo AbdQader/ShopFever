@@ -12,6 +12,7 @@ import 'package:shop_fever/app/services/app_exceptions.dart';
 import 'package:shop_fever/app/services/base_client.dart';
 import 'package:shop_fever/app/services/error_handler.dart';
 import 'package:shop_fever/app/utils/constants.dart';
+import 'package:shop_fever/app/utils/helperFunctions.dart';
 import '../../../utils/components.dart';
 import '/app/routes/app_pages.dart';
 
@@ -133,17 +134,16 @@ class AuthController extends GetxController {
   void _loginToApi() async {
     try {
       var response = await BaseClient.post(
-        LOGIN_URL,
+          Constants.LOGIN_URL,
         body: {
-          'phone' : countryCode + phoneNumberController.text.trim()
+          Constants.PHONE : countryCode + phoneNumberController.text.trim()
         },
         headers: {
-          'content-type': 'application/json'
+          Constants.API_CONTENT_TYPE: Constants.API_APPLICATION_JSON,
         }
       );
       // When Login Success
-      if (response['status'] == 'Success')
-        saveUserToLocal(UserModel.fromJson(response['user']));
+      saveUserToLocal(UserModel.fromJson(response['user']));
       
     } catch (error) {
       // Error
@@ -159,20 +159,19 @@ class AuthController extends GetxController {
     try {
       _isLoading.value = true;
       var response = await BaseClient.post(
-        REGISTER_URL,
+          Constants.REGISTER_URL,
         body: FormData({
-          'name': usernameController.text.trim(),
-          'phone': countryCode + phoneNumberController.text.trim(),
-          'photo': MultipartFile(getPickedImage, filename: DateTime.now().millisecondsSinceEpoch.toString()),
+          Constants.NAME : usernameController.text.trim(),
+          Constants.PHONE: countryCode + phoneNumberController.text.trim(),
+          Constants.PHOTO: MultipartFile(getPickedImage, filename: DateTime.now().millisecondsSinceEpoch.toString()),
         }),
         headers: {
-          'Accept': 'multipart/form-data',
+          Constants.API_ACCEPT: Constants.API_MULTIPART_DATA,
         }
       );
 
       // When Register Success
-      if (response['status'] == 'Success')
-        saveUserToLocal(UserModel.fromJson(response['user']));
+      saveUserToLocal(UserModel.fromJson(response['user']));
 
       // Stop Loading
       _isLoading.value = false;

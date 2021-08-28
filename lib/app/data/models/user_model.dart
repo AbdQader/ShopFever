@@ -32,22 +32,22 @@ class UserModel {
   factory UserModel.fromJson(Map<String, dynamic> json) {
     var photo = null;
     try {
-      photo = json[PRODUCT_PHOTO][0];
+      photo = json[Constants.PRODUCT_PHOTO][0];
     } catch (error) {}
     return UserModel(
-      name: json[NAME],
-      token: json[TOKEN],
-      photo: json[PHOTO],
-      phone: json[PHONE],
-      productsCount: json[PRODUCTS_COUNT],
+      name: json[Constants.NAME],
+      token: json[Constants.TOKEN],
+      photo: json[Constants.PHOTO],
+      phone: json[Constants.PHONE],
+      productsCount: json[Constants.PRODUCTS_COUNT],
       productPhoto: photo
     );
   }
 
   Map<String, dynamic> toJson() => {
-    TOKEN: token,
-    NAME: name,
-    PHONE: phone,
-    PHOTO: photo,
+    Constants.TOKEN: token,
+    Constants.NAME: name,
+    Constants.PHONE: phone,
+    Constants.PHOTO: photo,
   };
 }

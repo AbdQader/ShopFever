@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:get/get.dart';
+import 'package:shop_fever/app/utils/helperFunctions.dart';
 import 'app_exceptions.dart';
 
 class BaseClient
@@ -22,9 +23,12 @@ class BaseClient
       case 200:
       case 201:
       case 204:
-        return response.body;
+          if(HelperFunctions.checkIfStatusSuccess(response))
+            return response.body;
+          else
+            throw BadRequestException(response.body['message'] ?? 'Invalid api call');
       case 400:
-        throw BadRequestException(response.body['message'] ?? 'Invalid parameters');
+        throw BadRequestException(response.body['message'] ?? 'Invalid api call');
       case 404:
         throw NotFoundException(response.body['message'] ?? 'Url not founded');
       case 401:
