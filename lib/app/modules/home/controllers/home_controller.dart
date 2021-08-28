@@ -89,7 +89,7 @@ class HomeController extends GetxController {
         }
       );
       // When Location Updated Successfully
-      if (response['status'] == 'Success')
+      if (response['status'].toString().toLowerCase() == 'success')
         Logger().e('UpdateUserLocation: ${response['message']}');
     } catch (error) {
       Logger().e('UpdateUserLocation: $error');
@@ -165,7 +165,8 @@ class HomeController extends GetxController {
       }
       );
       // Success
-      if (response['status'] == 'success') {
+      if (response['status'].toString().toLowerCase() == 'success') {
+        Logger().e('Response => ${response}');
         response['products'].forEach((product) {
           _closeProducts.value.add(ProductModel.fromJson(product));
         });
