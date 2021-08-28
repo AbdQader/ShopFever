@@ -28,6 +28,14 @@ class AddProductController extends GetxController {
   late String status;
   late String currency;
 
+  @override
+  void onClose() {
+    nameController.dispose();
+    descriptionController.dispose();
+    priceController.dispose();
+    super.onClose();
+  }
+
   // Submit the product data
   void submit() {
     // Close the keyboard

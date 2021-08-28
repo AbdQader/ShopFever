@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:get/get.dart';
 import 'package:location/location.dart';
 import 'package:logger/logger.dart';
@@ -23,22 +21,18 @@ class HomeController extends GetxController {
 
   // For Categories
   List<CategoryModel> _categories = [];
-
   List<CategoryModel> get categories => _categories;
 
   // For Special Users
   Rx<List<UserModel>> _users = Rx<List<UserModel>>([]);
-
   List<UserModel> get users => _users.value;
 
   // For Special Products
   Rx<List<ProductModel>> _specialProducts = Rx<List<ProductModel>>([]);
-
   List<ProductModel> get specialProducts => _specialProducts.value;
 
   // For Close Products
   Rx<List<ProductModel>> _closeProducts = Rx<List<ProductModel>>([]);
-
   List<ProductModel> get closeProducts => _closeProducts.value;
 
   @override
@@ -55,7 +49,7 @@ class HomeController extends GetxController {
     try {
       _currentUser = await MyHive.getCurrentUser();
     } catch (error) {
-      print('abd => GCU: $error');
+      print('abd => getCurrentUser Error: $error');
     }
   }
 
@@ -76,30 +70,24 @@ class HomeController extends GetxController {
     }
 
     _locationData = await location.getLocation();
-    if (_locationData.latitude == null) {
-      Logger().e('_locationData.latitude is null');
-    } else {
-      Logger().e(
-          'GetUserLocation: lat = ${_locationData.latitude!} || lon = ${_locationData.longitude!}');
-      await updateUserLocation(
-          _locationData.latitude!, _locationData.longitude!);
+      Logger().e('GetUserLocation: lat = ${_locationData.latitude!} || lon = ${_locationData.longitude!}');
+      await updateUserLocation(_locationData.latitude!, _locationData.longitude!);
       getCloseProducts();
-    }
   }
 
-  // TODO to update the user location
+  // to update the user location
   Future<void> updateUserLocation(double lat, double lon) async {
     List<double> location = [lat, lon];
-    var body = {"location": location};
+    var body = {'location': location};
     try {
-      var response =
-          await BaseClient.post(USER_LOCATION_URL, body: body, headers: {
-        'authorization': _currentUser!.token,
-        'content-type': 'application/json',
-        //'Content-Type': 'application/json; charset=UTF-8'
-        //"accept": "application/json"
-        //'Accept': 'multipart/form-data',
-      });
+      var response = await BaseClient.post(
+        USER_LOCATION_URL,
+        body: body,
+        headers: {
+          'authorization': _currentUser!.token,
+          'content-type': 'application/json',
+        }
+      );
       // When Location Updated Successfully
       if (response['status'] == 'Success')
         Logger().e('UpdateUserLocation: ${response['message']}');

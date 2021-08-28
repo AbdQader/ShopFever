@@ -42,6 +42,14 @@ class AuthController extends GetxController {
   Rx<bool> _isLoading = false.obs;
   bool get isLoading => _isLoading.value;
 
+  @override
+  void onClose() {
+    usernameController.dispose();
+    phoneNumberController.dispose();
+    codeController.dispose();
+    super.onClose();
+  }
+
   // to submit the login
   void submitLogin() {
     // Close the keyboard
