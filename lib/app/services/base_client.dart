@@ -23,7 +23,7 @@ class BaseClient
       case 200:
       case 201:
       case 204:
-          if(HelperFunctions.checkIfStatusSuccess(response))
+          if(HelperFunctions.checkIfStatusSuccess(response.body))
             return response.body;
           else
             throw BadRequestException(response.body['message'] ?? 'Invalid api call');

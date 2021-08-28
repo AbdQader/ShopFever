@@ -102,41 +102,42 @@ class HomeController extends GetxController {
 
   // to fetch the categories
   void getCategories() async {
-    try {
-      var response = await BaseClient.get(Constants.CATEGORIES_URL,
-          headers: {Constants.API_AUTHORIZATION: _currentUser!.token});
-      // Success
-      response['data']['categories'].forEach((category) {
-        _categories.add(CategoryModel.fromJson(category));
-      });
-        update();
-    } catch (error) {
-      // Error
-      ErrorHandler.handleError(error);
-    }
+    // try {
+    //   var response = await BaseClient.get(Constants.CATEGORIES_URL,
+    //       headers: {Constants.API_AUTHORIZATION: _currentUser!.token});
+    //   // Success
+    //   response['data']['categories'].forEach((category) {
+    //     _categories.add(CategoryModel.fromJson(category));
+    //   });
+    //     update();
+    // } catch (error) {
+    //   // Error
+    //   ErrorHandler.handleError(error);
+    // }
 
 
-    // HelperFunctions.safeApiCall(
-    //     execute: ()
-    //     {
-    //       return BaseClient.get(Constants.CATEGORIES_URL, headers: {Constants.API_AUTHORIZATION: _currentUser!.token});
-    //     },
-    //     onSuccess: (response)
-    //     {
-    //       response['data']['categories'].forEach((category) {
-    //         _categories.add(CategoryModel.fromJson(category));
-    //       });
-    //       update();
-    //     },
-    //     onError: (error)
-    //     {
-    //       ErrorHandler.handleError(error);
-    //     },
-    //     onLoading: ()
-    //     {
-    //       //LOADING
-    //     }
-    // );
+    HelperFunctions.safeApiCall(
+        execute:  () async
+        {
+          return await BaseClient.get(Constants.CATEGORIES_URL, headers: {Constants.API_AUTHORIZATION: _currentUser!.token});
+        },
+        onSuccess: (response)
+        {
+          Logger().e('OnSuccess..');
+          response['data']['categories'].forEach((category) {
+            _categories.add(CategoryModel.fromJson(category));
+          });
+          update();
+        },
+        onError: (error)
+        {
+          ErrorHandler.handleError(error);
+        },
+        onLoading: ()
+        {
+          //on loading...
+        }
+    );
   }
 
   // to fetch the special users
