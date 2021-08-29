@@ -117,9 +117,9 @@ class HomeController extends GetxController {
 
 
     HelperFunctions.safeApiCall(
-        execute:  () async
+        execute: ()
         {
-          return await BaseClient.get(Constants.CATEGORIES_URL, headers: {Constants.API_AUTHORIZATION: _currentUser!.token});
+          return BaseClient.get(Constants.CATEGORIES_URL, headers: {Constants.API_AUTHORIZATION: _currentUser!.token});
         },
         onSuccess: (response)
         {
