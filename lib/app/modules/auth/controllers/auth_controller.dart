@@ -292,7 +292,7 @@ class AuthController extends GetxController {
 
   ///save user to local db and set it as logged in sharedPref
   Future<void> saveUserToLocal(UserModel user) async {
-    MyHive.saveUser(user);
+    await MyHive.saveUser(user);
     SharedPref.setUserAsLogged();
     Get.offAndToNamed(Routes.HOME);
   }
