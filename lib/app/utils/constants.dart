@@ -2,7 +2,7 @@ class Constants {
 
   // API Url's
   static String BASE_URL = 'https://selling-appx.herokuapp.com' ;
-//const String BASE_URL = 'http://192.168.0.109:3000' ;
+  //const String BASE_URL = 'http://192.168.0.109:3000' ;
   static String LOGIN_URL = '${BASE_URL}/api/v1/users/login';
   static String REGISTER_URL = '${BASE_URL}/api/v1/users/signUp';
   static String USER_LOCATION_URL = '${BASE_URL}/api/v1/users/location';
@@ -13,7 +13,7 @@ class Constants {
   static String CLOSE_PRODUCTS_URL = '${BASE_URL}/api/v1/products/near';
   static String FAVORITE_PRODUCTS_URL = '${BASE_URL}/api/v1/products/favourite';
 
-  //API keywords
+  // API keywords
   static String API_AUTHORIZATION = 'authorization';
   static String API_CONTENT_TYPE = 'content-type';
   static String API_APPLICATION_JSON = 'application/json';
@@ -24,7 +24,7 @@ class Constants {
   static String API_SUCCESS = 'success';
 
 
-// Models Variables
+  // Models Variables
   static String ID = "_id";
   static String TOKEN = 'token';
   static String NAME = 'name';

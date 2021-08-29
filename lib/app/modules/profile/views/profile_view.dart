@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
+import 'package:shop_fever/app/data/models/user_model.dart';
 import 'package:shop_fever/app/routes/app_pages.dart';
 import 'package:shop_fever/app/utils/components.dart';
 import '../controllers/profile_controller.dart';
@@ -8,6 +10,7 @@ class ProfileView extends GetView<ProfileController> {
   final String profile = 'https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80';
   final String cover = 'https://timelinecovers.pro/facebook-cover/download/blue-bubbles-facebook-cover.jpg';
   final String photo = 'https://www.weddingear.com/media/catalog/product/cache/1/thumbnail/600x/17f82f742ffe127f42dca9de82fb58b1/b/r/bridesmaid-gift-ideas-personalized-tumbler-25.jpg';
+  final UserModel user = Get.arguments;
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -24,7 +27,7 @@ class ProfileView extends GetView<ProfileController> {
             onPressed: () => Get.back(),
           ),
           actions: [
-            // show this if that's my profile
+            // show this if it's other profile
             IconButton(
               onPressed: () {},
               icon: const Icon(
@@ -65,14 +68,14 @@ class ProfileView extends GetView<ProfileController> {
                       right: 30.0,
                       child: CircleAvatar(
                         radius: 40.0,
-                        backgroundImage: NetworkImage(profile),
+                        backgroundImage: NetworkImage(user.photo),
                       ),
                     ),
                     Positioned(
                       top: 200.0,
                       right: 150.0,
                       child: buildText(
-                        text: 'محمد احمد',
+                        text: user.name,
                         size: 24.0,
                         color: Colors.black,
                         weight: FontWeight.bold
