@@ -6,6 +6,7 @@ import 'package:shop_fever/app/components/close_product_item.dart';
 import 'package:shop_fever/app/components/recently_added_product_item.dart';
 import 'package:shop_fever/app/components/special_product_item.dart';
 import 'package:shop_fever/app/components/user_item.dart';
+import 'package:shop_fever/app/data/local/sharedPref.dart';
 import 'package:shop_fever/app/routes/app_pages.dart';
 import '../controllers/home_controller.dart';
 import '../../../utils/components.dart';
@@ -41,13 +42,14 @@ class HomeView extends GetView<HomeController> {
             IconButton(
               onPressed: () {
                 FirebaseAuth.instance.signOut();
+                SharedPref.setUserAsLoggedOut();
                 Get.offAllNamed(AppPages.LOGIN);
               },
               icon: const Icon(Icons.logout),
             ),
           ],
         ),
-        body: MixinBuilder<HomeController>(
+        body: GetX<HomeController>(
           builder: (controller) => Padding(
             padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
             child: ListView(
@@ -57,7 +59,7 @@ class HomeView extends GetView<HomeController> {
                   height: 120.0,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    physics: BouncingScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     itemCount: controller.categories.length,
                     itemBuilder: (BuildContext context, int index) {
                       return CategoryItem(
@@ -89,7 +91,7 @@ class HomeView extends GetView<HomeController> {
                   height: 320.0,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    physics: BouncingScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     itemCount: controller.specialProducts.length,
                     itemBuilder: (BuildContext context, int index) {
                       return SpecialProductItem(
@@ -104,7 +106,7 @@ class HomeView extends GetView<HomeController> {
                   height: 120.0,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    physics: BouncingScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     itemCount: controller.products.length,
                     itemBuilder: (BuildContext context, int index) {
                       return RecentlyAddedProductItem(
@@ -119,7 +121,7 @@ class HomeView extends GetView<HomeController> {
                   margin: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: GridView.builder(
                     shrinkWrap: true,
-                    physics: BouncingScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: 200,
                       childAspectRatio: 2/3.2,

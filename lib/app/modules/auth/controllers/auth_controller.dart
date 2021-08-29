@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:pinput/pin_put/pin_put.dart';
-import 'package:custom_timer/custom_timer.dart';
 import 'package:shop_fever/app/data/local/my_hive.dart';
 import 'package:shop_fever/app/data/local/sharedPref.dart';
 import 'package:shop_fever/app/data/models/user_model.dart';
+import 'package:shop_fever/app/modules/auth/views/otp_view.dart';
 import 'package:shop_fever/app/services/app_exceptions.dart';
 import 'package:shop_fever/app/services/base_client.dart';
 import 'package:shop_fever/app/services/error_handler.dart';
@@ -98,7 +97,14 @@ class AuthController extends GetxController {
         codeSent: (verificationId, forceResendingToken) {
           _isLoading.value = false;
           this.verificationId = verificationId;
-          showBottomSheet();
+          Get.bottomSheet(
+            OtpView(
+              codeController: codeController,
+              verifyOTP: _verifyOTP
+            ),
+            backgroundColor: Colors.white,
+            isScrollControlled: true,
+          );
         },
         codeAutoRetrievalTimeout: (verificationId) {
           this.verificationId = verificationId;
@@ -132,55 +138,64 @@ class AuthController extends GetxController {
 
   // Login the user in API
   void _loginToApi() async {
-    try {
-      var response = await BaseClient.post(
+    HelperFunctions.safeApiCall(
+      execute: () async
+      {
+        return await BaseClient.post(
           Constants.LOGIN_URL,
-        body: {
-          Constants.PHONE : countryCode + phoneNumberController.text.trim()
-        },
-        headers: {
-          Constants.API_CONTENT_TYPE: Constants.API_APPLICATION_JSON,
-        }
-      );
-      // When Login Success
-      saveUserToLocal(UserModel.fromJson(response['user']));
-      
-    } catch (error) {
-      // Error
-      if (error is UnauthorizedException)
-        Get.toNamed(AppPages.REGISTER);
-      else
-        ErrorHandler.handleError(error);
-    }
+          body: {
+            Constants.PHONE : countryCode + phoneNumberController.text.trim()
+          },
+          headers: {
+            Constants.API_CONTENT_TYPE: Constants.API_APPLICATION_JSON,
+          }
+        );
+      },
+      onSuccess: (response)
+      {
+        saveUserToLocal(UserModel.fromJson(response['user']));
+      },
+      onError: (error)
+      {
+        if (error is UnauthorizedException)
+          Get.toNamed(AppPages.REGISTER);
+        else
+          ErrorHandler.handleError(error);
+      },
+      onLoading: () {}
+    );
   }
 
   // Register the user in API
   void _registerToApi() async {
-    try {
-      _isLoading.value = true;
-      var response = await BaseClient.post(
+    HelperFunctions.safeApiCall(
+      execute: () async
+      {
+        _isLoading.value = true;
+        return await BaseClient.post(
           Constants.REGISTER_URL,
-        body: FormData({
-          Constants.NAME : usernameController.text.trim(),
-          Constants.PHONE: countryCode + phoneNumberController.text.trim(),
-          Constants.PHOTO: MultipartFile(getPickedImage, filename: DateTime.now().millisecondsSinceEpoch.toString()),
-        }),
-        headers: {
-          Constants.API_ACCEPT: Constants.API_MULTIPART_DATA,
-        }
-      );
-
-      // When Register Success
-      saveUserToLocal(UserModel.fromJson(response['user']));
-
-      // Stop Loading
-      _isLoading.value = false;
-
-    } catch (error) {
-      _isLoading.value = false;
-      // Error
-      ErrorHandler.handleError(error);
-    }
+          body: FormData({
+            Constants.NAME : usernameController.text.trim(),
+            Constants.PHONE: countryCode + phoneNumberController.text.trim(),
+            Constants.PHOTO: MultipartFile(getPickedImage, filename: DateTime.now().millisecondsSinceEpoch.toString()),
+          }),
+          headers: {
+            Constants.API_ACCEPT: Constants.API_MULTIPART_DATA,
+          }
+        );
+      },
+      onSuccess: (response)
+      {
+        _isLoading.value = false;
+        saveUserToLocal(UserModel.fromJson(response['user']));
+      },
+      onError: (error)
+      {
+        _isLoading.value = false;
+        ErrorHandler.handleError(error);
+      },
+      onLoading: () {}
+    );
   }
 
   // To get the image that user select it
@@ -191,103 +206,6 @@ class AuthController extends GetxController {
       _pickedImage = File(pickedImageFile.path);
       update();
     }
-  }
-
-  // For bottom sheet
-  void showBottomSheet() {
-    Get.bottomSheet(
-      Directionality(
-        textDirection: TextDirection.rtl,
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              buildText(
-                text: 'تم إرسال رمز التحقق من رقم الهاتف',
-                size: 20.0,
-                weight: FontWeight.bold
-              ),
-              const SizedBox(height: 10.0),
-              Container(
-                child: PinPut(
-                  fieldsCount: 6,
-                  controller: codeController,
-                  onSubmit: (String code) {
-                    _verifyOTP(code);
-                    Get.focusScope!.unfocus();
-                  },
-                  submittedFieldDecoration: _pinPutDecoration(20.0),
-                  selectedFieldDecoration: _pinPutDecoration(15.0),
-                  followingFieldDecoration: _pinPutDecoration(5.0),
-                ),
-              ),
-              const SizedBox(height: 10.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  buildText(
-                    text: 'سيتم إعادة إرسال الرمز بعد ',
-                    size: 18.0,
-                    color: Colors.black
-                  ),
-                  buildCustomTimer(),
-                  buildText(
-                    text: ' ث',
-                    size: 18.0,
-                    color: Colors.black
-                  ),
-                ],
-              ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-              //     buildText(text: 'لم يصلك الرمز؟', size: 18.0),
-              //     TextButton(
-              //       onPressed: () {
-              //       },
-              //       child: buildText(
-              //         text: 'إعادة الإرسال',
-              //         size: 18,
-              //         isUpperCase: true,
-              //         weight: FontWeight.bold,
-              //         color: Get.theme.accentColor
-              //       ),
-              //     ),
-              //   ],
-              // ),
-            ],
-          ),
-        ),
-      ),
-      backgroundColor: Colors.white
-    );
-  }
-
-  // For pinPut box decoration
-  BoxDecoration _pinPutDecoration(double raduis) {
-    return BoxDecoration(
-      border: Border.all(width: 2.0, color: Get.theme.accentColor),
-      borderRadius: BorderRadius.circular(raduis),
-    );
-  }
-
-  // For CustomTimer
-  Widget buildCustomTimer() {
-    return CustomTimer(
-      from: Duration(seconds: 30),
-      to: Duration(seconds: 0),
-      onBuildAction: CustomTimerAction.auto_start,
-      builder: (CustomTimerRemainingTime remaining) {
-        return buildText(
-          text: remaining.seconds,
-          size: 18.0,
-          color: Get.theme.accentColor,
-          weight: FontWeight.bold,
-        );
-      },
-    );
   }
 
   ///save user to local db and set it as logged in sharedPref

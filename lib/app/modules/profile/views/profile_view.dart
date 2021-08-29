@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:logger/logger.dart';
 import 'package:shop_fever/app/data/models/user_model.dart';
 import 'package:shop_fever/app/routes/app_pages.dart';
 import 'package:shop_fever/app/utils/components.dart';
@@ -10,9 +9,9 @@ class ProfileView extends GetView<ProfileController> {
   final String profile = 'https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80';
   final String cover = 'https://timelinecovers.pro/facebook-cover/download/blue-bubbles-facebook-cover.jpg';
   final String photo = 'https://www.weddingear.com/media/catalog/product/cache/1/thumbnail/600x/17f82f742ffe127f42dca9de82fb58b1/b/r/bridesmaid-gift-ideas-personalized-tumbler-25.jpg';
-  final UserModel user = Get.arguments;
   @override
   Widget build(BuildContext context) {
+    final UserModel user = Get.arguments ?? controller.currentUser;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -27,19 +26,20 @@ class ProfileView extends GetView<ProfileController> {
             onPressed: () => Get.back(),
           ),
           actions: [
-            // show this if it's other profile
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.favorite_border,
-                color: Colors.white
+            if (user.phone != controller.currentUser.phone)
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.favorite_border,
+                  color: Colors.white
+                ),
               ),
-            ),
             IconButton(
               onPressed: () => showBottomSheet(),
-              icon: const Icon(
-                //Icons.shortcut_outlined, // if other user profile
-                Icons.more_vert, // if it's my profile
+              icon: Icon(
+                user.phone != controller.currentUser.phone
+                ? Icons.shortcut_outlined
+                : Icons.more_vert,
                 color: Colors.white
               ),
             ),

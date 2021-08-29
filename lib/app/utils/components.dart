@@ -65,10 +65,11 @@ Widget buildMaterialButton({
         text: text,
         size: 22.0,
         color: Colors.white,
+        weight: FontWeight.bold
       ),
       color: Get.theme.accentColor,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0)
+        borderRadius: BorderRadius.circular(15.0),
       ),
     ),
   );

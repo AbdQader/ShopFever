@@ -28,4 +28,15 @@ class SharedPref
       return false;
     }
   }
+  
+  ///save user as logged out
+  static bool setUserAsLoggedOut() {
+    try {
+      storage.write(STORAGE_USER_LOGGED_KEY, false);
+      return true;
+    } catch(error) {
+      return false;
+    }
+  }
+
 }

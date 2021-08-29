@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shop_fever/app/data/models/product_model.dart';
+import 'package:shop_fever/app/routes/app_pages.dart';
 import 'package:shop_fever/app/utils/components.dart';
 
 class SpecialProductItem extends StatelessWidget {
@@ -11,7 +12,7 @@ class SpecialProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () => Get.toNamed(AppPages.PRODUCT_DETAILS, arguments: productModel),
       child: Column(
         children: [
           Card(

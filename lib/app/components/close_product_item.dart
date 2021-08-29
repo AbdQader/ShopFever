@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shop_fever/app/data/models/product_model.dart';
+import 'package:shop_fever/app/routes/app_pages.dart';
 import 'package:shop_fever/app/utils/components.dart';
 
 class CloseProductItem extends StatelessWidget {
 
   final ProductModel productModel;
-
   const CloseProductItem({required this.productModel});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () => Get.toNamed(AppPages.PRODUCT_DETAILS, arguments: productModel),
       child: Container(
         width: 190.0,
         height: 290.0,
