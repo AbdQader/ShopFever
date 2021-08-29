@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:shop_fever/app/data/models/product_model.dart';
 
 class RecentlyAddedProductItem extends StatelessWidget {
 
-  final String image;
-  const RecentlyAddedProductItem({required this.image});
+  final ProductModel productModel;
+  const RecentlyAddedProductItem({required this.productModel});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,7 @@ class RecentlyAddedProductItem extends StatelessWidget {
         padding: EdgeInsets.only(bottom: 10.0),
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: NetworkImage(image),
+            image: NetworkImage(productModel.photos[0]),
             fit: BoxFit.cover,
           ),
           borderRadius: BorderRadius.circular(30.0),

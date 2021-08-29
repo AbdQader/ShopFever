@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shop_fever/app/data/models/product_model.dart';
 import 'package:shop_fever/app/utils/components.dart';
 
 class SpecialProductItem extends StatelessWidget {
   
-  final String title;
-  final String image;
-  final double price;
-
-  const SpecialProductItem({
-    required this.title,
-    required this.image,
-    required this.price,
-  });
+  final ProductModel productModel;
+  const SpecialProductItem({required this.productModel});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +19,7 @@ class SpecialProductItem extends StatelessWidget {
             child: Container(
               width: 190.0,
               height: 300.0,
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0),
               clipBehavior: Clip.antiAliasWithSaveLayer,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.0),
@@ -37,19 +31,19 @@ class SpecialProductItem extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10.0),
                     child: Image(
                       height: 220,
-                      image: NetworkImage(image),
+                      image: NetworkImage(productModel.photos[0]),
                       fit: BoxFit.cover,
                     ),
                   ),
                   const SizedBox(height: 5.0),
                   buildText(
-                    text: title,
+                    text: productModel.name,
                     size: 20.0,
                     weight: FontWeight.bold,
                     overflow: TextOverflow.ellipsis,
                   ),
                   buildText(
-                    text: '$price ILS',
+                    text: '${productModel.price} ILS',
                     size: 18.0,
                     color: Get.theme.accentColor,
                     weight: FontWeight.bold,

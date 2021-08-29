@@ -12,9 +12,6 @@ import '../../../utils/components.dart';
 
 class HomeView extends GetView<HomeController> {
   final String userImage = 'https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80';
-  final String productImage = 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZHVjdHxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80';
-  final String pImage = 'https://www.weddingear.com/media/catalog/product/cache/1/thumbnail/600x/17f82f742ffe127f42dca9de82fb58b1/b/r/bridesmaid-gift-ideas-personalized-tumbler-25.jpg';
-  final String photo = 'https://cdn0.iconfinder.com/data/icons/transportation-icons-rounded/110/Old-Car-2-512.png';
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -54,7 +51,7 @@ class HomeView extends GetView<HomeController> {
           builder: (controller) => Padding(
             padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
             child: ListView(
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               children: [
                 SizedBox(
                   height: 120.0,
@@ -76,7 +73,7 @@ class HomeView extends GetView<HomeController> {
                   height: 235.0,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    physics: BouncingScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     itemCount: controller.users.length,
                     itemBuilder: (BuildContext context, int index) {
                       return UserItem(
@@ -93,12 +90,10 @@ class HomeView extends GetView<HomeController> {
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     physics: BouncingScrollPhysics(),
-                    itemCount: 10,
+                    itemCount: controller.specialProducts.length,
                     itemBuilder: (BuildContext context, int index) {
                       return SpecialProductItem(
-                        title: 'عصير فاخر',
-                        image: pImage,
-                        price: 79.9
+                        productModel: controller.specialProducts[index],
                       );
                     },
                   ),
@@ -110,9 +105,11 @@ class HomeView extends GetView<HomeController> {
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     physics: BouncingScrollPhysics(),
-                    itemCount: 10,
+                    itemCount: controller.products.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return RecentlyAddedProductItem(image: productImage);
+                      return RecentlyAddedProductItem(
+                        productModel: controller.products[index]
+                      );
                     },
                   ),
                 ),

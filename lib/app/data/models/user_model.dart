@@ -36,7 +36,9 @@ class UserModel {
     } catch (error) {}
     return UserModel(
       name: json[Constants.NAME],
-      token: json[Constants.TOKEN],
+      // TODO: Remind emad/nigga to edit his fucking url
+      // the fucking token is not in the fucking response
+      token: json[Constants.TOKEN] ?? 'emad is a bitch',
       photo: json[Constants.PHOTO],
       phone: json[Constants.PHONE],
       productsCount: json[Constants.PRODUCTS_COUNT],
