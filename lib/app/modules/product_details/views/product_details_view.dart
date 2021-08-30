@@ -3,12 +3,14 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:shop_fever/app/data/models/product_model.dart';
 import 'package:shop_fever/app/utils/components.dart';
 import '../controllers/product_details_controller.dart';
 
 class ProductDetailsView extends GetView<ProductDetailsController> {
   final String desc = 'هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها التطبيق. إذا كنت تحتاج إلى عدد أكبر من الفقرات يتيح لك مولد النص العربى زيادة عدد الفقرات كما تريد، النص لن يبدو مقسما ولا يحوي أخطاء لغوية، مولد النص العربى مفيد لمصممي المواقع على وجه الخصوص، حيث يحتاج العميل فى كثير من الأحيان أن يطلع على صورة حقيقية لتصميم الموقع.';
   final String profile = 'https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80';
+  final ProductModel product = Get.arguments;
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -49,7 +51,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                   background: Stack(
                     children: [
                       CarouselSlider(
-                        items: controller.images.map((image) {
+                        items: product.photos.map((image) {
                           return Image(
                             image: NetworkImage(image),
                             width: double.infinity,
@@ -69,7 +71,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                         bottom: 20,
                         right: 165,
                         child: DotsIndicator(
-                          dotsCount: controller.images.length,
+                          dotsCount: product.photos.length,
                           position: controller.currentIndex.toDouble(),
                           decorator: DotsDecorator(
                             size: Size.square(8.0),
@@ -90,7 +92,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         buildText(
-                          text: 'مثلجات ايس كريم',
+                          text: product.name,
                           size: 24.0,
                           color: Colors.black,
                           weight: FontWeight.bold
@@ -100,7 +102,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             buildText(
-                              text: '35 ILS',
+                              text: '${product.price} ILS',
                               size: 24.0,
                               color: Get.theme.accentColor,
                               weight: FontWeight.bold
@@ -117,7 +119,10 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                         ),
                         const SizedBox(height: 20.0),
                         const Divider(height: 40.0),
-                        buildText(text: desc, size: 20.0),
+                        buildText(
+                          text: product.description,
+                          size: 20.0
+                        ),
                         const SizedBox(height: 20.0),
                         Row(
                           children: [
@@ -144,24 +149,24 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                               ),
                               children: [
                                 buildTableRow(
-                                  title: 'رقم السلعة',
-                                  value: '7260',
-                                  icon: Icons.label_outline
+                                  title: 'البيع',
+                                  value: product.sold ? 'مباع' : 'متوفر',
+                                  icon: Icons.sell_outlined
                                 ),
                                 buildTableRow(
                                   title: 'الحالة',
-                                  value: 'جديد',
+                                  value: product.isItUsed ? 'مستخدم' : 'جديد',
+                                  icon: Icons.inventory_2_outlined
+                                ),
+                                buildTableRow(
+                                  title: 'الفئة',
+                                  value: controller.productCategory(product.categoryId),
                                   icon: Icons.label_outline
                                 ),
                                 buildTableRow(
-                                  title: 'القسم',
-                                  value: 'طعام',
-                                  icon: Icons.label_outline
-                                ),
-                                buildTableRow(
-                                  title: 'النوع',
-                                  value: 'بضان',
-                                  icon: Icons.label_outline
+                                  title: 'التاريخ',
+                                  value: controller.productPublishDate(product.publishDate),
+                                  icon: Icons.date_range
                                 ),
                               ],
                             ),

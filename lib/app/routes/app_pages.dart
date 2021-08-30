@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-
 import 'package:shop_fever/app/modules/add_product/bindings/add_product_binding.dart';
 import 'package:shop_fever/app/modules/add_product/views/add_product_view.dart';
 import 'package:shop_fever/app/modules/auth/bindings/auth_binding.dart';
@@ -50,7 +49,7 @@ class AppPages {
     GetPage(
       name: _Paths.FAVORITES,
       page: () => FavoritesView(),
-      //binding: ProfileBinding(),
+      binding: ProfileBinding(),
     ),
     GetPage(
       name: _Paths.PRODUCT_DETAILS,
