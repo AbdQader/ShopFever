@@ -8,11 +8,11 @@ import 'package:shop_fever/app/utils/components.dart';
 import '../controllers/product_details_controller.dart';
 
 class ProductDetailsView extends GetView<ProductDetailsController> {
-  final String desc = 'هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها التطبيق. إذا كنت تحتاج إلى عدد أكبر من الفقرات يتيح لك مولد النص العربى زيادة عدد الفقرات كما تريد، النص لن يبدو مقسما ولا يحوي أخطاء لغوية، مولد النص العربى مفيد لمصممي المواقع على وجه الخصوص، حيث يحتاج العميل فى كثير من الأحيان أن يطلع على صورة حقيقية لتصميم الموقع.';
   final String profile = 'https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80';
   final ProductModel product = Get.arguments;
   @override
   Widget build(BuildContext context) {
+    controller.markProductAsWatched(product.id);
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -33,10 +33,14 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                 ),
                 actions: [
                   IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.favorite_border,
-                      color: Colors.white
+                    onPressed: () => controller.markProductAsFavorites(product.id),
+                    icon: Icon(
+                      controller.isFavorites
+                        ? Icons.favorite
+                        : Icons.favorite_border,
+                      color: controller.isFavorites
+                        ? Colors.redAccent
+                        : Colors.white
                     ),
                   ),
                   IconButton(

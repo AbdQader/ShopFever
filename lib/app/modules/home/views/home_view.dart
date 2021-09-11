@@ -122,8 +122,8 @@ class HomeView extends GetView<HomeController> {
                   child: GridView.builder(
                     shrinkWrap: true,
                     physics: const BouncingScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200,
+                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 200.0,
                       childAspectRatio: 2/3.2,
                       crossAxisSpacing: 10.0,
                       mainAxisSpacing: 10.0,

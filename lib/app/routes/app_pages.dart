@@ -4,6 +4,8 @@ import 'package:shop_fever/app/modules/add_product/views/add_product_view.dart';
 import 'package:shop_fever/app/modules/auth/bindings/auth_binding.dart';
 import 'package:shop_fever/app/modules/auth/views/login_view.dart';
 import 'package:shop_fever/app/modules/auth/views/register_view.dart';
+import 'package:shop_fever/app/modules/category/bindings/category_binding.dart';
+import 'package:shop_fever/app/modules/category/views/category_view.dart';
 import 'package:shop_fever/app/modules/home/bindings/home_binding.dart';
 import 'package:shop_fever/app/modules/home/views/home_view.dart';
 import 'package:shop_fever/app/modules/product_details/bindings/product_details_binding.dart';
@@ -24,6 +26,7 @@ class AppPages {
   static const FAVORITES = Routes.FAVORITES;
   static const PRODUCT_DETAILS = Routes.PRODUCT_DETAILS;
   static const ADD_PRODUCT = Routes.ADD_PRODUCT;
+  static const CATEGORY = Routes.CATEGORY;
 
   static final routes = [
     GetPage(
@@ -60,6 +63,11 @@ class AppPages {
       name: _Paths.ADD_PRODUCT,
       page: () => AddProductView(),
       binding: AddProductBinding(),
+    ),
+    GetPage(
+      name: _Paths.CATEGORY,
+      page: () => CategoryView(),
+      binding: CategoryBinding(),
     ),
   ];
 }

@@ -12,6 +12,7 @@ class Constants {
   static String SPECIAL_PRODUCTS_URL = '${BASE_URL}/api/v1/products/special';
   static String CLOSE_PRODUCTS_URL = '${BASE_URL}/api/v1/products/near';
   static String FAVORITE_PRODUCTS_URL = '${BASE_URL}/api/v1/products/favourite';
+  static String WATCHED_PRODUCTS_URL = '${BASE_URL}/api/v1/products/watched';
 
   // API keywords
   static String API_AUTHORIZATION = 'authorization';

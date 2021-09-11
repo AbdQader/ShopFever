@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shop_fever/app/data/models/category_model.dart';
+import 'package:shop_fever/app/routes/app_pages.dart';
 import 'package:shop_fever/app/utils/components.dart';
 
 class CategoryItem extends StatelessWidget {
@@ -11,7 +13,7 @@ class CategoryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () => Get.toNamed(AppPages.CATEGORY, arguments: categoryModel),
       child: Column(
         children: [
           Padding(

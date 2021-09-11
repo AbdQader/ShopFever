@@ -24,14 +24,14 @@ class OtpView extends StatelessWidget {
           children: [
             Container(
               padding: const EdgeInsets.only(top: 30.0),
-              alignment: Alignment.topLeft,
+              alignment: Alignment.topRight,
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(15.0)
                 ),
                 child: IconButton(
-                  icon: Icon(Icons.arrow_forward),
+                  icon: Icon(Icons.arrow_back),
                   onPressed: () => Get.back(),
                 ),
               ),
