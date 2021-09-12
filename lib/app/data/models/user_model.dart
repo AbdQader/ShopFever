@@ -8,16 +8,18 @@ part 'user_model.g.dart';
 @HiveType(typeId : 1)
 class UserModel {
   @HiveField(0)
-  final String token;
+  final String id;
   @HiveField(1)
-  final String name;
+  final String token;
   @HiveField(2)
-  final String photo;
+  final String name;
   @HiveField(3)
-  final String phone;
+  final String photo;
   @HiveField(4)
-  final String? productPhoto;
+  final String phone;
   @HiveField(5)
+  final String? productPhoto;
+  @HiveField(6)
   final int? productsCount;
 
   const UserModel({
@@ -26,7 +28,8 @@ class UserModel {
     required this.photo,
     required this.phone,
     this.productsCount,
-    this.productPhoto
+    this.productPhoto,
+    required this.id,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -36,6 +39,7 @@ class UserModel {
     } catch (error) {}
     return UserModel(
       name: json[Constants.NAME],
+      id: json[Constants.ID],
       // TODO: Remind emad/nigga to edit his fucking url
       // the fucking token is not in the fucking response
       token: json[Constants.TOKEN] ?? 'emad is a bitch',
