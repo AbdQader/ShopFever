@@ -1,9 +1,13 @@
+import 'package:logger/logger.dart';
 import 'package:shop_fever/app/utils/constants.dart';
 
 class HelperFunctions {
   ///check if status of api call was success
   static bool checkIfStatusSuccess(dynamic response)
-    => response[Constants.API_STATUS].toString().toLowerCase() == Constants.API_SUCCESS;
+  {
+    String status = response[Constants.API_STATUS] ?? 'success';
+    return status.toLowerCase() == Constants.API_SUCCESS;
+  }
 
   ///safe api calls and auto handling for errors
   static Future<void> safeApiCall({
