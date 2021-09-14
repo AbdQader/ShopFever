@@ -51,6 +51,7 @@ class UserModel {
   }
 
   Map<String, dynamic> toJson() => {
+    Constants.ID: id,
     Constants.TOKEN: token,
     Constants.NAME: name,
     Constants.PHONE: phone,

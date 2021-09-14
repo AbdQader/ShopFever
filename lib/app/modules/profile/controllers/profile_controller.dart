@@ -20,7 +20,9 @@ class ProfileController extends GetxController with SingleGetTickerProviderMixin
   // For Favorites Products
   List<ProductModel> _products = [];
   List<ProductModel> get products => _products;
-  var _productsIds = [];
+  
+  // For Favorites Products Ids
+  List<String> _productsIds = [];
 
   // For TabBar
   late final TabController tabController;
@@ -49,7 +51,6 @@ class ProfileController extends GetxController with SingleGetTickerProviderMixin
       onSuccess: (response)
       {
         response['products'].forEach((productId) {
-          print('abd => ProductId: ${productId['_id']}');
           _productsIds.add(productId['_id']);
         });
         getProducts();
@@ -64,9 +65,14 @@ class ProfileController extends GetxController with SingleGetTickerProviderMixin
     Get.find<HomeController>().products.forEach((product) {
       _productsIds.forEach((productId) {
         if (product.id == productId)
-          _products.add(product); print('abd => Product: ${product.name}');
+          _products.add(product);
       });
     });
+  }
+
+  // to check if the product is favorite or not
+  bool isFavorite(String productId) {
+    return _productsIds.contains(productId);
   }
 
   @override

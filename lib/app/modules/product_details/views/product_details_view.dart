@@ -17,8 +17,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: GetBuilder<ProductDetailsController>(
-          builder: (controller) => CustomScrollView(
+        body: CustomScrollView(
             slivers: [
               SliverAppBar(
                 expandedHeight: 270.0,
@@ -33,12 +32,12 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                 ),
                 actions: [
                   IconButton(
-                    onPressed: () => controller.markProductAsFavorites(product.id),
+                    onPressed: () => controller.addProductToFavorites(product.id),
                     icon: Icon(
-                      controller.isFavorites
+                      controller.isFavorite(product.id)
                         ? Icons.favorite
                         : Icons.favorite_border,
-                      color: controller.isFavorites
+                      color: controller.isFavorite(product.id)
                         ? Colors.redAccent
                         : Colors.white
                     ),
@@ -186,7 +185,6 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                 ]),
               ),
             ],
-          ),
         ),
         floatingActionButton: buildFloatingActionButton(
           title: 'تواصل معي',

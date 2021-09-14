@@ -1,4 +1,3 @@
-import 'package:logger/logger.dart';
 import 'package:shop_fever/app/utils/constants.dart';
 
 class HelperFunctions {
