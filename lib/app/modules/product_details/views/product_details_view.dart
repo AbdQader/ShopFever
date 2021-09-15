@@ -23,8 +23,8 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                 backgroundColor: Colors.black.withOpacity(0.2),
                 leading: IconButton(
                   icon: const Icon(
-                    Icons.arrow_back,
-                    color: Colors.white
+                      Icons.arrow_back,
+                      color: Colors.white
                   ),
                   onPressed: () => Get.back(),
                 ),
@@ -33,19 +33,19 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                   IconButton(
                     onPressed: () => controller.markProductAsFavorites(controller.product.id),
                     icon: Icon(
-                      controller.isFavorites
-                        ? Icons.favorite
-                        : Icons.favorite_border,
-                      color: controller.isFavorites
-                        ? Colors.redAccent
-                        : Colors.white
+                        controller.isFavorites
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color: controller.isFavorites
+                            ? Colors.redAccent
+                            : Colors.white
                     ),
                   ),
                   IconButton(
                     onPressed: () {},
                     icon: const Icon(
-                      Icons.shortcut_outlined,
-                      color: Colors.white
+                        Icons.shortcut_outlined,
+                        color: Colors.white
                     ),
                   ),
                 ],
@@ -94,20 +94,20 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         buildText(
-                          text: controller.product.name,
-                          size: 24.0,
-                          color: Colors.black,
-                          weight: FontWeight.bold
+                            text: controller.product.name,
+                            size: 24.0,
+                            color: Colors.black,
+                            weight: FontWeight.bold
                         ),
                         const SizedBox(height: 20.0),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             buildText(
-                              text: controller.product.currency.startsWith('s') ? '${controller.product.price}ILS' : "${controller.product.price}Dollar",
-                              size: 24.0,
-                              color: Get.theme.accentColor,
-                              weight: FontWeight.bold
+                                text: controller.product.currency.startsWith('s') ? '${controller.product.price}ILS' : "${controller.product.price}Dollar",
+                                size: 24.0,
+                                color: Get.theme.accentColor,
+                                weight: FontWeight.bold
                             ),
                             const Spacer(),
                             const Icon(Icons.favorite_border, size: 20.0),
@@ -122,8 +122,8 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                         const SizedBox(height: 20.0),
                         const Divider(height: 40.0),
                         buildText(
-                          text: controller.product.description,
-                          size: 20.0
+                            text: controller.product.description,
+                            size: 20.0
                         ),
                         const SizedBox(height: 20.0),
                         Row(
@@ -151,24 +151,24 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                               ),
                               children: [
                                 buildTableRow(
-                                  title: 'البيع',
-                                  value: controller.product.sold ? 'مباع' : 'متوفر',
-                                  icon: Icons.sell_outlined
+                                    title: 'البيع',
+                                    value: controller.product.sold ? 'مباع' : 'متوفر',
+                                    icon: Icons.sell_outlined
                                 ),
                                 buildTableRow(
-                                  title: 'الحالة',
-                                  value: controller.product.isItUsed ? 'مستخدم' : 'جديد',
-                                  icon: Icons.inventory_2_outlined
+                                    title: 'الحالة',
+                                    value: controller.product.isItUsed ? 'مستخدم' : 'جديد',
+                                    icon: Icons.inventory_2_outlined
                                 ),
                                 buildTableRow(
-                                  title: 'الفئة',
-                                  value: controller.productCategory(controller.product.categoryId),
-                                  icon: Icons.label_outline
+                                    title: 'الفئة',
+                                    value: controller.productCategory(controller.product.categoryId),
+                                    icon: Icons.label_outline
                                 ),
                                 buildTableRow(
-                                  title: 'التاريخ',
-                                  value: controller.productPublishDate(controller.product.publishDate),
-                                  icon: Icons.date_range
+                                    title: 'التاريخ',
+                                    value: controller.productPublishDate(controller.product.publishDate),
+                                    icon: Icons.date_range
                                 ),
                               ],
                             ),
@@ -187,10 +187,10 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
           ),
         ),
         floatingActionButton: buildFloatingActionButton(
-          title: 'تواصل معي',
-          icon: Icons.phone,
-          width: 150.0,
-          onPressed: () {}
+            title: 'تواصل معي',
+            icon: Icons.phone,
+            width: 150.0,
+            onPressed: () {}
         ),
       ),
     );
@@ -203,32 +203,32 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
     required IconData icon,
   }) {
     return TableRow(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Row(
-            children: [
-              Icon(
-                icon,
-                size: 24.0,
-              ),
-              const SizedBox(width: 10.0),
-              buildText(
-                text: title,
-                size: 20.0,
-              ),
-            ],
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Row(
+              children: [
+                Icon(
+                  icon,
+                  size: 24.0,
+                ),
+                const SizedBox(width: 10.0),
+                buildText(
+                  text: title,
+                  size: 20.0,
+                ),
+              ],
+            ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: buildText(
-            text: value,
-            size: 18.0,
-            weight: FontWeight.bold
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: buildText(
+                text: value,
+                size: 18.0,
+                weight: FontWeight.bold
+            ),
           ),
-        ),
-      ]
+        ]
     );
   }
 
@@ -268,10 +268,10 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
       subtitle: Column(
         children: [
           buildStarRating(
-            starCount: 5,
-            rating: 2.5,
-            onRatingChanged: (rating) {},
-            color: Colors.amber
+              starCount: 5,
+              rating: 2.5,
+              onRatingChanged: (rating) {},
+              color: Colors.amber
           ),
           Row(
             children: [
@@ -321,7 +321,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
     }
 
     return Row(
-      children: List.generate(starCount, (index) => buildStar(index))
+        children: List.generate(starCount, (index) => buildStar(index))
     );
   }
 

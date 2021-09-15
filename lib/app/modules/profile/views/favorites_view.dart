@@ -49,9 +49,7 @@ class FavoritesView extends GetView<ProfileController> {
                 itemCount: controller.products.length,
                 itemBuilder: (BuildContext context, int index) {
                   return FavoritesItem(
-                    photo: controller.products[index].photos[0],
-                    title: controller.products[index].name,
-                    subtitle: controller.products[index].price.toString(),
+                    data: controller.products[index],
                   );
                 },
               ),
@@ -60,9 +58,7 @@ class FavoritesView extends GetView<ProfileController> {
                 itemCount: controller.users.length,
                 itemBuilder: (BuildContext context, int index) {
                   return FavoritesItem(
-                    photo: controller.users[index].photo,
-                    title: controller.users[index].name,
-                    subtitle: controller.users[index].productsCount.toString(),
+                    data: controller.users[index],
                   );
                 },
               ),

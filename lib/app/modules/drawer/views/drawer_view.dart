@@ -98,7 +98,7 @@ class DrawerView extends GetView<HomeController> {
     required Function onTap,
   }) {
     return ListTile(
-      onTap: onTap(),
+      onTap: () => onTap(),
       title: buildText(text: title, size: 18.0),
       leading: Icon(icon, color: Colors.black54),
       dense: true,

@@ -120,11 +120,11 @@ class ProductDetailsController extends GetxController {
                 Get.find<HomeController>().currentUser.token
               })
               :
-           BaseClient.post(
+          BaseClient.post(
               Constants.FAVORITE_PRODUCTS_URL + '/$productId',
               headers: {
                 Constants.API_AUTHORIZATION:
-                    Get.find<HomeController>().currentUser.token
+                Get.find<HomeController>().currentUser.token
               });
         },
         onSuccess: (response) {
@@ -135,7 +135,7 @@ class ProductDetailsController extends GetxController {
         onError: (error) {
           ErrorHandler.handleError(error);
           isFavLoading = false;
-          },
+        },
         onLoading: () {
           isFavLoading = true;
           update();
@@ -144,16 +144,16 @@ class ProductDetailsController extends GetxController {
 
   void markProductAsWatched(String productId) {
     HelperFunctions.safeApiCall(
-        execute: () async {
-          return await BaseClient.post(
-              Constants.WATCHED_PRODUCTS_URL + '/$productId',
-              headers: {
-                Constants.API_AUTHORIZATION:
-                    Get.find<HomeController>().currentUser.token
-              });
-        },
-        onSuccess: (response) {
-          print('abd => Response: $response');
-        },);
+      execute: () async {
+        return await BaseClient.post(
+            Constants.WATCHED_PRODUCTS_URL + '/$productId',
+            headers: {
+              Constants.API_AUTHORIZATION:
+              Get.find<HomeController>().currentUser.token
+            });
+      },
+      onSuccess: (response) {
+        print('abd => Response: $response');
+      },);
   }
 }
