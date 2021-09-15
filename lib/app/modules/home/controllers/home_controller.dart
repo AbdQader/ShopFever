@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:location/location.dart';
+import 'package:logger/logger.dart';
 import 'package:shop_fever/app/data/local/my_hive.dart';
 import 'package:shop_fever/app/data/models/category_model.dart';
 import 'package:shop_fever/app/data/models/product_model.dart';
@@ -13,6 +14,9 @@ class HomeController extends GetxController {
   // For Current User
   UserModel? _currentUser;
   UserModel get currentUser => _currentUser!;
+
+  //the product that user clicked on to go to the detailes
+  late ProductModel currentProduct;
 
   // For User Location
   Location location = Location();
@@ -207,6 +211,7 @@ class HomeController extends GetxController {
         update();
       },
       onError: (error) {
+        Logger().e(error);
         ErrorHandler.handleError(error);
       },
       onLoading: () {}

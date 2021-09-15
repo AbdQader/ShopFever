@@ -19,9 +19,6 @@ class AddProductController extends GetxController {
   ImagePicker _picker = ImagePicker();
   List<File> images = <File>[];
 
-  //List<XFile> pickedImages = [];
-  //File? pickedImage;
-
   // For DropdownButton
   late final List<CategoryModel> categoryList;
   final statusList = ['جديد', 'مستخدم'];
@@ -148,16 +145,5 @@ class AddProductController extends GetxController {
       return 'هذا الحقل مطلوب';
     return null;
   }
-
-// void pickImages() async {
-//   try {
-//     var images = await _picker.pickMultiImage();
-//     if (images != null)
-//       pickedImages = images;
-//     update();
-//   } catch (error) {
-//     print('abd => MultiImagePicker Error: $error');
-//   }
-// }
 
 }

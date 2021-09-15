@@ -17,10 +17,10 @@ class HelperFunctions {
     Function? onLoading
   }) async {
     try {
-      //execute function that user passed
-      var response = await execute();
       if(onLoading != null)
         onLoading();
+      //execute function that user passed
+      var response = await execute();
       onSuccess(response);
       return;
     } catch (error) {

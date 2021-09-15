@@ -8,11 +8,8 @@ import 'package:shop_fever/app/utils/components.dart';
 import '../controllers/product_details_controller.dart';
 
 class ProductDetailsView extends GetView<ProductDetailsController> {
-  final String profile = 'https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80';
-  final ProductModel product = Get.arguments;
   @override
   Widget build(BuildContext context) {
-    controller.markProductAsWatched(product.id);
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -32,8 +29,9 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                   onPressed: () => Get.back(),
                 ),
                 actions: [
+                  controller.isFavLoading ? SizedBox(height: 15,width: 15,child: Center(child: CircularProgressIndicator())) :
                   IconButton(
-                    onPressed: () => controller.markProductAsFavorites(product.id),
+                    onPressed: () => controller.markProductAsFavorites(controller.product.id),
                     icon: Icon(
                       controller.isFavorites
                         ? Icons.favorite
@@ -55,7 +53,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                   background: Stack(
                     children: [
                       CarouselSlider(
-                        items: product.photos.map((image) {
+                        items: controller.product.photos.map((image) {
                           return Image(
                             image: NetworkImage(image),
                             width: double.infinity,
@@ -75,7 +73,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                         bottom: 20,
                         right: 165,
                         child: DotsIndicator(
-                          dotsCount: product.photos.length,
+                          dotsCount: controller.product.photos.length,
                           position: controller.currentIndex.toDouble(),
                           decorator: DotsDecorator(
                             size: Size.square(8.0),
@@ -96,7 +94,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         buildText(
-                          text: product.name,
+                          text: controller.product.name,
                           size: 24.0,
                           color: Colors.black,
                           weight: FontWeight.bold
@@ -106,7 +104,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             buildText(
-                              text: '${product.price} ILS',
+                              text: controller.product.currency.startsWith('s') ? '${controller.product.price}ILS' : "${controller.product.price}Dollar",
                               size: 24.0,
                               color: Get.theme.accentColor,
                               weight: FontWeight.bold
@@ -114,17 +112,17 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                             const Spacer(),
                             const Icon(Icons.favorite_border, size: 20.0),
                             const SizedBox(width: 10.0),
-                            const Text('23'),
+                            Text(controller.favTimes.toString()),
                             const SizedBox(width: 20.0),
                             const Icon(Icons.remove_red_eye_outlined, size: 20.0),
                             const SizedBox(width: 10.0),
-                            const Text('2078'),
+                            Text(controller.watchedTimes.toString()),
                           ],
                         ),
                         const SizedBox(height: 20.0),
                         const Divider(height: 40.0),
                         buildText(
-                          text: product.description,
+                          text: controller.product.description,
                           size: 20.0
                         ),
                         const SizedBox(height: 20.0),
@@ -154,22 +152,22 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                               children: [
                                 buildTableRow(
                                   title: 'البيع',
-                                  value: product.sold ? 'مباع' : 'متوفر',
+                                  value: controller.product.sold ? 'مباع' : 'متوفر',
                                   icon: Icons.sell_outlined
                                 ),
                                 buildTableRow(
                                   title: 'الحالة',
-                                  value: product.isItUsed ? 'مستخدم' : 'جديد',
+                                  value: controller.product.isItUsed ? 'مستخدم' : 'جديد',
                                   icon: Icons.inventory_2_outlined
                                 ),
                                 buildTableRow(
                                   title: 'الفئة',
-                                  value: controller.productCategory(product.categoryId),
+                                  value: controller.productCategory(controller.product.categoryId),
                                   icon: Icons.label_outline
                                 ),
                                 buildTableRow(
                                   title: 'التاريخ',
-                                  value: controller.productPublishDate(product.publishDate),
+                                  value: controller.productPublishDate(controller.product.publishDate),
                                   icon: Icons.date_range
                                 ),
                               ],
@@ -261,7 +259,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
       onTap: () {},
       leading: CircleAvatar(
         radius: 30.0,
-        backgroundImage: NetworkImage(profile),
+        backgroundImage: NetworkImage(controller.product.user.photo),
       ),
       title: buildText(
         text: 'بضان ابن بضان',

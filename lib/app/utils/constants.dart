@@ -14,6 +14,10 @@ class Constants {
   static String CLOSE_PRODUCTS_URL = '${BASE_URL}/api/v1/products/near';
   static String FAVORITE_PRODUCTS_URL = '${BASE_URL}/api/v1/products/favourite';
   static String WATCHED_PRODUCTS_URL = '${BASE_URL}/api/v1/products/watched';
+  static String CHECK_IF_FAVOURITE = '${BASE_URL}/api/v1/products/favourite/isFavourite' ;
+  static String WATCHED_COUNT = '${BASE_URL}/api/v1/products/watched/count' ;
+  static String FAVOURITE_COUNT = '${BASE_URL}/api/v1/products/favourite/count' ;
+  static String DELETE_FROM_FAVOURITE = '${BASE_URL}/api/v1/products/favourite' ;
 
   // API keywords
   static String API_AUTHORIZATION = 'authorization';
