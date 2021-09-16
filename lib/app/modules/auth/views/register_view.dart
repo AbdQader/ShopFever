@@ -36,6 +36,7 @@ class RegisterView extends GetView<AuthController> {
                     ),
                     const SizedBox(height: 30.0),
                     GetBuilder<AuthController>(
+                      id: 'PickImage',
                       builder: (controller) => Center(
                         child: CircleAvatar(
                           radius: 50,

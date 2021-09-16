@@ -49,7 +49,7 @@ class AddProductController extends GetxController {
     super.onClose();
   }
 
-  //get categories names
+  ///to get categories names
   List<String> getCategories() {
     List<String> cate = <String>[];
     categoryList.forEach((element) {
@@ -58,7 +58,7 @@ class AddProductController extends GetxController {
     return cate;
   }
 
-  // Submit the product data
+  ///Submit the product data to the database
   submit() async {
     // Close the keyboard
     Get.focusScope!.unfocus();
@@ -83,16 +83,12 @@ class AddProductController extends GetxController {
       // send the data to the database
       var formData = FormData({
         Constants.USER_ID: (await MyHive.getCurrentUser())!.id,
-        Constants.CATEGORY_ID:
-            categoryList.firstWhere((element) => element.name == category).id,
+        Constants.CATEGORY_ID: categoryList.firstWhere((element) => element.name == category).id,
         Constants.NAME: nameController.value.text,
         Constants.DESCRIPTION: descriptionController.value.text,
         Constants.PRICE: int.parse(priceController.value.text),
         Constants.CURRENCY: currency.contains('USD') ? 'd' : 's',
-        Constants.IS_IT_USED:
-            statusList.indexWhere((element) => element == status) == 0
-                ? false
-                : true,
+        Constants.IS_IT_USED: statusList.indexWhere((element) => element == status) == 0 ? false : true,
         Constants.PHOTOS: photos
       });
 
@@ -103,8 +99,7 @@ class AddProductController extends GetxController {
 
       HelperFunctions.safeApiCall(
         execute: () {
-          return BaseClient.post(Constants.CREATE_PRODUCT_URL,
-              headers: headers, body: formData);
+          return BaseClient.post(Constants.CREATE_PRODUCT_URL, headers: headers, body: formData);
         },
         onSuccess: (response) {
           //showSnackbar('تمت الاضافة', 'تم اضافة المنتج بنجاح');
@@ -123,12 +118,9 @@ class AddProductController extends GetxController {
     update();
   }
 
-  // To get the image that user select it
+  ///to get the image that user select it
   Future<void> pickImage() async {
-    final pickedImages = await _picker.pickMultiImage(
-        //imageQuality: 50,
-        //maxWidth: 150
-        );
+    final pickedImages = await _picker.pickMultiImage();
     if (pickedImages != null) {
       //to only allow 10 images
       pickedImages.forEach((element) {
@@ -139,7 +131,7 @@ class AddProductController extends GetxController {
     }
   }
 
-  // For TextFormField Validation
+  ///for TextFormField validation
   String? validateValue(String? value) {
     if (value.toString().trim().isEmpty || value == null)
       return 'هذا الحقل مطلوب';

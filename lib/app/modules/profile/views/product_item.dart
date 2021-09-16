@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shop_fever/app/data/models/product_model.dart';
+import 'package:shop_fever/app/modules/home/controllers/home_controller.dart';
+import 'package:shop_fever/app/routes/app_pages.dart';
 import 'package:shop_fever/app/utils/components.dart';
 
 class ProductItem extends StatelessWidget {
@@ -10,7 +12,10 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Get.find<HomeController>().currentProduct = productModel;
+        Get.toNamed(AppPages.PRODUCT_DETAILS);
+      },
       child: Column(
         children: [
           Card(
@@ -18,7 +23,7 @@ class ProductItem extends StatelessWidget {
             child: Container(
               width: 190.0,
               height: 260.0,
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0),
               clipBehavior: Clip.antiAliasWithSaveLayer,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.0),
@@ -38,11 +43,11 @@ class ProductItem extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.favorite_border, size: 15.0),
+                      const Icon(Icons.favorite_border, size: 15.0),
                       const SizedBox(width: 10.0),
                       Text('23'),
                       const SizedBox(width: 50.0),
-                      Icon(Icons.remove_red_eye_outlined, size: 15.0),
+                      const Icon(Icons.remove_red_eye_outlined, size: 15.0),
                       const SizedBox(width: 10.0),
                       Text('2078'),
                     ],

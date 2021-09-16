@@ -32,7 +32,7 @@ class AddProductView extends GetView<AddProductController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     buildText(
-                      text: 'صور السلعة',
+                      text: 'الصور',
                       size: 24.0,
                       weight: FontWeight.bold
                     ),
@@ -83,14 +83,17 @@ class AddProductView extends GetView<AddProductController> {
                               Positioned(
                                 top: -7,
                                 left: -7,
-                                child: InkWell(onTap: () => controller.removeImage(index),child: Container(
+                                child: InkWell(
+                                  onTap: () => controller.removeImage(index),
+                                  child: Container(
                                     decoration: BoxDecoration(
                                       color: Colors.redAccent,
                                       borderRadius: BorderRadius.circular(100.0),
                                     ),
-                                  child: Icon(Icons.close,size: 13,color: Colors.white,),
-                                  padding: EdgeInsets.all(8)
-                                ),),
+                                    child: const Icon(Icons.close, size: 13, color: Colors.white),
+                                    padding: const EdgeInsets.all(8.0)
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -99,7 +102,7 @@ class AddProductView extends GetView<AddProductController> {
                     ),
                     const SizedBox(height: 20.0),
                     buildText(
-                      text: 'اسم السلعة',
+                      text: 'الاسم',
                       size: 24.0,
                       weight: FontWeight.bold
                     ),
@@ -112,7 +115,7 @@ class AddProductView extends GetView<AddProductController> {
                     ),
                     const SizedBox(height: 20.0),
                     buildText(
-                      text: 'تفاصيل السلعة',
+                      text: 'التفاصيل',
                       size: 24.0,
                       weight: FontWeight.bold
                     ),
@@ -124,7 +127,7 @@ class AddProductView extends GetView<AddProductController> {
                     ),
                     const SizedBox(height: 20.0),
                     buildText(
-                      text: 'سعر السلعة',
+                      text: 'السعر',
                       size: 24.0,
                       weight: FontWeight.bold
                     ),
@@ -137,19 +140,19 @@ class AddProductView extends GetView<AddProductController> {
                     ),
                     const SizedBox(height: 20.0),
                     buildText(
-                      text: 'نوع العملة',
+                      text: 'العملة',
                       size: 24.0,
                       weight: FontWeight.bold
                     ),
                     buildDropdownButton(
-                      hint: 'اختار العملة',
+                      hint: 'اختر العملة',
                       validate: (value) => controller.validateValue(value),
                       onChanged: (value) => controller.currency = value,
                       items: controller.currencyList,
                     ),
                     const SizedBox(height: 20.0),
                     buildText(
-                      text: 'حالة السلعة',
+                      text: 'الحالة',
                       size: 24.0,
                       weight: FontWeight.bold
                     ),
@@ -161,7 +164,7 @@ class AddProductView extends GetView<AddProductController> {
                     ),
                     const SizedBox(height: 20.0),
                     buildText(
-                      text: 'فئة السلعة',
+                      text: 'الفئة',
                       size: 24.0,
                       weight: FontWeight.bold
                     ),

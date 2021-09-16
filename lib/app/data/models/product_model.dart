@@ -1,4 +1,3 @@
-import 'package:logger/logger.dart';
 import 'package:shop_fever/app/data/models/user_model.dart';
 
 class ProductModel {

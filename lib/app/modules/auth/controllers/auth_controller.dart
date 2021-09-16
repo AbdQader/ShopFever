@@ -204,7 +204,7 @@ class AuthController extends GetxController {
         await _picker.pickImage(source: src, imageQuality: 50, maxWidth: 150);
     if (pickedImageFile != null) {
       _pickedImage = File(pickedImageFile.path);
-      update();
+      update(['PickImage']);
     }
   }
 

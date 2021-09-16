@@ -45,7 +45,7 @@ void showAlertDialog(String title, String content) {
 
 // For ProgressIndicator
 Widget showProgressIndicator() {
-  return Center(child: const CircularProgressIndicator());
+  return Center(child: const CircularProgressIndicator(color: Color(0xFF57bf72)));
 }
 
 // For MaterialButton

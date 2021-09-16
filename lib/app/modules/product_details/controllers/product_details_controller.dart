@@ -55,10 +55,10 @@ class ProductDetailsController extends GetxController {
     }, onSuccess: (response) {
       isFavorites = response['isFavorite'];
       isFavLoading = false;
-      update();
+      update(['Favorites']);
     },onError: (error){
       isFavLoading = false;
-      update();
+      update(['Favorites']);
     });
   }
 
@@ -69,7 +69,7 @@ class ProductDetailsController extends GetxController {
       return BaseClient.get(Constants.WATCHED_COUNT+'/'+product.id,headers: headers);
     }, onSuccess: (response) {
       watchedTimes = response['count'];
-      update();
+      update(['WatchedTimes']);
     },onError: (error){
       Logger().e(error);
     });
@@ -82,16 +82,16 @@ class ProductDetailsController extends GetxController {
       return BaseClient.get(Constants.FAVOURITE_COUNT+'/'+product.id,headers: headers);
     }, onSuccess: (response) {
       favTimes = response['count'];
-      update();
+      update(['FavTimes']);
     },onError: (error){
       Logger().e(error);
     });
   }
 
-  // to change image slider index
+  ///to change image slider index
   void changeCurrentIndex(int index) {
     currentIndex = index;
-    update();
+    update(['ImageSlider']);
   }
 
   // to get the product category name
@@ -130,7 +130,7 @@ class ProductDetailsController extends GetxController {
         onSuccess: (response) {
           isFavorites = !isFavorites;
           isFavLoading = false;
-          update();
+          update(['Favorites']);
         },
         onError: (error) {
           ErrorHandler.handleError(error);
@@ -138,7 +138,7 @@ class ProductDetailsController extends GetxController {
         },
         onLoading: () {
           isFavLoading = true;
-          update();
+          update(['Favorites']);
         });
   }
 
@@ -156,4 +156,5 @@ class ProductDetailsController extends GetxController {
         print('abd => Response: $response');
       },);
   }
+
 }

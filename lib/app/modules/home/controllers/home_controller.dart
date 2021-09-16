@@ -128,7 +128,7 @@ class HomeController extends GetxController {
           //_categories.value.add(CategoryModel.fromJson(category));
           _categories.add(CategoryModel.fromJson(category));
         });
-        update();
+        update(['Category']);
       },
       onError: (error) => ErrorHandler.handleError(error),
       onLoading: () {}
@@ -148,7 +148,7 @@ class HomeController extends GetxController {
           //_products.value.add(ProductModel.fromJson(product));
           _products.add(ProductModel.fromJson(product));
         });
-        update();
+        update(['Products']);
       },
       onError: (error) => ErrorHandler.handleError(error),
       onLoading: () {}
@@ -168,7 +168,7 @@ class HomeController extends GetxController {
           //_users.value.add(UserModel.fromJson(user));
           _users.add(UserModel.fromJson(user));
         });
-        update();
+        update(['SpecialUsers']);
       },
       onError: (error) => ErrorHandler.handleError(error),
       onLoading: () {}
@@ -188,7 +188,7 @@ class HomeController extends GetxController {
           //_specialProducts.value.add(ProductModel.fromJson(product));
           _specialProducts.add(ProductModel.fromJson(product));
         });
-        update();
+        update(['SpecialProducts']);
       },
       onError: (error) => ErrorHandler.handleError(error),
       onLoading: () {}
@@ -208,7 +208,7 @@ class HomeController extends GetxController {
           //_closeProducts.value.add(ProductModel.fromJson(product));
           _closeProducts.add(ProductModel.fromJson(product));
         });
-        update();
+        update(['CloseProducts']);
       },
       onError: (error) {
         Logger().e(error);

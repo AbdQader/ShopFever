@@ -27,14 +27,14 @@ class FavoritesView extends GetView<ProfileController> {
               tabs: [
                 Tab(
                   child: buildText(
-                    text: 'السلع (${controller.products.length})',
+                    text: 'السلع (${controller.favProducts.length})',
                     size: 18.0,
                     color: Colors.black
                   ),
                 ),
                 Tab(
                   child: buildText(
-                    text: 'المشتركين (${controller.users.length})',
+                    text: 'المشتركين (${controller.favUsers.length})',
                     size: 18.0,
                     color: Colors.black
                   ),
@@ -46,19 +46,19 @@ class FavoritesView extends GetView<ProfileController> {
             children: [
               ListView.builder(
                 physics: const BouncingScrollPhysics(),
-                itemCount: controller.products.length,
+                itemCount: controller.favProducts.length,
                 itemBuilder: (BuildContext context, int index) {
                   return FavoritesItem(
-                    data: controller.products[index],
+                    data: controller.favProducts[index],
                   );
                 },
               ),
               ListView.builder(
                 physics: const BouncingScrollPhysics(),
-                itemCount: controller.users.length,
+                itemCount: controller.favUsers.length,
                 itemBuilder: (BuildContext context, int index) {
                   return FavoritesItem(
-                    data: controller.users[index],
+                    data: controller.favUsers[index],
                   );
                 },
               ),

@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shop_fever/app/data/models/user_model.dart';
+import 'package:shop_fever/app/modules/profile/views/product_item.dart';
 import 'package:shop_fever/app/routes/app_pages.dart';
 import 'package:shop_fever/app/utils/components.dart';
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
-  final String profile = 'https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80';
-  final String cover = 'https://timelinecovers.pro/facebook-cover/download/blue-bubbles-facebook-cover.jpg';
-  final String photo = 'https://www.weddingear.com/media/catalog/product/cache/1/thumbnail/600x/17f82f742ffe127f42dca9de82fb58b1/b/r/bridesmaid-gift-ideas-personalized-tumbler-25.jpg';
   @override
   Widget build(BuildContext context) {
     final UserModel user = Get.arguments ?? controller.currentUser;
@@ -26,7 +24,7 @@ class ProfileView extends GetView<ProfileController> {
             onPressed: () => Get.back(),
           ),
           actions: [
-            if (user.phone != controller.currentUser.phone)
+            if (user.id != controller.currentUser.id)
               IconButton(
                 onPressed: () {},
                 icon: const Icon(
@@ -35,11 +33,15 @@ class ProfileView extends GetView<ProfileController> {
                 ),
               ),
             IconButton(
-              onPressed: () => showBottomSheet(),
+              onPressed: () {
+                user.id == controller.currentUser.id
+                  ? showBottomSheet()
+                  : null;
+              },
               icon: Icon(
-                user.phone != controller.currentUser.phone
-                ? Icons.shortcut_outlined
-                : Icons.more_vert,
+                user.id == controller.currentUser.id
+                  ? Icons.more_vert
+                  : Icons.shortcut_outlined,
                 color: Colors.white
               ),
             ),
@@ -58,7 +60,7 @@ class ProfileView extends GetView<ProfileController> {
                       height: 200.0,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: NetworkImage(cover),
+                          image: NetworkImage('https://timelinecovers.pro/facebook-cover/download/blue-bubbles-facebook-cover.jpg'),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -89,7 +91,7 @@ class ProfileView extends GetView<ProfileController> {
                 child: Row(
                   children: [
                     TextButton.icon(
-                      onPressed: () {},
+                      onPressed: null,
                       icon: Icon(
                         Icons.favorite_border,
                         size: 30.0,
@@ -156,7 +158,7 @@ class ProfileView extends GetView<ProfileController> {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.only(top: 10.0),
+          padding: const EdgeInsets.only(top: 10.0),
           child: TabBar(
             labelColor: Colors.black,
             unselectedLabelColor: Colors.grey[600],
@@ -177,7 +179,7 @@ class ProfileView extends GetView<ProfileController> {
                 child: Tab(
                   child: Column(
                     children: [
-                      Icon(Icons.add, size: 30.0),
+                      const Icon(Icons.add, size: 30.0),
                       buildText(text: 'المزيد', size: 20.0),
                     ],
                   ),
@@ -191,27 +193,43 @@ class ProfileView extends GetView<ProfileController> {
         Expanded(
           child: TabBarView(
             children: [
-              GridView.builder(
-                shrinkWrap: true,
-                padding: EdgeInsets.all(0.0),
-                physics: BouncingScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 200,
-                  mainAxisExtent: 270,
-                  childAspectRatio: 2/3,
-                  crossAxisSpacing: 0.0,
-                  mainAxisSpacing: 0.0,
+              controller.userProducts.isEmpty
+               ? Container(
+                  padding: const EdgeInsets.only(top: 30.0),
+                  alignment: Alignment.topCenter,
+                  child: buildText(
+                    text: 'لم تعرض شيء للبيع حتى هذه اللحظة!',
+                    size: 24.0,
+                    weight: FontWeight.bold
+                  ),
+                )
+               : GridView.builder(
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.all(0.0),
+                  physics: const BouncingScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 200,
+                    mainAxisExtent: 270,
+                    childAspectRatio: 2/3,
+                    crossAxisSpacing: 0.0,
+                    mainAxisSpacing: 0.0,
+                  ),
+                  itemCount: controller.userProducts.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ProductItem(
+                      productModel: controller.userProducts[index],
+                    );
+                  },
                 ),
-                itemCount: 10,
-                itemBuilder: (BuildContext context, int index) {
-                  return buildProfileProduct(
-                    title: 'عصير فاخر',
-                    image: photo,
-                    price: 79.9
-                  );
-                },
+              Container(
+                padding: const EdgeInsets.only(top: 30.0),
+                alignment: Alignment.topCenter,
+                child: buildText(
+                  text: 'لا يوجد بيانات حتى الان!',
+                  size: 24.0,
+                  weight: FontWeight.bold
+                ),
               ),
-              Center(child: buildText(text: 'Nothing To Show', size: 30.0))
             ],
             controller: controller.tabController,
           ),
@@ -254,75 +272,8 @@ class ProfileView extends GetView<ProfileController> {
         child: icon,
       );
     }
-
     return Row(
       children: List.generate(starCount, (index) => buildStar(index))
-    );
-  }
-
-  // For Profile Product
-  Widget buildProfileProduct({
-    required String title,
-    required String image,
-    required double price,
-  }) {
-    return InkWell(
-      onTap: () {},
-      child: Column(
-        children: [
-          Card(
-            elevation: 3.0,
-            child: Container(
-              width: 190.0,
-              height: 260.0,
-              padding: EdgeInsets.all(8.0),
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: Image(
-                      height: 170,
-                      image: NetworkImage(image),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  const SizedBox(height: 5.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.favorite_border, size: 15.0),
-                      const SizedBox(width: 10.0),
-                      Text('23'),
-                      const SizedBox(width: 50.0),
-                      Icon(Icons.remove_red_eye_outlined, size: 15.0),
-                      const SizedBox(width: 10.0),
-                      Text('2078'),
-                    ],
-                  ),
-                  buildText(
-                    text: title,
-                    size: 18.0,
-                    weight: FontWeight.bold,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  buildText(
-                    text: '$price ILS',
-                    size: 16.0,
-                    color: Get.theme.accentColor,
-                    weight: FontWeight.bold,
-                    overflow: TextOverflow.ellipsis
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 

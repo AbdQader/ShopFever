@@ -13,13 +13,17 @@ class ProfileController extends GetxController with SingleGetTickerProviderMixin
   // For Current User
   UserModel currentUser = Get.find<HomeController>().currentUser;
 
+  // For Current User Products
+  List<ProductModel> _userProducts = [];
+  List<ProductModel> get userProducts => _userProducts;
+
   // For Favorites Users
-  List<UserModel> _users = [];
-  List<UserModel> get users => _users;
+  List<UserModel> _favUsers = [];
+  List<UserModel> get favUsers => _favUsers;
 
   // For Favorites Products
-  List<ProductModel> _products = [];
-  List<ProductModel> get products => _products;
+  List<ProductModel> _favProducts = [];
+  List<ProductModel> get favProducts => _favProducts;
   
   // For Favorites Products Ids
   List<String> _productsIds = [];
@@ -32,12 +36,21 @@ class ProfileController extends GetxController with SingleGetTickerProviderMixin
     super.onInit();
     tabController = TabController(length: 2, vsync: this);
     getProductsIds();
+    getUserProducts();
   }
 
-  // to get favorites users
+  ///to get the current user products
+  void getUserProducts() {
+    Get.find<HomeController>().products.forEach((product) {
+      if (currentUser.id == product.id)
+        _userProducts.add(product);
+    });
+  }
+
+  ///to get favorites users
   void getUsers() {}
 
-  // to get favorites products ids
+  ///to get favorites products ids
   void getProductsIds() {
     HelperFunctions.safeApiCall(
       execute: () async
@@ -60,19 +73,14 @@ class ProfileController extends GetxController with SingleGetTickerProviderMixin
     );
   }
 
-  // to get favorites products
+  ///to get favorites products
   void getProducts() {
     Get.find<HomeController>().products.forEach((product) {
       _productsIds.forEach((productId) {
         if (product.id == productId)
-          _products.add(product);
+          _favProducts.add(product);
       });
     });
-  }
-
-  // to check if the product is favorite or not
-  bool isFavorite(String productId) {
-    return _productsIds.contains(productId);
   }
 
   @override

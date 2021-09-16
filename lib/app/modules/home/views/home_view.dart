@@ -49,13 +49,14 @@ class HomeView extends GetView<HomeController> {
             ),
           ],
         ),
-        body: GetBuilder<HomeController>(
-          builder: (controller) => Padding(
-            padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
-            child: ListView(
-              physics: const BouncingScrollPhysics(),
-              children: [
-                SizedBox(
+        body: Padding(
+          padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
+          child: ListView(
+            physics: const BouncingScrollPhysics(),
+            children: [
+              GetBuilder<HomeController>(
+                id: 'Category',
+                builder: (controller) => SizedBox(
                   height: 120.0,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
@@ -68,10 +69,13 @@ class HomeView extends GetView<HomeController> {
                     },
                   ),
                 ),
-                buildDivider(),
-                buildListHeader('مشتركين', 'مميزين'),
-                const SizedBox(height: 5.0),
-                SizedBox(
+              ),
+              buildDivider(),
+              buildListHeader('مشتركين', 'مميزين'),
+              const SizedBox(height: 5.0),
+              GetBuilder<HomeController>(
+                id: 'SpecialUsers',
+                builder: (controller) => SizedBox(
                   height: 235.0,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
@@ -84,10 +88,13 @@ class HomeView extends GetView<HomeController> {
                     },
                   ),
                 ),
-                const SizedBox(height: 10.0),
-                buildDivider(),
-                buildListHeader('منتجات', 'خاصة'),
-                SizedBox(
+              ),
+              const SizedBox(height: 10.0),
+              buildDivider(),
+              buildListHeader('منتجات', 'خاصة'),
+              GetBuilder<HomeController>(
+                id: 'SpecialProducts',
+                builder: (controller) => SizedBox(
                   height: 320.0,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
@@ -100,9 +107,12 @@ class HomeView extends GetView<HomeController> {
                     },
                   ),
                 ),
-                buildDivider(),
-                buildListHeader('منتجات', 'اضيفت حديثا'),
-                SizedBox(
+              ),
+              buildDivider(),
+              buildListHeader('منتجات', 'اضيفت حديثا'),
+              GetBuilder<HomeController>(
+                id: 'Products',
+                builder: (controller) => SizedBox(
                   height: 120.0,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
@@ -115,9 +125,12 @@ class HomeView extends GetView<HomeController> {
                     },
                   ),
                 ),
-                buildDivider(),
-                buildListHeader('منتجات', 'قريبة منك'),
-                Container(
+              ),
+              buildDivider(),
+              buildListHeader('منتجات', 'قريبة منك'),
+              GetBuilder<HomeController>(
+                id: 'CloseProducts',
+                builder: (controller) => Container(
                   margin: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: GridView.builder(
                     shrinkWrap: true,
@@ -136,8 +149,8 @@ class HomeView extends GetView<HomeController> {
                     },
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
         drawer: DrawerView(),

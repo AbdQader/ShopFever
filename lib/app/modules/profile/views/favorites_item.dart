@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shop_fever/app/data/models/user_model.dart';
+import 'package:shop_fever/app/modules/home/controllers/home_controller.dart';
 import 'package:shop_fever/app/routes/app_pages.dart';
 import 'package:shop_fever/app/utils/components.dart';
 
@@ -11,11 +12,16 @@ class FavoritesItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var isUserData = data is UserModel;
+    bool isUserData = data is UserModel;
     return InkWell(
-      onTap: () => isUserData
-        ? Get.toNamed(AppPages.PROFILE, arguments: data)
-        : Get.toNamed(AppPages.PRODUCT_DETAILS, arguments: data),
+      onTap: () {
+        if (isUserData) {
+          Get.toNamed(AppPages.PROFILE, arguments: data);
+        } else {
+          Get.find<HomeController>().currentProduct = data;
+          Get.toNamed(AppPages.PRODUCT_DETAILS);
+        }
+      },
       child: Card(
         elevation: 3.0,
         margin: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0.0),

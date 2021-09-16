@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:get/get.dart';
-import 'package:logger/logger.dart';
 import 'package:shop_fever/app/utils/helperFunctions.dart';
 import 'app_exceptions.dart';
 
@@ -16,21 +15,20 @@ class BaseClient
   }
 
   ///safe post api request
-  static Future<dynamic> post(String url, {dynamic body,Map<String, String>? headers,Map<String,dynamic>? query}) async {
-      var response = await GetConnect().httpClient.post(url,body: body,headers: headers,query: query).timeout(duration);
-      Logger().e(response.body);
-      return _processResponse(response);
+  static Future<dynamic> post(String url, {dynamic body, Map<String, String>? headers, Map<String,dynamic>? query}) async {
+    var response = await GetConnect().httpClient.post(url, body: body, headers: headers, query: query).timeout(duration);
+    return _processResponse(response);
   }
 
   ///safe delete api request
-  static Future<dynamic> delete(String url, {Map<String,dynamic>? query,Map<String, String>? headers}) async {
-    var response = await GetConnect().httpClient.delete(url, headers: headers,query: query).timeout(duration);
+  static Future<dynamic> delete(String url, {Map<String,dynamic>? query, Map<String, String>? headers}) async {
+    var response = await GetConnect().httpClient.delete(url, headers: headers, query: query).timeout(duration);
     return _processResponse(response);
   }
 
   //safe patch request
-  static Future<dynamic> patch(String url, {dynamic body,Map<String, String>? headers,Map<String,dynamic>? query}) async {
-    var response = await GetConnect().httpClient.patch(url,body: body,headers: headers,query: query).timeout(duration);
+  static Future<dynamic> patch(String url, {dynamic body, Map<String, String>? headers, Map<String,dynamic>? query}) async {
+    var response = await GetConnect().httpClient.patch(url, body: body, headers: headers, query: query).timeout(duration);
     return _processResponse(response);
   }
 
