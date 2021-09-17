@@ -10,12 +10,19 @@ import 'package:shop_fever/app/utils/helperFunctions.dart';
 
 class ProfileController extends GetxController with SingleGetTickerProviderMixin {
 
-  // For Current User
+  // For Home Controller
+  final _homeController = Get.find<HomeController>();
+
+  // For Users
   UserModel currentUser = Get.find<HomeController>().currentUser;
+  UserModel? otherUser;
 
   // For Current User Products
   List<ProductModel> _userProducts = [];
   List<ProductModel> get userProducts => _userProducts;
+
+  //List<ProductModel> _otherUserProducts = [];
+  //List<ProductModel> get otherUserserProducts => _otherUserProducts;
 
   // For Favorites Users
   List<UserModel> _favUsers = [];
@@ -36,16 +43,52 @@ class ProfileController extends GetxController with SingleGetTickerProviderMixin
     super.onInit();
     tabController = TabController(length: 2, vsync: this);
     getProductsIds();
-    getUserProducts();
+    //getUserProducts();
   }
 
-  ///to get the current user products
-  void getUserProducts() {
-    Get.find<HomeController>().products.forEach((product) {
-      if (currentUser.id == product.id)
-        _userProducts.add(product);
-    });
+  @override
+  void onReady() {
+    super.onReady();
+    //getUserProducts();
   }
+
+  ///to get the user products
+  void getUserProducts() {
+    if (otherUser == null)
+    {
+      _userProducts.clear();
+      _homeController.products.forEach((product) {
+        if (currentUser.id == product.user.id)
+          _userProducts.add(product);
+      });
+      update(['UserProduct']);
+    } else {
+      _userProducts.clear();
+      _homeController.products.forEach((product) {
+        if (otherUser!.id == product.user.id)
+          _userProducts.add(product);
+      });
+      update(['UserProduct']);
+    }
+  }
+
+  // ///to get the current user products
+  // void getUserProducts() {
+  //   _homeController.products.forEach((product) {
+  //     if (currentUser.id == product.user.id)
+  //       _userProducts.add(product);
+  //   });
+  //   update(['UserProduct']);
+  // }
+
+  // ///to get the other user products
+  // void getOtherUserProducts() {
+  //   _homeController.products.forEach((product) {
+  //     if (otherUser!.id == product.user.id)
+  //       _otherUserProducts.add(product);
+  //   });
+  //   update(['UserProduct']);
+  // }
 
   ///to get favorites users
   void getUsers() {}
@@ -75,7 +118,7 @@ class ProfileController extends GetxController with SingleGetTickerProviderMixin
 
   ///to get favorites products
   void getProducts() {
-    Get.find<HomeController>().products.forEach((product) {
+    _homeController.products.forEach((product) {
       _productsIds.forEach((productId) {
         if (product.id == productId)
           _favProducts.add(product);
