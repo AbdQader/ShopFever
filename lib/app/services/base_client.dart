@@ -6,7 +6,7 @@ import 'app_exceptions.dart';
 class BaseClient
 {
   //timeout for http request (max time until http done or error will be thrown)
-  static const duration = Duration(seconds: 10);
+  static const duration = Duration(seconds: 30);
 
   ///safe get api request
   static Future<dynamic> get(String url, {Map<String,dynamic>? query,Map<String, String>? headers}) async {

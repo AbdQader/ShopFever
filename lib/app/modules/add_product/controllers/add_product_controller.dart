@@ -97,6 +97,9 @@ class AddProductController extends GetxController {
         Constants.API_AUTHORIZATION :(await MyHive.getCurrentUser())!.token
       };
 
+      Logger().e('Token => ${(await MyHive.getCurrentUser())!.token}');
+      Logger().e('Url => ${Constants.CREATE_PRODUCT_URL}');
+
       HelperFunctions.safeApiCall(
         execute: () {
           return BaseClient.post(Constants.CREATE_PRODUCT_URL, headers: headers, body: formData);
@@ -120,7 +123,9 @@ class AddProductController extends GetxController {
 
   ///to get the image that user select it
   Future<void> pickImage() async {
-    final pickedImages = await _picker.pickMultiImage();
+    final pickedImages = await _picker.pickMultiImage(
+      imageQuality: 30,
+    );
     if (pickedImages != null) {
       //to only allow 10 images
       pickedImages.forEach((element) {
