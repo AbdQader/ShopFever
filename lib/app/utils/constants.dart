@@ -8,6 +8,7 @@ class Constants {
   static String USER_LOCATION_URL = '${BASE_URL}/api/v1/users/location';
   static String CATEGORIES_URL = '${BASE_URL}/api/v1/categories';
   static String PRODUCTS_URL = '${BASE_URL}/api/v1/products';
+  static String USER_PRODUCTS_URL = '${BASE_URL}/api/v1/products/user';
   static String CREATE_PRODUCT_URL = '${BASE_URL}/api/v1/products';
   static String SPECIAL_USERS_URL = '${BASE_URL}/api/v1/users/special';
   static String SPECIAL_PRODUCTS_URL = '${BASE_URL}/api/v1/products/special';
