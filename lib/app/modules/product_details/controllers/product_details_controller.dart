@@ -37,13 +37,12 @@ class ProductDetailsController extends GetxController {
   @override
   void onInit() {
     product = homeController.currentProduct;
+    Logger().e(product.user.name);
     markProductAsWatched(product.id);
-    MyHive.getCurrentUser().then((user) {
-      currentUser = user!;
+    currentUser = homeController.currentUser;
       checkIfProductIsFavourite();
       getWatchedTimes();
       getFavTimes();
-    });
     super.onInit();
   }
 

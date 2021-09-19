@@ -15,6 +15,8 @@ class HomeController extends GetxController {
   UserModel? _currentUser;
   UserModel get currentUser => _currentUser!;
 
+  late UserModel currentClickedUser;
+
   //the product that user clicked on to go to the detailes
   late ProductModel currentProduct;
 
@@ -208,6 +210,7 @@ class HomeController extends GetxController {
           //_closeProducts.value.add(ProductModel.fromJson(product));
           _closeProducts.add(ProductModel.fromJson(product));
         });
+        Logger().e(_closeProducts);
         update(['CloseProducts']);
       },
       onError: (error) {

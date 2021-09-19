@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import 'package:shop_fever/app/data/models/product_model.dart';
 import 'package:shop_fever/app/data/models/user_model.dart';
 import 'package:shop_fever/app/modules/home/controllers/home_controller.dart';
@@ -14,8 +15,7 @@ class ProfileController extends GetxController with SingleGetTickerProviderMixin
   final _homeController = Get.find<HomeController>();
 
   // For Users
-  UserModel currentUser = Get.find<HomeController>().currentUser;
-  UserModel? otherUser;
+  UserModel currentUser = Get.find<HomeController>().currentClickedUser;
 
   // For Current User Products
   List<ProductModel> _userProducts = [];
@@ -42,34 +42,31 @@ class ProfileController extends GetxController with SingleGetTickerProviderMixin
   void onInit() {
     super.onInit();
     tabController = TabController(length: 2, vsync: this);
+    getUserProducts();
     getProductsIds();
     //getUserProducts();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-    //getUserProducts();
-  }
+  bool isTheCurrent()
+    => _homeController.currentUser.id== currentUser.id;
+
 
   ///to get the user products
   void getUserProducts() {
-    if (otherUser == null)
-    {
-      _userProducts.clear();
-      _homeController.products.forEach((product) {
-        if (currentUser.id == product.user.id)
-          _userProducts.add(product);
+    HelperFunctions.safeApiCall(execute: (){
+      var headers = {Constants.API_AUTHORIZATION : Get.find<HomeController>().currentUser.token};
+      return BaseClient.get(Constants.USER_PRODUCTS_URL+'/${currentUser.id}',headers: headers);
+    }, onSuccess: (response){
+      response['products'].forEach((product) {
+        //_products.value.add(ProductModel.fromJson(product));
+        userProducts.add(ProductModel.fromJson(product));
       });
+      Logger().e(userProducts.length);
+      Logger().e(_userProducts.length);
       update(['UserProduct']);
-    } else {
-      _userProducts.clear();
-      _homeController.products.forEach((product) {
-        if (otherUser!.id == product.user.id)
-          _userProducts.add(product);
-      });
-      update(['UserProduct']);
-    }
+    },onError: (error){
+      Logger().e(error);
+    });
   }
 
   // ///to get the current user products

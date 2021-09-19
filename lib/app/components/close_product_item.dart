@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import 'package:shop_fever/app/data/models/product_model.dart';
 import 'package:shop_fever/app/modules/home/controllers/home_controller.dart';
 import 'package:shop_fever/app/routes/app_pages.dart';
@@ -14,6 +15,7 @@ class CloseProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        Logger().e(productModel.toJson());
         Get.find<HomeController>().currentProduct = productModel;
         Get.toNamed(AppPages.PRODUCT_DETAILS);
       },

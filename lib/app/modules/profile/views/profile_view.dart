@@ -9,8 +9,6 @@ import '../controllers/profile_controller.dart';
 class ProfileView extends GetView<ProfileController> {
   @override
   Widget build(BuildContext context) {
-    controller.getUserProducts();
-    final UserModel user = controller.otherUser ?? controller.currentUser;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -25,26 +23,22 @@ class ProfileView extends GetView<ProfileController> {
             onPressed: () => Get.back(),
           ),
           actions: [
-            if (user.id != controller.currentUser.id)
+            if (controller.currentUser.id != controller.currentUser.id)
               IconButton(
                 onPressed: () {},
-                icon: const Icon(
-                  Icons.favorite_border,
-                  color: Colors.white
-                ),
+                icon: const Icon(Icons.favorite_border, color: Colors.white),
               ),
             IconButton(
               onPressed: () {
-                user.id == controller.currentUser.id
-                  ? showBottomSheet()
-                  : null;
+                controller.currentUser.id == controller.currentUser.id
+                    ? showBottomSheet()
+                    : null;
               },
               icon: Icon(
-                user.id == controller.currentUser.id
-                  ? Icons.more_vert
-                  : Icons.shortcut_outlined,
-                color: Colors.white
-              ),
+                  controller.currentUser.id == controller.currentUser.id
+                      ? Icons.more_vert
+                      : Icons.shortcut_outlined,
+                  color: Colors.white),
             ),
           ],
         ),
@@ -61,7 +55,8 @@ class ProfileView extends GetView<ProfileController> {
                       height: 200.0,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: NetworkImage('https://timelinecovers.pro/facebook-cover/download/blue-bubbles-facebook-cover.jpg'),
+                          image: NetworkImage(
+                              'https://timelinecovers.pro/facebook-cover/download/blue-bubbles-facebook-cover.jpg'),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -71,26 +66,23 @@ class ProfileView extends GetView<ProfileController> {
                       right: 30.0,
                       child: CircleAvatar(
                         radius: 40.0,
-                        backgroundImage: NetworkImage(user.photo),
-                      ),
-                    ),
-                    Positioned(
-                      top: 200.0,
-                      right: 150.0,
-                      child: buildText(
-                        text: user.name,
-                        size: 24.0,
-                        color: Colors.black,
-                        weight: FontWeight.bold
+                        backgroundImage:
+                            NetworkImage(controller.currentUser.photo),
                       ),
                     ),
                   ],
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 40.0),
+                padding: EdgeInsets.symmetric(horizontal: 30),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    buildText(
+                        text: controller.currentUser.name,
+                        size: 24.0,
+                        color: Colors.black,
+                        weight: FontWeight.bold),
                     TextButton.icon(
                       onPressed: null,
                       icon: Icon(
@@ -102,20 +94,40 @@ class ProfileView extends GetView<ProfileController> {
                         text: '0',
                         size: 25.0,
                         color: Get.theme.accentColor,
-                      )
+                      ),
                     ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 20.0, right: 40.0),
+                child: Row(
+                  children: [
+                    // TextButton.icon(
+                    //   onPressed: null,
+                    //   icon: Icon(
+                    //     Icons.favorite_border,
+                    //     size: 30.0,
+                    //     color: Get.theme.accentColor,
+                    //   ),
+                    //   label: buildText(
+                    //     text: '0',
+                    //     size: 25.0,
+                    //     color: Get.theme.accentColor,
+                    //   )
+                    // ),
                     const Spacer(),
-                    buildStarRating(
-                      starCount: 5,
-                      rating: 0.0,
-                      onRatingChanged: (rating) {},
-                      color: Colors.amber,
-                    ),
-                    const SizedBox(width: 5.0),
-                    buildText(
-                      text: '(0)',
-                      size: 20.0,
-                    ),
+                    // buildStarRating(
+                    //   starCount: 5,
+                    //   rating: 0.0,
+                    //   onRatingChanged: (rating) {},
+                    //   color: Colors.amber,
+                    // ),
+                    // const SizedBox(width: 5.0),
+                    // buildText(
+                    //   text: '(0)',
+                    //   size: 20.0,
+                    // ),
                   ],
                 ),
               ),
@@ -124,9 +136,8 @@ class ProfileView extends GetView<ProfileController> {
                 padding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 20.0),
                 decoration: BoxDecoration(
                   border: Border(
-                    top: BorderSide(color: Colors.grey[200]!),
-                    bottom: BorderSide(color: Colors.grey[200]!)
-                  ),
+                      top: BorderSide(color: Colors.grey[200]!),
+                      bottom: BorderSide(color: Colors.grey[200]!)),
                 ),
                 child: Row(
                   children: [
@@ -139,17 +150,16 @@ class ProfileView extends GetView<ProfileController> {
               Container(
                 height: 680.0,
                 padding: const EdgeInsets.only(top: 10.0),
-                child: buildTabBar()
+                child: buildTabBar(),
               ),
             ],
           ),
         ),
         floatingActionButton: buildFloatingActionButton(
-          title: 'تواصل معي',
-          icon: Icons.phone,
-          width: 150.0,
-          onPressed: () {}
-        ),
+            title: 'تواصل معي',
+            icon: Icons.phone,
+            width: 150.0,
+            onPressed: () {}),
       ),
     );
   }
@@ -181,7 +191,7 @@ class ProfileView extends GetView<ProfileController> {
                   child: Column(
                     children: [
                       const Icon(Icons.add, size: 30.0),
-                      buildText(text: 'المزيد', size: 20.0),
+                      buildText(text: 'المنتجات المفضلة', size: 20.0),
                     ],
                   ),
                 ),
@@ -191,51 +201,48 @@ class ProfileView extends GetView<ProfileController> {
             indicatorSize: TabBarIndicatorSize.tab,
           ),
         ),
-        Expanded(
-          child: TabBarView(
-            children: [
-              controller.userProducts.isEmpty
-                ? Container(
-                    padding: const EdgeInsets.only(top: 30.0),
-                    alignment: Alignment.topCenter,
-                    child: buildText(
-                      text: 'لم تعرض شيء للبيع حتى هذه اللحظة!',
-                      size: 24.0,
-                      weight: FontWeight.bold
-                    ),
-                  )
-                : GetBuilder<ProfileController>(
-                    id: 'UserProduct',
-                    builder: (controller) => GridView.builder(
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.all(0.0),
-                      physics: const BouncingScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 200,
-                        mainAxisExtent: 270,
-                        childAspectRatio: 2/3,
-                        crossAxisSpacing: 0.0,
-                        mainAxisSpacing: 0.0,
+        GetBuilder<ProfileController>(
+          id: 'UserProduct',
+          builder: (controller) => Expanded(
+            child: TabBarView(
+              children: [
+                controller.userProducts.isEmpty
+                    ? Container(
+                        padding: const EdgeInsets.only(top: 30.0),
+                        alignment: Alignment.topCenter,
+                        child: buildText(
+                            text: 'لم تعرض شيء للبيع حتى هذه اللحظة!',
+                            size: 24.0,
+                            weight: FontWeight.bold),
+                      )
+                    : GridView.builder(
+                        shrinkWrap: true,
+                        padding: const EdgeInsets.all(0.0),
+                        physics: const BouncingScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 2 / 3,
+                          crossAxisSpacing: 0.0,
+                          mainAxisSpacing: 0.0,
+                        ),
+                        itemCount: controller.userProducts.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ProductItem(
+                              productModel: controller.userProducts[index]);
+                        },
                       ),
-                      itemCount: controller.userProducts.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return ProductItem(
-                          productModel: controller.userProducts[index]
-                        );
-                      },
-                    ),
-                  ),
-              Container(
-                padding: const EdgeInsets.only(top: 30.0),
-                alignment: Alignment.topCenter,
-                child: buildText(
-                  text: 'لا يوجد بيانات حتى الان!',
-                  size: 24.0,
-                  weight: FontWeight.bold
+                Container(
+                  padding: const EdgeInsets.only(top: 30.0),
+                  alignment: Alignment.topCenter,
+                  child: buildText(
+                      text: 'لا يوجد بيانات حتى الان!',
+                      size: 24.0,
+                      weight: FontWeight.bold),
                 ),
-              ),
-            ],
-            controller: controller.tabController,
+              ],
+              controller: controller.tabController,
+            ),
           ),
         ),
       ],
@@ -257,8 +264,7 @@ class ProfileView extends GetView<ProfileController> {
           size: 30.0,
           color: Colors.amber,
         );
-      }
-      else if (index > rating - 1 && index < rating) {
+      } else if (index > rating - 1 && index < rating) {
         icon = Icon(
           Icons.star_half,
           size: 30.0,
@@ -276,69 +282,57 @@ class ProfileView extends GetView<ProfileController> {
         child: icon,
       );
     }
-    return Row(
-      children: List.generate(starCount, (index) => buildStar(index))
-    );
+
+    return Row(children: List.generate(starCount, (index) => buildStar(index)));
   }
 
   // For Profile Settings
   void showBottomSheet() {
     Get.bottomSheet(
-      Directionality(
-        textDirection: TextDirection.rtl,
-        child: Wrap(
-          children: [
-            ListTile(
-              onTap: () => Get.back(),
-              title: buildText(
-                text: 'ادارة صفحتي',
-                size: 24.0,
-                weight: FontWeight.bold
+        Directionality(
+          textDirection: TextDirection.rtl,
+          child: Wrap(
+            children: [
+              ListTile(
+                onTap: () => Get.back(),
+                title: buildText(
+                    text: 'ادارة صفحتي', size: 24.0, weight: FontWeight.bold),
+                trailing:
+                    const Icon(Icons.close, size: 35.0, color: Colors.black),
               ),
-              trailing: const Icon(
-                Icons.close,
-                size: 35.0,
-                color: Colors.black
+              buildListTile(
+                title: 'تعديل معلوماتي',
+                icon: Icons.edit_outlined,
+                onPressed: () => Get.back(),
               ),
-            ),
-            buildListTile(
-              title: 'تعديل معلوماتي',
-              icon: Icons.edit_outlined,
-              onPressed: () => Get.back(),
-            ),
-            buildListTile(
-              title: 'السلع والصفحات المفضلة',
-              icon: Icons.favorite_border,
-              onPressed: () {
-                Get.back();
-                Get.toNamed(AppPages.FAVORITES);
-              }
-            ),
-            buildListTile(
-              title: 'ترقية الصفحة',
-              icon: Icons.local_fire_department_outlined,
-              onPressed: () => Get.back(),
-            ),
-          ],
+              buildListTile(
+                  title: 'السلع والصفحات المفضلة',
+                  icon: Icons.favorite_border,
+                  onPressed: () {
+                    Get.back();
+                    Get.toNamed(AppPages.FAVORITES);
+                  }),
+              buildListTile(
+                title: 'ترقية الصفحة',
+                icon: Icons.local_fire_department_outlined,
+                onPressed: () => Get.back(),
+              ),
+            ],
+          ),
         ),
-      ),
-      backgroundColor: Colors.white,
-      barrierColor: Colors.black87,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(15.0),
-          topRight: Radius.circular(15.0)
-        ),
-      )
-    );
+        backgroundColor: Colors.white,
+        barrierColor: Colors.black87,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15.0), topRight: Radius.circular(15.0)),
+        ));
   }
 
   // For ListTile
-  Widget buildListTile({
-    required String title,
-    required IconData icon,
-    required Function() onPressed
-  }) {
+  Widget buildListTile(
+      {required String title,
+      required IconData icon,
+      required Function() onPressed}) {
     return ListTile(
       onTap: onPressed,
       title: buildText(
@@ -349,12 +343,8 @@ class ProfileView extends GetView<ProfileController> {
         icon,
         size: 25.0,
       ),
-      shape: Border(
-        top: BorderSide(color: Colors.grey[300]!, width: 1.0)
-      ),
+      shape: Border(top: BorderSide(color: Colors.grey[300]!, width: 1.0)),
       //contentPadding: EdgeInsets.fromLTRB(16.0, 5.0, 16.0, 5.0),
     );
-    
   }
-
 }
