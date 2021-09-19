@@ -1,6 +1,9 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:shop_fever/app/data/local/my_hive.dart';
@@ -34,6 +37,11 @@ class AddProductController extends GetxController {
   late String category;
   late String status;
   late String currency;
+
+  //for location
+  double? lon;
+  double? lat;
+  String? address;
 
   @override
   void onInit() {
@@ -141,6 +149,40 @@ class AddProductController extends GetxController {
     if (value.toString().trim().isEmpty || value == null)
       return 'هذا الحقل مطلوب';
     return null;
+  }
+
+
+  ///allow user to pick user location
+  ///let user chose start distanation
+  Future<void> pickLocation(BuildContext context) async {
+
+    CameraPosition cameraPosition = CameraPosition(
+      //bearing: 192.8334901395799,
+        target: LatLng(37.43296265331129, -122.08832357078792),
+        //tilt: 59.440717697143555,
+        zoom: 14.151926040649414);
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PlacePicker(
+          apiKey: 'AIzaSyCpG3MH8zjWJpX7X-pWKAotpclwF1I2-e0',
+          autocompleteLanguage: 'ar',
+          enableMapTypeButton: true,
+          onPlacePicked: (result) {
+            if (result.geometry == null) return;
+
+           lat = result.geometry!.location.lat;
+           lon = result.geometry!.location.lng;
+
+            address = result.formattedAddress ?? 'موقع غير معروف';
+            update();
+          },
+          initialPosition: cameraPosition.target,
+          useCurrentLocation: false,
+        ),
+      ),
+    );
   }
 
 }

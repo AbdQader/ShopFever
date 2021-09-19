@@ -49,4 +49,6 @@ class Constants {
   static String PUBLISH_DATE = 'publishDate';
   static String PHOTOS = 'photos';
 
+  static String MAP_KEY = 'AIzaSyCpG3MH8zjWJpX7X-pWKAotpclwF1I2-e0';
+
 }

@@ -174,11 +174,24 @@ class AddProductView extends GetView<AddProductController> {
                       onChanged: (value) => controller.category = value,
                       items: controller.getCategories(),
                     ),
+                    // const SizedBox(height: 30.0),
+                    //
+                    // ElevatedButton(
+                    //   onPressed: (){
+                    //     controller.pickLocation(context);
+                    //   },
+                    //   child: Text('أختر الموقع')
+                    // ),
+                    // const SizedBox(height: 10.0),
+                    // Visibility(
+                    // visible: controller.address != null
+                    //     ,child: Text(controller.address ?? "UNKNOWN"),),
+
                     const SizedBox(height: 30.0),
                     buildMaterialButton(
                       onPressed: () => controller.submit(),
                       text: 'إضافة السلعة'
-                    )
+                    ),
                   ],
                 ),
               ),
