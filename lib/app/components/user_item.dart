@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shop_fever/app/data/models/user_model.dart';
+import 'package:shop_fever/app/modules/profile/controllers/profile_controller.dart';
 import 'package:shop_fever/app/routes/app_pages.dart';
 import 'package:shop_fever/app/utils/components.dart';
 
@@ -13,7 +14,10 @@ class UserItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Get.toNamed(AppPages.PROFILE, arguments: userModel),
+      onTap: () {
+        Get.put(ProfileController()).otherUser = userModel;
+        Get.toNamed(AppPages.PROFILE);
+      },
       child: Stack(
         children: [
           Container(

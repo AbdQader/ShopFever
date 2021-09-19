@@ -13,6 +13,8 @@ import 'package:shop_fever/app/modules/product_details/views/product_details_vie
 import 'package:shop_fever/app/modules/profile/bindings/profile_binding.dart';
 import 'package:shop_fever/app/modules/profile/views/favorites_view.dart';
 import 'package:shop_fever/app/modules/profile/views/profile_view.dart';
+import 'package:shop_fever/app/modules/search/bindings/search_binding.dart';
+import 'package:shop_fever/app/modules/search/views/search_view.dart';
 
 part 'app_routes.dart';
 
@@ -27,6 +29,7 @@ class AppPages {
   static const PRODUCT_DETAILS = Routes.PRODUCT_DETAILS;
   static const ADD_PRODUCT = Routes.ADD_PRODUCT;
   static const CATEGORY = Routes.CATEGORY;
+  static const SEARCH = Routes.SEARCH;
 
   static final routes = [
     GetPage(
@@ -68,6 +71,11 @@ class AppPages {
       name: _Paths.CATEGORY,
       page: () => CategoryView(),
       binding: CategoryBinding(),
+    ),
+    GetPage(
+      name: _Paths.SEARCH,
+      page: () => SearchView(),
+      binding: SearchBinding(),
     ),
   ];
 }

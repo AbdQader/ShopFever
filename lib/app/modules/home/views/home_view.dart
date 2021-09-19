@@ -32,7 +32,7 @@ class HomeView extends GetView<HomeController> {
           iconTheme: IconThemeData(color: Colors.black),
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () => Get.toNamed(AppPages.SEARCH),
               icon: const Icon(Icons.search),
             ),
             IconButton(

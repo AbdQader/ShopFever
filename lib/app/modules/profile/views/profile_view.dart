@@ -9,7 +9,8 @@ import '../controllers/profile_controller.dart';
 class ProfileView extends GetView<ProfileController> {
   @override
   Widget build(BuildContext context) {
-    final UserModel user = Get.arguments ?? controller.currentUser;
+    controller.getUserProducts();
+    final UserModel user = controller.otherUser ?? controller.currentUser;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -194,33 +195,36 @@ class ProfileView extends GetView<ProfileController> {
           child: TabBarView(
             children: [
               controller.userProducts.isEmpty
-               ? Container(
-                  padding: const EdgeInsets.only(top: 30.0),
-                  alignment: Alignment.topCenter,
-                  child: buildText(
-                    text: 'لم تعرض شيء للبيع حتى هذه اللحظة!',
-                    size: 24.0,
-                    weight: FontWeight.bold
+                ? Container(
+                    padding: const EdgeInsets.only(top: 30.0),
+                    alignment: Alignment.topCenter,
+                    child: buildText(
+                      text: 'لم تعرض شيء للبيع حتى هذه اللحظة!',
+                      size: 24.0,
+                      weight: FontWeight.bold
+                    ),
+                  )
+                : GetBuilder<ProfileController>(
+                    id: 'UserProduct',
+                    builder: (controller) => GridView.builder(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.all(0.0),
+                      physics: const BouncingScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 200,
+                        mainAxisExtent: 270,
+                        childAspectRatio: 2/3,
+                        crossAxisSpacing: 0.0,
+                        mainAxisSpacing: 0.0,
+                      ),
+                      itemCount: controller.userProducts.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ProductItem(
+                          productModel: controller.userProducts[index]
+                        );
+                      },
+                    ),
                   ),
-                )
-               : GridView.builder(
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.all(0.0),
-                  physics: const BouncingScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200,
-                    mainAxisExtent: 270,
-                    childAspectRatio: 2/3,
-                    crossAxisSpacing: 0.0,
-                    mainAxisSpacing: 0.0,
-                  ),
-                  itemCount: controller.userProducts.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ProductItem(
-                      productModel: controller.userProducts[index],
-                    );
-                  },
-                ),
               Container(
                 padding: const EdgeInsets.only(top: 30.0),
                 alignment: Alignment.topCenter,

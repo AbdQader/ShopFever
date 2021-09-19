@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shop_fever/app/modules/home/controllers/home_controller.dart';
+import 'package:shop_fever/app/modules/profile/controllers/profile_controller.dart';
 import 'package:shop_fever/app/routes/app_pages.dart';
 import 'package:shop_fever/app/utils/components.dart';
 
@@ -24,7 +25,10 @@ class DrawerView extends GetView<HomeController> {
           Expanded(
             flex: 0,
             child: ListTile(
-              onTap: () => Get.toNamed(AppPages.PROFILE),
+              onTap: () {
+                Get.put(ProfileController()).otherUser = null;
+                Get.toNamed(AppPages.PROFILE);
+              },
               title: buildText(
                 text: controller.currentUser.name,
                 size: 24.0,
