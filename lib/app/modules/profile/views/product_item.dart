@@ -7,7 +7,11 @@ import 'package:shop_fever/app/utils/components.dart';
 
 class ProductItem extends StatelessWidget {
   final ProductModel productModel;
-  const ProductItem({ required this.productModel });
+  final bool isCurrentUser;
+  const ProductItem({
+    required this.productModel,
+    required this.isCurrentUser
+  });
 
   @override
   Widget build(BuildContext context) {

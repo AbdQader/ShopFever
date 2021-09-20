@@ -16,7 +16,6 @@ class ProfileController extends GetxController with SingleGetTickerProviderMixin
 
   // For Users
   UserModel currentUser = Get.find<HomeController>().currentClickedUser;
-  UserModel user = Get.find<HomeController>().currentUser;
 
   // For Current User Products
   List<ProductModel> _userProducts = [];
@@ -33,6 +32,9 @@ class ProfileController extends GetxController with SingleGetTickerProviderMixin
   // For Favorites Products Ids
   List<String> _productsIds = [];
 
+  // For Loading
+  bool isLoading = false;
+
   // For TabBar
   late final TabController tabController;
 
@@ -48,18 +50,24 @@ class ProfileController extends GetxController with SingleGetTickerProviderMixin
 
   ///to get the user products
   void getUserProducts() {
+    Logger().e(Constants.USER_PRODUCTS_URL+'/${currentUser.id}');
+    Logger().e('Token:' + Get.find<HomeController>().currentUser.token);
+    isLoading = true;
     HelperFunctions.safeApiCall(
       execute: () {
         var headers = {Constants.API_AUTHORIZATION : Get.find<HomeController>().currentUser.token};
         return BaseClient.get(Constants.USER_PRODUCTS_URL+'/${currentUser.id}',headers: headers);
       },
       onSuccess: (response) {
-        userProducts.clear();
+        //_userProducts.clear();
         response['products'].forEach((product) {
-          userProducts.add(ProductModel.fromJson(product));
+          _userProducts.add(ProductModel.fromJson(product));
         });
+        isLoading = false;
         update(['UserProduct']);
       },onError: (error) {
+        isLoading = false;
+        ErrorHandler.handleError(error);
         Logger().e(error);
       }
     );

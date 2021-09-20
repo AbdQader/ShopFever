@@ -8,7 +8,6 @@ import '../controllers/profile_controller.dart';
 class ProfileView extends GetView<ProfileController> {
   @override
   Widget build(BuildContext context) {
-    //controller.getUserProducts();
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -23,7 +22,6 @@ class ProfileView extends GetView<ProfileController> {
             onPressed: () => Get.back(),
           ),
           actions: [
-            //controller.user.id != controller.currentUser.id
             !controller.isTheCurrent()
             ? IconButton(
                 onPressed: () {},
@@ -58,8 +56,7 @@ class ProfileView extends GetView<ProfileController> {
                       right: 30.0,
                       child: CircleAvatar(
                         radius: 40.0,
-                        backgroundImage:
-                            NetworkImage(controller.currentUser.photo),
+                        backgroundImage: NetworkImage(controller.currentUser.photo),
                       ),
                     ),
                   ],
@@ -71,10 +68,11 @@ class ProfileView extends GetView<ProfileController> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     buildText(
-                        text: controller.currentUser.name,
-                        size: 24.0,
-                        color: Colors.black,
-                        weight: FontWeight.bold),
+                      text: controller.currentUser.name,
+                      size: 24.0,
+                      color: Colors.black,
+                      weight: FontWeight.bold
+                    ),
                     TextButton.icon(
                       onPressed: null,
                       icon: Icon(
@@ -91,45 +89,46 @@ class ProfileView extends GetView<ProfileController> {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 40.0),
-                child: Row(
-                  children: [
-                    // TextButton.icon(
-                    //   onPressed: null,
-                    //   icon: Icon(
-                    //     Icons.favorite_border,
-                    //     size: 30.0,
-                    //     color: Get.theme.accentColor,
-                    //   ),
-                    //   label: buildText(
-                    //     text: '0',
-                    //     size: 25.0,
-                    //     color: Get.theme.accentColor,
-                    //   )
-                    // ),
-                    const Spacer(),
-                    // buildStarRating(
-                    //   starCount: 5,
-                    //   rating: 0.0,
-                    //   onRatingChanged: (rating) {},
-                    //   color: Colors.amber,
-                    // ),
-                    // const SizedBox(width: 5.0),
-                    // buildText(
-                    //   text: '(0)',
-                    //   size: 20.0,
-                    // ),
-                  ],
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.only(left: 20.0, right: 40.0),
+              //   child: Row(
+              //     children: [
+              //       // TextButton.icon(
+              //       //   onPressed: null,
+              //       //   icon: Icon(
+              //       //     Icons.favorite_border,
+              //       //     size: 30.0,
+              //       //     color: Get.theme.accentColor,
+              //       //   ),
+              //       //   label: buildText(
+              //       //     text: '0',
+              //       //     size: 25.0,
+              //       //     color: Get.theme.accentColor,
+              //       //   )
+              //       // ),
+              //       const Spacer(),
+              //       // buildStarRating(
+              //       //   starCount: 5,
+              //       //   rating: 0.0,
+              //       //   onRatingChanged: (rating) {},
+              //       //   color: Colors.amber,
+              //       // ),
+              //       // const SizedBox(width: 5.0),
+              //       // buildText(
+              //       //   text: '(0)',
+              //       //   size: 20.0,
+              //       // ),
+              //     ],
+              //   ),
+              // ),
               Container(
                 margin: const EdgeInsets.only(top: 20.0),
                 padding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 20.0),
                 decoration: BoxDecoration(
                   border: Border(
-                      top: BorderSide(color: Colors.grey[200]!),
-                      bottom: BorderSide(color: Colors.grey[200]!)),
+                    top: BorderSide(color: Colors.grey[200]!),
+                    bottom: BorderSide(color: Colors.grey[200]!)
+                  ),
                 ),
                 child: Row(
                   children: [
@@ -139,19 +138,68 @@ class ProfileView extends GetView<ProfileController> {
                   ],
                 ),
               ),
-              Container(
-                height: 680.0,
-                padding: const EdgeInsets.only(top: 10.0),
-                child: buildTabBar(),
+              GetBuilder<ProfileController>(
+                id: 'UserProduct',
+                builder: (controller) => Container(
+                  padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 20.0),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.shopping_cart, color: Colors.black45),
+                      buildText(text: '  عدد السلع المعروضة للبيع  ', size: 20.0),
+                      buildText(text: '(${controller.userProducts.length})', size: 20.0)
+                    ],
+                  ),
+                ),
               ),
+              GetBuilder<ProfileController>(
+                id: 'UserProduct',
+                builder: (controller) => controller.isLoading
+                  ? showProgressIndicator()
+                  : controller.userProducts.isEmpty
+                    ? Container(
+                        padding: const EdgeInsets.only(top: 30.0),
+                        alignment: Alignment.topCenter,
+                        child: buildText(
+                          text: 'لم يتم عرض شيء للبيع حتى هذه اللحظة!',
+                          size: 24.0,
+                          weight: FontWeight.bold
+                        ),
+                      )
+                    : GridView.builder(
+                        shrinkWrap: true,
+                        padding: const EdgeInsets.all(0.0),
+                        physics: const BouncingScrollPhysics(),
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 2/3,
+                          crossAxisSpacing: 0.0,
+                          mainAxisSpacing: 0.0,
+                        ),
+                        itemCount: controller.userProducts.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ProductItem(
+                            productModel: controller.userProducts[index],
+                            isCurrentUser: controller.isTheCurrent()
+                          );
+                        },
+                      ),
+              ),
+              // Container(
+              //   height: 680.0,
+              //   padding: const EdgeInsets.only(top: 10.0),
+              //   child: buildTabBar(),
+              // ),
             ],
           ),
         ),
-        floatingActionButton: buildFloatingActionButton(
-            title: 'تواصل معي',
-            icon: Icons.phone,
-            width: 150.0,
-            onPressed: () {}),
+        floatingActionButton: !controller.isTheCurrent()
+          ? buildFloatingActionButton(
+              title: 'تواصل معي',
+              icon: Icons.phone,
+              width: 150.0,
+              onPressed: () {}
+            )
+          : null
       ),
     );
   }
@@ -221,7 +269,8 @@ class ProfileView extends GetView<ProfileController> {
                       itemCount: controller.userProducts.length,
                       itemBuilder: (BuildContext context, int index) {
                         return ProductItem(
-                          productModel: controller.userProducts[index]
+                          productModel: controller.userProducts[index],
+                          isCurrentUser: controller.isTheCurrent()
                         );
                       },
                     ),
@@ -304,4 +353,5 @@ class ProfileView extends GetView<ProfileController> {
       shape: Border(top: BorderSide(color: Colors.grey[300]!, width: 1.0)),
     );
   }
+
 }
