@@ -1,8 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:shop_fever/app/data/local/sharedPref.dart';
 import 'package:shop_fever/app/modules/home/controllers/home_controller.dart';
-import 'package:shop_fever/app/modules/profile/controllers/profile_controller.dart';
 import 'package:shop_fever/app/routes/app_pages.dart';
 import 'package:shop_fever/app/utils/components.dart';
 
@@ -29,7 +29,7 @@ class DrawerView extends GetView<HomeController> {
               onTap: () {
                 //TODO PROFILE
                 Get.find<HomeController>().currentClickedUser = Get.find<HomeController>().currentUser;
-                Get.put(ProfileController());
+                //Get.put(ProfileController());
                 Get.toNamed(AppPages.PROFILE);
               },
               title: buildText(
@@ -59,7 +59,10 @@ class DrawerView extends GetView<HomeController> {
                 buildListTile(
                   title: 'جميع اعجاباتي',
                   icon: Icons.favorite_border,
-                  onTap: () {}
+                  onTap: () {
+                    Get.find<HomeController>().currentClickedUser = Get.find<HomeController>().currentUser;
+                    Get.toNamed(AppPages.FAVORITES);
+                  }
                 ),
                 buildListTile(
                   title: 'شارك التطبيق',
@@ -87,9 +90,13 @@ class DrawerView extends GetView<HomeController> {
                   onTap: () {}
                 ),
                 buildListTile(
-                  title: 'الخروج',
-                  icon: Icons.exit_to_app_outlined,
-                  onTap: () {}
+                  title: 'تسجيل الخروج',
+                  icon: Icons.logout,
+                  onTap: () {
+                    FirebaseAuth.instance.signOut();
+                    SharedPref.setUserAsLoggedOut();
+                    Get.offAllNamed(AppPages.LOGIN);
+                  }
                 ),
               ],
             ),

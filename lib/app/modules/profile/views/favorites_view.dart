@@ -42,27 +42,30 @@ class FavoritesView extends GetView<ProfileController> {
               ],
             ),
           ),
-          body: TabBarView(
-            children: [
-              ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: controller.favProducts.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return FavoritesItem(
-                    data: controller.favProducts[index],
-                  );
-                },
-              ),
-              ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: controller.favUsers.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return FavoritesItem(
-                    data: controller.favUsers[index],
-                  );
-                },
-              ),
-            ],
+          body: GetBuilder<ProfileController>(
+            id: 'FavoritesProducts',
+            builder: (controller) => TabBarView(
+              children: [
+                ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: controller.favProducts.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return FavoritesItem(
+                      data: controller.favProducts[index],
+                    );
+                  },
+                ),
+                ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: controller.favUsers.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return FavoritesItem(
+                      data: controller.favUsers[index],
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

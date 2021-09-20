@@ -81,6 +81,7 @@ Widget buildFormField({
   required TextInputType type,
   required Function validate,
   required String? hint,
+  Function? onChange,
   bool isPassword = false,
   IconData? prefix,
   Widget? suffix,
@@ -92,6 +93,7 @@ Widget buildFormField({
     obscureText: isPassword,
     style: TextStyle(fontSize: 20.0, height: 1.1),
     validator: (value) => validate(value),
+    onChanged: (value) => onChange!(value),
     maxLines: lines,
     decoration: InputDecoration(
       hintText: hint,

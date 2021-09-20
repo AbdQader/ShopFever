@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shop_fever/app/data/models/category_model.dart';
+import 'package:shop_fever/app/modules/category/controllers/category_controller.dart';
 import 'package:shop_fever/app/routes/app_pages.dart';
 import 'package:shop_fever/app/utils/components.dart';
 
 class CategoryItem extends StatelessWidget {
-
   final CategoryModel categoryModel;
-
   const CategoryItem({required this.categoryModel});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Get.toNamed(AppPages.CATEGORY, arguments: categoryModel),
+      onTap: () {
+        Get.put(CategoryController())..currentCategory = categoryModel;
+        Get.toNamed(AppPages.CATEGORY);
+      },
       child: Column(
         children: [
           Padding(

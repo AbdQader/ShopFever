@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:shop_fever/app/components/category_item.dart';
 import 'package:shop_fever/app/components/close_product_item.dart';
 import 'package:shop_fever/app/components/recently_added_product_item.dart';
 import 'package:shop_fever/app/components/special_product_item.dart';
 import 'package:shop_fever/app/components/user_item.dart';
-import 'package:shop_fever/app/data/local/sharedPref.dart';
 import 'package:shop_fever/app/modules/drawer/views/drawer_view.dart';
 import 'package:shop_fever/app/routes/app_pages.dart';
 import '../controllers/home_controller.dart';
@@ -34,18 +32,6 @@ class HomeView extends GetView<HomeController> {
             IconButton(
               onPressed: () => Get.toNamed(AppPages.SEARCH),
               icon: const Icon(Icons.search),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.notifications_none),
-            ),
-            IconButton(
-              onPressed: () {
-                FirebaseAuth.instance.signOut();
-                SharedPref.setUserAsLoggedOut();
-                Get.offAllNamed(AppPages.LOGIN);
-              },
-              icon: const Icon(Icons.logout),
             ),
           ],
         ),
@@ -117,10 +103,10 @@ class HomeView extends GetView<HomeController> {
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     physics: const BouncingScrollPhysics(),
-                    itemCount: controller.products.length,
+                    itemCount: controller.recentProducts.length,
                     itemBuilder: (BuildContext context, int index) {
                       return RecentlyAddedProductItem(
-                        productModel: controller.products[index]
+                        productModel: controller.recentProducts[index]
                       );
                     },
                   ),

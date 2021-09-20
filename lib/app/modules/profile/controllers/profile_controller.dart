@@ -16,13 +16,11 @@ class ProfileController extends GetxController with SingleGetTickerProviderMixin
 
   // For Users
   UserModel currentUser = Get.find<HomeController>().currentClickedUser;
+  UserModel user = Get.find<HomeController>().currentUser;
 
   // For Current User Products
   List<ProductModel> _userProducts = [];
   List<ProductModel> get userProducts => _userProducts;
-
-  //List<ProductModel> _otherUserProducts = [];
-  //List<ProductModel> get otherUserserProducts => _otherUserProducts;
 
   // For Favorites Users
   List<UserModel> _favUsers = [];
@@ -42,31 +40,29 @@ class ProfileController extends GetxController with SingleGetTickerProviderMixin
   void onInit() {
     super.onInit();
     tabController = TabController(length: 2, vsync: this);
-    getUserProducts();
     getProductsIds();
-    //getUserProducts();
+    getUserProducts();
   }
 
-  bool isTheCurrent()
-    => _homeController.currentUser.id== currentUser.id;
-
+  bool isTheCurrent() => _homeController.currentUser.id == currentUser.id;
 
   ///to get the user products
   void getUserProducts() {
-    HelperFunctions.safeApiCall(execute: (){
-      var headers = {Constants.API_AUTHORIZATION : Get.find<HomeController>().currentUser.token};
-      return BaseClient.get(Constants.USER_PRODUCTS_URL+'/${currentUser.id}',headers: headers);
-    }, onSuccess: (response){
-      response['products'].forEach((product) {
-        //_products.value.add(ProductModel.fromJson(product));
-        userProducts.add(ProductModel.fromJson(product));
-      });
-      Logger().e(userProducts.length);
-      Logger().e(_userProducts.length);
-      update(['UserProduct']);
-    },onError: (error){
-      Logger().e(error);
-    });
+    HelperFunctions.safeApiCall(
+      execute: () {
+        var headers = {Constants.API_AUTHORIZATION : Get.find<HomeController>().currentUser.token};
+        return BaseClient.get(Constants.USER_PRODUCTS_URL+'/${currentUser.id}',headers: headers);
+      },
+      onSuccess: (response) {
+        userProducts.clear();
+        response['products'].forEach((product) {
+          userProducts.add(ProductModel.fromJson(product));
+        });
+        update(['UserProduct']);
+      },onError: (error) {
+        Logger().e(error);
+      }
+    );
   }
 
   // ///to get the current user products
@@ -103,6 +99,7 @@ class ProfileController extends GetxController with SingleGetTickerProviderMixin
       },
       onSuccess: (response)
       {
+        Logger().e('RESPONSE: $response');
         response['products'].forEach((productId) {
           _productsIds.add(productId['_id']);
         });
@@ -120,6 +117,7 @@ class ProfileController extends GetxController with SingleGetTickerProviderMixin
         if (product.id == productId)
           _favProducts.add(product);
       });
+      update(['FavoritesProducts']);
     });
   }
 

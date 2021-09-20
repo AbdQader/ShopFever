@@ -8,24 +8,36 @@ import 'package:shop_fever/app/utils/helperFunctions.dart';
 
 class SearchController extends GetxController {
 
+  // For Current User
   final _currentUser = Get.find<HomeController>().currentUser;
+
+  // For Searched Products
+  var products = <ProductModel>[];
+
+  // For Search Text
   Rx<String> search = ''.obs;
+
+  // For Loading
+  Rx<bool> isLoading = false.obs;
+
+  // For Products List
+  Rx<bool> isListEmpty = false.obs;
 
   @override
   void onInit() {
     super.onInit();
-    debounce(search, (_) => getProducts(search.value), time: Duration(seconds: 5));
+    debounce(search, (_) => getProducts(), time: Duration(seconds: 5));
   }
 
-  List<ProductModel> getProducts(String text) {
-    var products = <ProductModel>[];
+  void getProducts() {
+    isLoading.value = true;
     HelperFunctions.safeApiCall(
       execute: () async
       {
         return await BaseClient.get(
-          Constants.PRODUCTS_URL,
+          Constants.SEARCH_PRODUCTS_URL,
           query: {
-            'searchKey': text
+            'search': search.value.trim()
           },
           headers: {
             Constants.API_AUTHORIZATION: _currentUser.token
@@ -34,14 +46,21 @@ class SearchController extends GetxController {
       },
       onSuccess: (response)
       {
+        products.clear();
         response['products'].forEach((product) {
+          print('abd => Search Products: ${ProductModel.fromJson(product).toJson()}');
           products.add(ProductModel.fromJson(product));
         });
+        isListEmpty.value = products.isEmpty;
+        isLoading.value = false;
+        update();
       },
-      onError: (error) => ErrorHandler.handleError(error),
+      onError: (error) {
+        isLoading.value = false;
+        ErrorHandler.handleError(error);
+      },
       onLoading: () {}
     );
-    return products;
   }
 
 }

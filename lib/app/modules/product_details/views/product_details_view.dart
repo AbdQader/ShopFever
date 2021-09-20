@@ -3,6 +3,9 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:shop_fever/app/modules/home/controllers/home_controller.dart';
+import 'package:shop_fever/app/modules/profile/controllers/profile_controller.dart';
+import 'package:shop_fever/app/routes/app_pages.dart';
 import 'package:shop_fever/app/utils/components.dart';
 import '../controllers/product_details_controller.dart';
 
@@ -194,8 +197,37 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                       ),
                       buildGoogleMap(),
                       const Divider(height: 40.0, color: Colors.grey),
-                      buildListTile(),
-                      const SizedBox(height: 60.0)
+                      ListTile(
+                        onTap: () {
+                          Get.find<HomeController>().currentClickedUser = controller.product.user;
+                          Get.toNamed(AppPages.PROFILE);
+                        },
+                        leading: CircleAvatar(
+                          radius: 30.0,
+                          backgroundImage: NetworkImage(controller.product.user.photo),
+                        ),
+                        title: buildText(
+                          text: controller.product.user.name,
+                          size: 20.0,
+                        ),
+                        subtitle: Column(
+                          children: [
+                            buildStarRating(
+                              starCount: 5,
+                              rating: 2.5,
+                              onRatingChanged: (rating) {},
+                              color: Colors.amber
+                            ),
+                            Row(
+                              children: [
+                                Icon(Icons.location_on_outlined, color: Colors.grey),
+                                SizedBox(width: 5.0),
+                                buildText(text: 'فلسطين', size: 18.0)
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -266,38 +298,6 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
         // onMapCreated: (GoogleMapController controller) {
         //   _controller.complete(controller);
         // },
-      ),
-    );
-  }
-
-  // For ListTile
-  Widget buildListTile() {
-    return ListTile(
-      onTap: () {},
-      leading: CircleAvatar(
-        radius: 30.0,
-        backgroundImage: NetworkImage(controller.product.user.photo),
-      ),
-      title: buildText(
-        text: controller.product.user.name,
-        size: 20.0,
-      ),
-      subtitle: Column(
-        children: [
-          buildStarRating(
-              starCount: 5,
-              rating: 2.5,
-              onRatingChanged: (rating) {},
-              color: Colors.amber
-          ),
-          Row(
-            children: [
-              Icon(Icons.location_on_outlined, color: Colors.grey),
-              SizedBox(width: 5.0),
-              buildText(text: 'فلسطين', size: 18.0)
-            ],
-          ),
-        ],
       ),
     );
   }

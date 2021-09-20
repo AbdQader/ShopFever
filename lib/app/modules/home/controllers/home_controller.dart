@@ -27,32 +27,26 @@ class HomeController extends GetxController {
   late LocationData _locationData;
 
   // For Categories
-  // Rx<List<CategoryModel>> _categories = Rx<List<CategoryModel>>([]);
-  // List<CategoryModel> get categories => _categories.value;
   List<CategoryModel> _categories = [];
   List<CategoryModel> get categories => _categories;
 
   // For Special Users
-  // Rx<List<UserModel>> _users = Rx<List<UserModel>>([]);
-  // List<UserModel> get users => _users.value;
   List<UserModel> _users = [];
   List<UserModel> get users => _users;
 
   // For Products
-  // Rx<List<ProductModel>> _products = Rx<List<ProductModel>>([]);
-  // List<ProductModel> get products => _products.value;
   List<ProductModel> _products = [];
   List<ProductModel> get products => _products;
 
   // For Special Products
-  // Rx<List<ProductModel>> _specialProducts = Rx<List<ProductModel>>([]);
-  // List<ProductModel> get specialProducts => _specialProducts.value;
   List<ProductModel> _specialProducts = [];
   List<ProductModel> get specialProducts => _specialProducts;
 
+  // For Recent Products
+  List<ProductModel> _recentProducts = [];
+  List<ProductModel> get recentProducts => _recentProducts;
+
   // For Close Products
-  // Rx<List<ProductModel>> _closeProducts = Rx<List<ProductModel>>([]);
-  // List<ProductModel> get closeProducts => _closeProducts.value;
   List<ProductModel> _closeProducts = [];
   List<ProductModel> get closeProducts => _closeProducts;
 
@@ -65,10 +59,11 @@ class HomeController extends GetxController {
       getProducts();
       getSpecialUsers();
       getSpecialProducts();
+      getRecentProducts();
     });
   }
 
-  // to get current user from local db
+  ///to get current user from local db
   Future<void> getCurrentUser() async {
     try {
       _currentUser = await MyHive.getCurrentUser();
@@ -77,7 +72,7 @@ class HomeController extends GetxController {
     }
   }
 
-  // to get the user location
+  ///to get the user location
   void getUserLocation() async {
     // check if the service is enabled
     _serviceEnabled = await location.serviceEnabled();
@@ -97,7 +92,7 @@ class HomeController extends GetxController {
     await updateUserLocation(_locationData.latitude!, _locationData.longitude!);
   }
 
-  // to update the user location
+  ///to update the user location
   Future<void> updateUserLocation(double lat, double lon) async {
     HelperFunctions.safeApiCall(
       execute: () async
@@ -112,12 +107,15 @@ class HomeController extends GetxController {
         );
       },
       onSuccess: (response) => getCloseProducts(),
-      onError: (error) => ErrorHandler.handleError(error),
+      onError: (error) {
+        Logger().e('updateUserLocation => Error: $error');
+        ErrorHandler.handleError(error);
+      },
       onLoading: () {}
     );
   }
 
-  // to fetch the categories
+  ///to fetch the categories
   void getCategories() async {
     HelperFunctions.safeApiCall(
       execute: () async
@@ -127,17 +125,19 @@ class HomeController extends GetxController {
       onSuccess: (response)
       {
         response['data']['categories'].forEach((category) {
-          //_categories.value.add(CategoryModel.fromJson(category));
           _categories.add(CategoryModel.fromJson(category));
         });
         update(['Category']);
       },
-      onError: (error) => ErrorHandler.handleError(error),
+      onError: (error) {
+        Logger().e('getCategories => Error: $error');
+        ErrorHandler.handleError(error);
+      },
       onLoading: () {}
     );
   }
 
-  // to fetch the products
+  ///to fetch the products
   void getProducts() async {
     HelperFunctions.safeApiCall(
       execute: () async
@@ -147,7 +147,6 @@ class HomeController extends GetxController {
       onSuccess: (response)
       {
         response['products'].forEach((product) {
-          //_products.value.add(ProductModel.fromJson(product));
           _products.add(ProductModel.fromJson(product));
         });
         update(['Products']);
@@ -157,7 +156,7 @@ class HomeController extends GetxController {
     );
   }
 
-  // to fetch the special users
+  ///to fetch the special users
   void getSpecialUsers() async {
     HelperFunctions.safeApiCall(
       execute: () async
@@ -167,17 +166,19 @@ class HomeController extends GetxController {
       onSuccess: (response)
       {
         response['users'].forEach((user) {
-          //_users.value.add(UserModel.fromJson(user));
           _users.add(UserModel.fromJson(user));
         });
         update(['SpecialUsers']);
       },
-      onError: (error) => ErrorHandler.handleError(error),
+      onError: (error) {
+        Logger().e('getSpecialUsers => Error: $error');
+        ErrorHandler.handleError(error);
+      },
       onLoading: () {}
     );
   }
 
-  // to fetch the special products
+  ///to fetch the special products
   void getSpecialProducts() async {
     HelperFunctions.safeApiCall(
       execute: () async
@@ -187,17 +188,41 @@ class HomeController extends GetxController {
       onSuccess: (response)
       {
         response['products'].forEach((product) {
-          //_specialProducts.value.add(ProductModel.fromJson(product));
           _specialProducts.add(ProductModel.fromJson(product));
         });
         update(['SpecialProducts']);
       },
-      onError: (error) => ErrorHandler.handleError(error),
+      onError: (error) {
+        Logger().e('getSpecialProducts => Error: $error');
+        ErrorHandler.handleError(error);
+      },
       onLoading: () {}
     );
   }
 
-  // to fetch the close products
+  ///to fetch the products
+  void getRecentProducts() async {
+    HelperFunctions.safeApiCall(
+      execute: () async
+      {
+        return await BaseClient.get(Constants.RECENT_PRODUCTS_URL, headers: {Constants.API_AUTHORIZATION: _currentUser!.token});
+      },
+      onSuccess: (response)
+      {
+        response['products'].forEach((product) {
+          _recentProducts.add(ProductModel.fromJson(product));
+        });
+        update(['Products']);
+      },
+      onError: (error) {
+        Logger().e('getRecentProducts => Error: $error');
+        ErrorHandler.handleError(error);
+      },
+      onLoading: () {}
+    );
+  }
+
+  ///to fetch the close products
   void getCloseProducts() async {
     HelperFunctions.safeApiCall(
       execute: () async
@@ -207,14 +232,12 @@ class HomeController extends GetxController {
       onSuccess: (response)
       {
         response['products'].forEach((product) {
-          //_closeProducts.value.add(ProductModel.fromJson(product));
           _closeProducts.add(ProductModel.fromJson(product));
         });
-        Logger().e(_closeProducts);
         update(['CloseProducts']);
       },
       onError: (error) {
-        Logger().e(error);
+        Logger().e('getCloseProducts => Error: $error');
         ErrorHandler.handleError(error);
       },
       onLoading: () {}

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shop_fever/app/data/models/user_model.dart';
 import 'package:shop_fever/app/modules/profile/views/product_item.dart';
 import 'package:shop_fever/app/routes/app_pages.dart';
 import 'package:shop_fever/app/utils/components.dart';
@@ -9,6 +8,7 @@ import '../controllers/profile_controller.dart';
 class ProfileView extends GetView<ProfileController> {
   @override
   Widget build(BuildContext context) {
+    //controller.getUserProducts();
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -23,23 +23,16 @@ class ProfileView extends GetView<ProfileController> {
             onPressed: () => Get.back(),
           ),
           actions: [
-            if (controller.currentUser.id != controller.currentUser.id)
-              IconButton(
+            //controller.user.id != controller.currentUser.id
+            !controller.isTheCurrent()
+            ? IconButton(
                 onPressed: () {},
                 icon: const Icon(Icons.favorite_border, color: Colors.white),
+              )
+            : IconButton(
+                onPressed: () => showBottomSheet(),
+                icon: const Icon(Icons.more_vert, color: Colors.white),
               ),
-            IconButton(
-              onPressed: () {
-                controller.currentUser.id == controller.currentUser.id
-                    ? showBottomSheet()
-                    : null;
-              },
-              icon: Icon(
-                  controller.currentUser.id == controller.currentUser.id
-                      ? Icons.more_vert
-                      : Icons.shortcut_outlined,
-                  color: Colors.white),
-            ),
           ],
         ),
         body: SingleChildScrollView(
@@ -55,8 +48,7 @@ class ProfileView extends GetView<ProfileController> {
                       height: 200.0,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: NetworkImage(
-                              'https://timelinecovers.pro/facebook-cover/download/blue-bubbles-facebook-cover.jpg'),
+                          image: NetworkImage('https://timelinecovers.pro/facebook-cover/download/blue-bubbles-facebook-cover.jpg'),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -166,124 +158,89 @@ class ProfileView extends GetView<ProfileController> {
 
   // For Tab Bar
   Widget buildTabBar() {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 10.0),
-          child: TabBar(
-            labelColor: Colors.black,
-            unselectedLabelColor: Colors.grey[600],
-            tabs: [
-              Container(
-                height: 70.0,
-                child: Tab(
-                  child: Column(
-                    children: [
-                      buildText(text: '4', size: 24.0),
-                      buildText(text: 'سلع للبيع', size: 20.0),
-                    ],
+    return GetBuilder<ProfileController>(
+      id: 'UserProduct',
+      builder: (controller) => Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 10.0),
+            child: TabBar(
+              labelColor: Colors.black,
+              unselectedLabelColor: Colors.grey[600],
+              tabs: [
+                Container(
+                  height: 70.0,
+                  child: Tab(
+                    child: Column(
+                      children: [
+                        buildText(text: '${controller.userProducts.length}', size: 24.0),
+                        buildText(text: 'سلع للبيع', size: 20.0),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Container(
-                height: 70.0,
-                child: Tab(
-                  child: Column(
-                    children: [
-                      const Icon(Icons.add, size: 30.0),
-                      buildText(text: 'المنتجات المفضلة', size: 20.0),
-                    ],
+                Container(
+                  height: 70.0,
+                  child: Tab(
+                    child: Column(
+                      children: [
+                        const Icon(Icons.add, size: 30.0),
+                        buildText(text: 'المنتجات المفضلة', size: 20.0),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-            controller: controller.tabController,
-            indicatorSize: TabBarIndicatorSize.tab,
+              ],
+              controller: controller.tabController,
+              indicatorSize: TabBarIndicatorSize.tab,
+            ),
           ),
-        ),
-        GetBuilder<ProfileController>(
-          id: 'UserProduct',
-          builder: (controller) => Expanded(
+          Expanded(
             child: TabBarView(
               children: [
                 controller.userProducts.isEmpty
-                    ? Container(
-                        padding: const EdgeInsets.only(top: 30.0),
-                        alignment: Alignment.topCenter,
-                        child: buildText(
-                            text: 'لم تعرض شيء للبيع حتى هذه اللحظة!',
-                            size: 24.0,
-                            weight: FontWeight.bold),
-                      )
-                    : GridView.builder(
-                        shrinkWrap: true,
-                        padding: const EdgeInsets.all(0.0),
-                        physics: const BouncingScrollPhysics(),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 2 / 3,
-                          crossAxisSpacing: 0.0,
-                          mainAxisSpacing: 0.0,
-                        ),
-                        itemCount: controller.userProducts.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return ProductItem(
-                              productModel: controller.userProducts[index]);
-                        },
+                  ? Container(
+                      padding: const EdgeInsets.only(top: 30.0),
+                      alignment: Alignment.topCenter,
+                      child: buildText(
+                        text: 'لم تعرض شيء للبيع حتى هذه اللحظة!',
+                        size: 24.0,
+                        weight: FontWeight.bold
                       ),
+                    )
+                  : GridView.builder(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.all(0.0),
+                      physics: const BouncingScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 2/3,
+                        crossAxisSpacing: 0.0,
+                        mainAxisSpacing: 0.0,
+                      ),
+                      itemCount: controller.userProducts.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ProductItem(
+                          productModel: controller.userProducts[index]
+                        );
+                      },
+                    ),
                 Container(
                   padding: const EdgeInsets.only(top: 30.0),
                   alignment: Alignment.topCenter,
                   child: buildText(
-                      text: 'لا يوجد بيانات حتى الان!',
-                      size: 24.0,
-                      weight: FontWeight.bold),
+                    text: 'لا يوجد بيانات حتى الان!',
+                    size: 24.0,
+                    weight: FontWeight.bold
+                  ),
                 ),
               ],
               controller: controller.tabController,
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
-  }
-
-  // For Rating Bar
-  Widget buildStarRating({
-    required int starCount,
-    required double rating,
-    required Function(double rating) onRatingChanged,
-    required Color color,
-  }) {
-    Widget buildStar(int index) {
-      Icon icon;
-      if (index >= rating) {
-        icon = new Icon(
-          Icons.star_border,
-          size: 30.0,
-          color: Colors.amber,
-        );
-      } else if (index > rating - 1 && index < rating) {
-        icon = Icon(
-          Icons.star_half,
-          size: 30.0,
-          color: color,
-        );
-      } else {
-        icon = Icon(
-          Icons.star,
-          size: 30.0,
-          color: color,
-        );
-      }
-      return InkResponse(
-        onTap: () => onRatingChanged(index + 1.0),
-        child: icon,
-      );
-    }
-
-    return Row(children: List.generate(starCount, (index) => buildStar(index)));
   }
 
   // For Profile Settings
@@ -329,10 +286,11 @@ class ProfileView extends GetView<ProfileController> {
   }
 
   // For ListTile
-  Widget buildListTile(
-      {required String title,
-      required IconData icon,
-      required Function() onPressed}) {
+  Widget buildListTile({
+    required String title,
+    required IconData icon,
+    required Function() onPressed
+  }) {
     return ListTile(
       onTap: onPressed,
       title: buildText(
@@ -344,7 +302,6 @@ class ProfileView extends GetView<ProfileController> {
         size: 25.0,
       ),
       shape: Border(top: BorderSide(color: Colors.grey[300]!, width: 1.0)),
-      //contentPadding: EdgeInsets.fromLTRB(16.0, 5.0, 16.0, 5.0),
     );
   }
 }

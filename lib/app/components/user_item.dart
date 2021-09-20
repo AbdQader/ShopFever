@@ -9,15 +9,14 @@ import 'package:shop_fever/app/utils/components.dart';
 class UserItem extends StatelessWidget {
 
   final UserModel userModel;
-
-  const UserItem({required this.userModel});
+  const UserItem({ required this.userModel });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
         Get.find<HomeController>().currentClickedUser = userModel;
-        Get.put(ProfileController());
+        //Get.put(ProfileController());
         Get.toNamed(AppPages.PROFILE);
       },
       child: Stack(

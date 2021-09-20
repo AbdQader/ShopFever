@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
-import 'package:shop_fever/app/data/local/my_hive.dart';
 import 'package:shop_fever/app/data/models/product_model.dart';
 import 'package:shop_fever/app/data/models/user_model.dart';
 import 'package:shop_fever/app/modules/home/controllers/home_controller.dart';
@@ -33,16 +32,15 @@ class ProductDetailsController extends GetxController {
   //to show loading when user mark/remove from favourite
   var isFavLoading = true;
 
-
   @override
   void onInit() {
     product = homeController.currentProduct;
     Logger().e(product.user.name);
     markProductAsWatched(product.id);
     currentUser = homeController.currentUser;
-      checkIfProductIsFavourite();
-      getWatchedTimes();
-      getFavTimes();
+    checkIfProductIsFavourite();
+    getWatchedTimes();
+    getFavTimes();
     super.onInit();
   }
 
@@ -93,7 +91,7 @@ class ProductDetailsController extends GetxController {
     update(['ImageSlider']);
   }
 
-  // to get the product category name
+  ///to get the product category name
   String productCategory(String categoryId) {
     return Get.find<HomeController>()
         .categories
@@ -101,13 +99,13 @@ class ProductDetailsController extends GetxController {
         .name;
   }
 
-  // to change product publish date format
+  ///to change product publish date format
   String productPublishDate(String date) {
     var dateFormat = DateFormat('d / MM / yyyy');
     return dateFormat.format(DateTime.parse(date));
   }
 
-  // to add the product to the favorites
+  ///to add the product to the favorites
   void markProductAsFavorites(String productId) {
     HelperFunctions.safeApiCall(
         execute: () async {
@@ -141,6 +139,7 @@ class ProductDetailsController extends GetxController {
         });
   }
 
+  ///to mark the product as watched
   void markProductAsWatched(String productId) {
     HelperFunctions.safeApiCall(
       execute: () async {
