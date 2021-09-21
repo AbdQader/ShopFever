@@ -11,6 +11,9 @@ import 'package:shop_fever/app/utils/helperFunctions.dart';
 
 class ProfileController extends GetxController with SingleGetTickerProviderMixin {
 
+  // For TabBar
+  late final TabController tabController;
+
   // For Home Controller
   final _homeController = Get.find<HomeController>();
 
@@ -21,37 +24,30 @@ class ProfileController extends GetxController with SingleGetTickerProviderMixin
   List<ProductModel> _userProducts = [];
   List<ProductModel> get userProducts => _userProducts;
 
-  // For Favorites Users
-  List<UserModel> _favUsers = [];
-  List<UserModel> get favUsers => _favUsers;
+  //favorite times for the user
+  var favTimes = 0;
 
-  // For Favorites Products
-  List<ProductModel> _favProducts = [];
-  List<ProductModel> get favProducts => _favProducts;
-  
-  // For Favorites Products Ids
-  List<String> _productsIds = [];
+  // for favorites icon
+  bool isFavorites = false;
+
+  //to show loading when user mark/remove from favourite
+  var isFavLoading = true;
 
   // For Loading
   bool isLoading = false;
-
-  // For TabBar
-  late final TabController tabController;
 
   @override
   void onInit() {
     super.onInit();
     tabController = TabController(length: 2, vsync: this);
-    getProductsIds();
     getUserProducts();
   }
 
+  ///to check if the user is the current or not
   bool isTheCurrent() => _homeController.currentUser.id == currentUser.id;
 
   ///to get the user products
   void getUserProducts() {
-    Logger().e(Constants.USER_PRODUCTS_URL+'/${currentUser.id}');
-    Logger().e('Token:' + Get.find<HomeController>().currentUser.token);
     isLoading = true;
     HelperFunctions.safeApiCall(
       execute: () {
@@ -59,7 +55,6 @@ class ProfileController extends GetxController with SingleGetTickerProviderMixin
         return BaseClient.get(Constants.USER_PRODUCTS_URL+'/${currentUser.id}',headers: headers);
       },
       onSuccess: (response) {
-        //_userProducts.clear();
         response['products'].forEach((product) {
           _userProducts.add(ProductModel.fromJson(product));
         });
@@ -73,60 +68,68 @@ class ProfileController extends GetxController with SingleGetTickerProviderMixin
     );
   }
 
-  // ///to get the current user products
-  // void getUserProducts() {
-  //   _homeController.products.forEach((product) {
-  //     if (currentUser.id == product.user.id)
-  //       _userProducts.add(product);
-  //   });
-  //   update(['UserProduct']);
-  // }
-
-  // ///to get the other user products
-  // void getOtherUserProducts() {
-  //   _homeController.products.forEach((product) {
-  //     if (otherUser!.id == product.user.id)
-  //       _otherUserProducts.add(product);
-  //   });
-  //   update(['UserProduct']);
-  // }
-
-  ///to get favorites users
-  void getUsers() {}
-
-  ///to get favorites products ids
-  void getProductsIds() {
-    HelperFunctions.safeApiCall(
-      execute: () async
-      {
-        return await BaseClient.get(
-          Constants.FAVORITE_PRODUCTS_URL,
-          headers: {
-            Constants.API_AUTHORIZATION: currentUser.token
-          });
-      },
-      onSuccess: (response)
-      {
-        Logger().e('RESPONSE: $response');
-        response['products'].forEach((productId) {
-          _productsIds.add(productId['_id']);
-        });
-        getProducts();
-      },
-      onError: (error) => ErrorHandler.handleError(error),
-      onLoading: () {}
-    );
+  ///check if the product is in favourite
+  checkIfUserIsFavourite() async {
+    var headers = {Constants.API_AUTHORIZATION : currentUser.token};
+    HelperFunctions.safeApiCall(execute: () {
+      // TODO: don't forget to change the url in the constants
+      return BaseClient.get(Constants.CHECK_IF_FAVOURITE+'/'+currentUser.id,headers: headers);
+    }, onSuccess: (response) {
+      isFavorites = response['isFavorite'];
+      isFavLoading = false;
+      update(['Favorites']);
+    },onError: (error){
+      isFavLoading = false;
+      update(['Favorites']);
+    });
   }
 
-  ///to get favorites products
-  void getProducts() {
-    _homeController.products.forEach((product) {
-      _productsIds.forEach((productId) {
-        if (product.id == productId)
-          _favProducts.add(product);
-      });
-      update(['FavoritesProducts']);
+  ///get favourite times
+  getFavTimes() {
+    HelperFunctions.safeApiCall(execute: () {
+      var headers = {Constants.API_AUTHORIZATION : currentUser.token};
+      return BaseClient.get(Constants.FAVOURITE_USERS_COUNT+'/'+currentUser.id,headers: headers);
+    }, onSuccess: (response) {
+      favTimes = response['count'];
+      update(['FavTimes']);
+    },onError: (error){
+      Logger().e(error);
     });
+  }
+
+  ///to add the product to the favorites
+  void markUserAsFavorites(String userId) {
+    HelperFunctions.safeApiCall(
+      execute: () async {
+        return isFavorites
+          ? BaseClient.delete(
+              Constants.FAVORITE_USERS_URL + '/$userId',
+              headers: {
+                Constants.API_AUTHORIZATION:
+                Get.find<HomeController>().currentUser.token
+              }
+            )
+          : BaseClient.post(
+              Constants.FAVORITE_USERS_URL + '/$userId',
+              headers: {
+                Constants.API_AUTHORIZATION:
+                Get.find<HomeController>().currentUser.token
+              }
+            );
+      },
+      onSuccess: (response) {
+        isFavorites = !isFavorites;
+        isFavLoading = false;
+        update(['Favorites']);
+      },
+      onError: (error) {
+        ErrorHandler.handleError(error);
+        isFavLoading = false;
+      },
+      onLoading: () {
+        isFavLoading = true;
+        update(['Favorites']);
+      });
   }
 
   @override

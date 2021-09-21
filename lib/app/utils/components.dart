@@ -93,7 +93,7 @@ Widget buildFormField({
     obscureText: isPassword,
     style: TextStyle(fontSize: 20.0, height: 1.1),
     validator: (value) => validate(value),
-    onChanged: (value) => onChange!(value),
+    onChanged: (value) => onChange != null ? onChange(value) : null,
     maxLines: lines,
     decoration: InputDecoration(
       hintText: hint,

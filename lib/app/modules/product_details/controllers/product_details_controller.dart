@@ -35,7 +35,6 @@ class ProductDetailsController extends GetxController {
   @override
   void onInit() {
     product = homeController.currentProduct;
-    Logger().e(product.user.name);
     markProductAsWatched(product.id);
     currentUser = homeController.currentUser;
     checkIfProductIsFavourite();
@@ -76,7 +75,7 @@ class ProductDetailsController extends GetxController {
   getFavTimes() {
     HelperFunctions.safeApiCall(execute: () {
       var headers = {Constants.API_AUTHORIZATION : currentUser.token};
-      return BaseClient.get(Constants.FAVOURITE_COUNT+'/'+product.id,headers: headers);
+      return BaseClient.get(Constants.FAVOURITE_PRODUCTS_COUNT+'/'+product.id,headers: headers);
     }, onSuccess: (response) {
       favTimes = response['count'];
       update(['FavTimes']);

@@ -5,10 +5,9 @@ import 'package:shop_fever/app/modules/home/controllers/home_controller.dart';
 import 'package:shop_fever/app/routes/app_pages.dart';
 import 'package:shop_fever/app/utils/components.dart';
 
-class FavoritesItem extends StatelessWidget {
-
+class FavoriteItem extends StatelessWidget {
   final dynamic data;
-  const FavoritesItem({ this.data });
+  const FavoriteItem({ this.data });
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +67,9 @@ class FavoritesItem extends StatelessWidget {
                 weight: FontWeight.bold
               ),
               buildText(
-                text: isUserData ? data.productsCount.toString() : data.price.toString(),
+                text: isUserData
+                  ? data.productsCount.toString()
+                  : data.currency == 'd' ? '\$ ${data.price}' : 'ILS ${data.price}',
                 size: 20.0,
                 color: Get.theme.accentColor,
               ),
