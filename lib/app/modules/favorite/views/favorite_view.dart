@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shop_fever/app/components/empty_view.dart';
 import 'package:shop_fever/app/modules/favorite/controllers/favorite_controller.dart';
-import 'package:shop_fever/app/modules/profile/controllers/profile_controller.dart';
 import 'package:shop_fever/app/utils/components.dart';
 import 'favorite_item.dart';
 
@@ -26,6 +25,7 @@ class FavoriteView extends GetView<FavoriteController> {
               ),
               iconTheme: const IconThemeData(color: Colors.black),
               bottom: TabBar(
+                indicatorColor: Get.theme.colorScheme.secondary,
                 labelColor: Colors.black,
                 tabs: [
                   Tab(
@@ -56,7 +56,8 @@ class FavoriteView extends GetView<FavoriteController> {
                         itemCount: controller.favProducts.length,
                         itemBuilder: (BuildContext context, int index) {
                           return FavoriteItem(
-                            data: controller.favProducts[index],
+                            productModel: controller.favProducts[index],
+                            userModel: null,
                           );
                         },
                       ),
@@ -69,7 +70,8 @@ class FavoriteView extends GetView<FavoriteController> {
                         itemCount: controller.favUsers.length,
                         itemBuilder: (BuildContext context, int index) {
                           return FavoriteItem(
-                            data: controller.favUsers[index],
+                            userModel: controller.favUsers[index],
+                            productModel: null,
                           );
                         },
                       ),

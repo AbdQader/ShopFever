@@ -18,7 +18,8 @@ class Constants {
   static String FAVORITE_PRODUCTS_URL = '${BASE_URL}/api/v1/products/favourite';
   static String FAVORITE_USERS_URL = '${BASE_URL}/api/v1/users/favourite';
   static String WATCHED_PRODUCTS_URL = '${BASE_URL}/api/v1/products/watched';
-  static String CHECK_IF_FAVOURITE = '${BASE_URL}/api/v1/products/favourite/isFavourite' ;
+  static String CHECK_IF_PRODUCT_FAVOURITE = '${BASE_URL}/api/v1/products/favourite/isFavourite' ;
+  static String CHECK_IF_USER_FAVOURITE = '${BASE_URL}/api/v1/users/favourite/check' ;
   static String WATCHED_COUNT = '${BASE_URL}/api/v1/products/watched/count';
   static String FAVOURITE_PRODUCTS_COUNT = '${BASE_URL}/api/v1/products/favourite/count';
   static String FAVOURITE_USERS_COUNT = '${BASE_URL}/api/v1/users/favourite/count';

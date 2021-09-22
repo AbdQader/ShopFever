@@ -38,7 +38,6 @@ class FavoriteController extends GetxController with SingleGetTickerProviderMixi
 
   ///to get favorites users
   void getUsers() {
-    isLoading = true;
     HelperFunctions.safeApiCall(
       execute: () async
       {
@@ -61,13 +60,15 @@ class FavoriteController extends GetxController with SingleGetTickerProviderMixi
         isLoading = false;
         ErrorHandler.handleError(error);
       },
-      onLoading: () {}
+      onLoading: () {
+        isLoading = true;
+        update();
+      }
     );
   }
 
   ///to get favorites products
   void getProducts() {
-    isLoading = true;
     HelperFunctions.safeApiCall(
       execute: () async
       {
@@ -88,9 +89,42 @@ class FavoriteController extends GetxController with SingleGetTickerProviderMixi
       },
       onError: (error) {
         isLoading = false;
+        update();
         ErrorHandler.handleError(error);
       },
-      onLoading: () {}
+      onLoading: () {
+        isLoading = true;
+        update();
+      }
+    );
+  }
+
+  ///to remove the user form favorites
+  void removeUserFromFavorites(String userId) {
+    HelperFunctions.safeApiCall(
+      execute: () async {
+        return BaseClient.delete(
+          Constants.FAVORITE_USERS_URL,
+          query: { Constants.USER_ID: userId },
+          headers: { Constants.API_AUTHORIZATION: currentUser.token }
+        );
+      },
+      onSuccess: (response) => Logger().e('Remove User Response: $response'),
+      onError: (error) => ErrorHandler.handleError(error),
+    );
+  }
+
+  ///to remove the product form favorites
+  void removeProductFromFavorites(String productId) {
+    HelperFunctions.safeApiCall(
+      execute: () async {
+        return BaseClient.delete(
+          Constants.DELETE_FROM_FAVOURITE + '/' + productId,
+          headers: { Constants.API_AUTHORIZATION: currentUser.token }
+        );
+      },
+      onSuccess: (response) => Logger().e('Remove Product Response: $response'),
+      onError: (error) => ErrorHandler.handleError(error),
     );
   }
 

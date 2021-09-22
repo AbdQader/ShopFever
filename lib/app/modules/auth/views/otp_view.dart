@@ -122,7 +122,7 @@ class OtpView extends StatelessWidget {
                           size: 20.0,
                           isUpperCase: true,
                           weight: FontWeight.bold,
-                          color: Get.theme.accentColor
+                          color: Get.theme.colorScheme.secondary
                         ),
                       ),
                     ],
@@ -139,7 +139,7 @@ class OtpView extends StatelessWidget {
   // For pinPut box decoration
   BoxDecoration _pinPutDecoration(double raduis) {
     return BoxDecoration(
-      border: Border.all(width: 2.0, color: Get.theme.accentColor),
+      border: Border.all(width: 2.0, color: Get.theme.colorScheme.secondary),
       borderRadius: BorderRadius.circular(raduis),
     );
   }
@@ -154,7 +154,7 @@ class OtpView extends StatelessWidget {
         return buildText(
           text: remaining.seconds,
           size: 20.0,
-          color: Get.theme.accentColor,
+          color: Get.theme.colorScheme.secondary,
           weight: FontWeight.bold,
         );
       },
@@ -222,7 +222,7 @@ class OtpView extends StatelessWidget {
 //             //         size: 18,
 //             //         isUpperCase: true,
 //             //         weight: FontWeight.bold,
-//             //         color: Get.theme.accentColor
+//             //         color: Get.theme.colorScheme.secondary
 //             //       ),
 //             //     ),
 //             //   ],
@@ -238,7 +238,7 @@ class OtpView extends StatelessWidget {
 // // For pinPut box decoration
 // BoxDecoration _pinPutDecoration(double raduis) {
 //   return BoxDecoration(
-//     border: Border.all(width: 2.0, color: Get.theme.accentColor),
+//     border: Border.all(width: 2.0, color: Get.theme.colorScheme.secondary),
 //     borderRadius: BorderRadius.circular(raduis),
 //   );
 // }
@@ -253,7 +253,7 @@ class OtpView extends StatelessWidget {
 //       return buildText(
 //         text: remaining.seconds,
 //         size: 18.0,
-//         color: Get.theme.accentColor,
+//         color: Get.theme.colorScheme.secondary,
 //         weight: FontWeight.bold,
 //       );
 //     },

@@ -61,7 +61,7 @@ class RegisterView extends GetView<AuthController> {
                               ? Icon(
                                   Icons.add_a_photo,
                                   size: 50,
-                                  color: Get.theme.accentColor,
+                                  color: Get.theme.colorScheme.secondary,
                                 )
                               : null,
                           ),

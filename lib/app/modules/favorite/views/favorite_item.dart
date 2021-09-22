@@ -1,23 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shop_fever/app/data/models/product_model.dart';
 import 'package:shop_fever/app/data/models/user_model.dart';
+import 'package:shop_fever/app/modules/favorite/controllers/favorite_controller.dart';
 import 'package:shop_fever/app/modules/home/controllers/home_controller.dart';
 import 'package:shop_fever/app/routes/app_pages.dart';
 import 'package:shop_fever/app/utils/components.dart';
 
-class FavoriteItem extends StatelessWidget {
-  final dynamic data;
-  const FavoriteItem({ this.data });
+class FavoriteItem extends GetView<FavoriteController> {
+  
+  final UserModel? userModel;
+  final ProductModel? productModel;
+  const FavoriteItem({
+    required this.userModel,
+    required this.productModel,
+  });
 
   @override
   Widget build(BuildContext context) {
-    bool isUserData = data is UserModel;
     return InkWell(
       onTap: () {
-        if (isUserData) {
-          Get.toNamed(AppPages.PROFILE, arguments: data);
+        if (userModel != null) {
+          Get.find<HomeController>().currentClickedUser = userModel!;
+          Get.toNamed(AppPages.PROFILE);
         } else {
-          Get.find<HomeController>().currentProduct = data;
+          Get.find<HomeController>().currentProduct = productModel!;
           Get.toNamed(AppPages.PRODUCT_DETAILS);
         }
       },
@@ -32,7 +39,11 @@ class FavoriteItem extends StatelessWidget {
               Stack(
                 children: [
                   Image(
-                    image: NetworkImage(isUserData ? data.photo : data.photos[0]),
+                    image: NetworkImage(
+                      userModel != null
+                        ? userModel!.photo
+                        : productModel!.photos[0]
+                    ),
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: 200.0,
@@ -49,7 +60,9 @@ class FavoriteItem extends StatelessWidget {
                       )
                     ),
                     child: IconButton(
-                      onPressed: () {},
+                      onPressed: () => userModel != null
+                        ? controller.removeUserFromFavorites(userModel!.id)
+                        : controller.removeProductFromFavorites(productModel!.id),
                       icon: Icon(
                         Icons.cancel_outlined,
                         size: 30.0,
@@ -61,17 +74,21 @@ class FavoriteItem extends StatelessWidget {
               ),
               const SizedBox(height: 10.0),
               buildText(
-                text: data.name,
+                text: userModel != null
+                  ? userModel!.name
+                  : productModel!.name,
                 size: 24.0,
                 color: Colors.black,
                 weight: FontWeight.bold
               ),
               buildText(
-                text: isUserData
-                  ? data.productsCount.toString()
-                  : data.currency == 'd' ? '\$ ${data.price}' : 'ILS ${data.price}',
+                text: userModel != null
+                  ? 'متوفر'
+                  : productModel!.currency == 'd'
+                    ? '\$ ${productModel!.price}'
+                    : 'ILS ${productModel!.price}',
                 size: 20.0,
-                color: Get.theme.accentColor,
+                color: Get.theme.colorScheme.secondary,
               ),
             ],
           ),

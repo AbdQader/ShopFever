@@ -151,17 +151,15 @@ class AddProductController extends GetxController {
     return null;
   }
 
-
   ///allow user to pick user location
   ///let user chose start distanation
   Future<void> pickLocation(BuildContext context) async {
-
     CameraPosition cameraPosition = CameraPosition(
       //bearing: 192.8334901395799,
-        target: LatLng(37.43296265331129, -122.08832357078792),
-        //tilt: 59.440717697143555,
-        zoom: 14.151926040649414);
-
+      target: LatLng(37.43296265331129, -122.08832357078792),
+      //tilt: 59.440717697143555,
+      zoom: 14.151926040649414
+    );
     await Navigator.push(
       context,
       MaterialPageRoute(
@@ -172,10 +170,12 @@ class AddProductController extends GetxController {
           onPlacePicked: (result) {
             if (result.geometry == null) return;
 
-           lat = result.geometry!.location.lat;
-           lon = result.geometry!.location.lng;
+            lat = result.geometry!.location.lat;
+            lon = result.geometry!.location.lng;
 
             address = result.formattedAddress ?? 'موقع غير معروف';
+            print('abd => address: $address');
+            print('abd => lat: $lat || lon: $lon');
             update();
           },
           initialPosition: cameraPosition.target,

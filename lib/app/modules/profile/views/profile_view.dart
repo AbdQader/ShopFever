@@ -22,14 +22,29 @@ class ProfileView extends GetView<ProfileController> {
             onPressed: () => Get.back(),
           ),
           actions: [
-            !controller.isTheCurrent()
+            controller.isTheCurrent()
             ? IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.favorite_border, color: Colors.white),
-              )
-            : IconButton(
                 onPressed: () => showBottomSheet(),
                 icon: const Icon(Icons.more_vert, color: Colors.white),
+              )
+            : GetBuilder<ProfileController>(
+                id: 'Favorites',
+                builder: (controller) => controller.isFavLoading
+                ? Transform.scale(
+                    scale: 0.5,
+                    child: showProgressIndicator(),
+                  )
+                : IconButton(
+                    onPressed: () => controller.markUserAsFavorites(),
+                    icon: Icon(
+                      controller.isFavorites
+                        ? Icons.favorite
+                        : Icons.favorite_border,
+                      color: controller.isFavorites
+                        ? Colors.redAccent
+                        : Colors.white
+                    ),
+                  ),
               ),
           ],
         ),
@@ -78,12 +93,15 @@ class ProfileView extends GetView<ProfileController> {
                       icon: Icon(
                         Icons.favorite_border,
                         size: 30.0,
-                        color: Get.theme.accentColor,
+                        color: Get.theme.colorScheme.secondary,
                       ),
-                      label: buildText(
-                        text: '0',
-                        size: 25.0,
-                        color: Get.theme.accentColor,
+                      label: GetBuilder<ProfileController>(
+                        id: 'FavTimes',
+                        builder: (controller) => buildText(
+                          text: controller.favTimes.toString(),
+                          size: 25.0,
+                          color: Get.theme.colorScheme.secondary,
+                        )
                       ),
                     ),
                   ],
@@ -98,12 +116,12 @@ class ProfileView extends GetView<ProfileController> {
               //       //   icon: Icon(
               //       //     Icons.favorite_border,
               //       //     size: 30.0,
-              //       //     color: Get.theme.accentColor,
+              //       //     color: Get.theme.colorScheme.secondary,
               //       //   ),
               //       //   label: buildText(
               //       //     text: '0',
               //       //     size: 25.0,
-              //       //     color: Get.theme.accentColor,
+              //       //     color: Get.theme.colorScheme.secondary,
               //       //   )
               //       // ),
               //       const Spacer(),

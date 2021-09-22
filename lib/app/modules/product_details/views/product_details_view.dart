@@ -4,7 +4,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:shop_fever/app/modules/home/controllers/home_controller.dart';
-import 'package:shop_fever/app/modules/profile/controllers/profile_controller.dart';
 import 'package:shop_fever/app/routes/app_pages.dart';
 import 'package:shop_fever/app/utils/components.dart';
 import '../controllers/product_details_controller.dart';
@@ -33,28 +32,21 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                 GetBuilder<ProductDetailsController>(
                   id: 'Favorites',
                   builder: (controller) => controller.isFavLoading
-                  ? Transform.scale(
-                      scale: 0.5,
-                      child: showProgressIndicator(),
-                    )
-                  : IconButton(
-                      onPressed: () => controller.markProductAsFavorites(controller.product.id),
-                      icon: Icon(
-                        controller.isFavorites
-                          ? Icons.favorite
-                          : Icons.favorite_border,
-                        color: controller.isFavorites
-                          ? Colors.redAccent
-                          : Colors.white
+                    ? Transform.scale(
+                        scale: 0.5,
+                        child: showProgressIndicator(),
+                      )
+                    : IconButton(
+                        onPressed: () => controller.markProductAsFavorites(),
+                        icon: Icon(
+                          controller.isFavorites
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                          color: controller.isFavorites
+                            ? Colors.redAccent
+                            : Colors.white
+                        ),
                       ),
-                    ),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                      Icons.shortcut_outlined,
-                      color: Colors.white
-                  ),
                 ),
               ],
               flexibleSpace: FlexibleSpaceBar(
@@ -115,10 +107,10 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           buildText(
-                              text: controller.product.currency.startsWith('s') ? '${controller.product.price}ILS' : "${controller.product.price}Dollar",
-                              size: 24.0,
-                              color: Get.theme.accentColor,
-                              weight: FontWeight.bold
+                            text: controller.product.currency.startsWith('s') ? '${controller.product.price} ILS' : "${controller.product.price} Dollar",
+                            size: 24.0,
+                            color: Get.theme.colorScheme.secondary,
+                            weight: FontWeight.bold
                           ),
                           const Spacer(),
                           const Icon(Icons.favorite_border, size: 20.0),
@@ -236,10 +228,14 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
           ],
         ),
         floatingActionButton: buildFloatingActionButton(
-            title: 'تواصل معي',
-            icon: Icons.phone,
-            width: 150.0,
-            onPressed: () {}
+          title: controller.currentUser.id == controller.product.user.id
+            ? 'تعديل المنتج'
+            : 'تواصل معي',
+          icon: controller.currentUser.id == controller.product.user.id
+            ? Icons.edit
+            : Icons.phone,
+          width: 150.0,
+          onPressed: () {}
         ),
       ),
     );

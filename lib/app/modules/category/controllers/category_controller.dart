@@ -23,7 +23,6 @@ class CategoryController extends GetxController {
 
   ///to get the category products
   void getCategoryProducts() {
-    isLoading = true;
     HelperFunctions.safeApiCall(
       execute: () async
       {
@@ -48,9 +47,13 @@ class CategoryController extends GetxController {
       },
       onError: (error) {
         isLoading = false;
+        update(['CategoryProducts']);
         ErrorHandler.handleError(error);
       },
-      onLoading: () {}
+      onLoading: () {
+        isLoading = true;
+        update(['CategoryProducts']);
+      }
     );
   }
 

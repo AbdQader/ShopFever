@@ -15,7 +15,7 @@ class ProfileController extends GetxController with SingleGetTickerProviderMixin
   late final TabController tabController;
 
   // For Home Controller
-  final _homeController = Get.find<HomeController>();
+  HomeController homeController = Get.find<HomeController>();
 
   // For Users
   UserModel currentUser = Get.find<HomeController>().currentClickedUser;
@@ -41,17 +41,18 @@ class ProfileController extends GetxController with SingleGetTickerProviderMixin
     super.onInit();
     tabController = TabController(length: 2, vsync: this);
     getUserProducts();
+    checkIfUserIsFavourite();
+    getFavTimes();
   }
 
   ///to check if the user is the current or not
-  bool isTheCurrent() => _homeController.currentUser.id == currentUser.id;
+  bool isTheCurrent() => homeController.currentUser.id == currentUser.id;
 
   ///to get the user products
   void getUserProducts() {
-    isLoading = true;
     HelperFunctions.safeApiCall(
       execute: () {
-        var headers = {Constants.API_AUTHORIZATION : Get.find<HomeController>().currentUser.token};
+        var headers = {Constants.API_AUTHORIZATION : homeController.currentUser.token};
         return BaseClient.get(Constants.USER_PRODUCTS_URL+'/${currentUser.id}',headers: headers);
       },
       onSuccess: (response) {
@@ -60,61 +61,75 @@ class ProfileController extends GetxController with SingleGetTickerProviderMixin
         });
         isLoading = false;
         update(['UserProduct']);
-      },onError: (error) {
+      },
+      onError: (error) {
         isLoading = false;
+        update(['UserProduct']);
         ErrorHandler.handleError(error);
-        Logger().e(error);
+      },
+      onLoading: () {
+        isLoading = true;
+        update(['UserProduct']);
       }
     );
   }
 
   ///check if the product is in favourite
-  checkIfUserIsFavourite() async {
-    var headers = {Constants.API_AUTHORIZATION : currentUser.token};
-    HelperFunctions.safeApiCall(execute: () {
-      // TODO: don't forget to change the url in the constants
-      return BaseClient.get(Constants.CHECK_IF_FAVOURITE+'/'+currentUser.id,headers: headers);
-    }, onSuccess: (response) {
-      isFavorites = response['isFavorite'];
-      isFavLoading = false;
-      update(['Favorites']);
-    },onError: (error){
-      isFavLoading = false;
-      update(['Favorites']);
-    });
+  void checkIfUserIsFavourite() async {
+    var headers = {Constants.API_AUTHORIZATION : homeController.currentUser.token};
+    HelperFunctions.safeApiCall(
+      execute: () {
+        return BaseClient.get(Constants.CHECK_IF_USER_FAVOURITE+'/'+currentUser.id,headers: headers);
+      },
+      onSuccess: (response) {
+        isFavorites = response['isFavorite'];
+        isFavLoading = false;
+        update(['Favorites']);
+      },
+      onError: (error) {
+        isFavLoading = false;
+        update(['Favorites']);
+        ErrorHandler.handleError(error);
+      },
+      onLoading: () {
+        isFavLoading = true;
+        update(['Favorites']);
+      }
+    );
   }
 
   ///get favourite times
-  getFavTimes() {
-    HelperFunctions.safeApiCall(execute: () {
-      var headers = {Constants.API_AUTHORIZATION : currentUser.token};
-      return BaseClient.get(Constants.FAVOURITE_USERS_COUNT+'/'+currentUser.id,headers: headers);
-    }, onSuccess: (response) {
-      favTimes = response['count'];
-      update(['FavTimes']);
-    },onError: (error){
-      Logger().e(error);
-    });
+  void getFavTimes() {
+    HelperFunctions.safeApiCall(
+      execute: () {
+        var headers = {Constants.API_AUTHORIZATION : homeController.currentUser.token};
+        var query = {Constants.USER_ID: currentUser.id};
+        return BaseClient.get(Constants.FAVOURITE_USERS_COUNT, query: query, headers: headers);
+      },
+      onSuccess: (response) {
+        Logger().e('res: $response');
+        favTimes = response['count'];
+        update(['FavTimes']);
+      },
+      onError: (error) {
+        ErrorHandler.handleError(error);
+      }
+    );
   }
 
   ///to add the product to the favorites
-  void markUserAsFavorites(String userId) {
+  void markUserAsFavorites() {
     HelperFunctions.safeApiCall(
       execute: () async {
         return isFavorites
           ? BaseClient.delete(
-              Constants.FAVORITE_USERS_URL + '/$userId',
-              headers: {
-                Constants.API_AUTHORIZATION:
-                Get.find<HomeController>().currentUser.token
-              }
+              Constants.FAVORITE_USERS_URL,
+              query: { Constants.USER_ID: currentUser.id },
+              headers: { Constants.API_AUTHORIZATION: homeController.currentUser.token }
             )
           : BaseClient.post(
-              Constants.FAVORITE_USERS_URL + '/$userId',
-              headers: {
-                Constants.API_AUTHORIZATION:
-                Get.find<HomeController>().currentUser.token
-              }
+              Constants.FAVORITE_USERS_URL + '/${currentUser.id}',
+              headers: { Constants.API_AUTHORIZATION: homeController.currentUser.token }
             );
       },
       onSuccess: (response) {
@@ -123,13 +138,15 @@ class ProfileController extends GetxController with SingleGetTickerProviderMixin
         update(['Favorites']);
       },
       onError: (error) {
-        ErrorHandler.handleError(error);
         isFavLoading = false;
+        update(['Favorites']);
+        ErrorHandler.handleError(error);
       },
       onLoading: () {
         isFavLoading = true;
         update(['Favorites']);
-      });
+      }
+    );
   }
 
   @override

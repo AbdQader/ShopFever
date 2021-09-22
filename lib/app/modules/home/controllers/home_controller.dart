@@ -171,7 +171,6 @@ class HomeController extends GetxController {
         update(['SpecialUsers']);
       },
       onError: (error) {
-        Logger().e('getSpecialUsers => Error: $error');
         ErrorHandler.handleError(error);
       },
       onLoading: () {}

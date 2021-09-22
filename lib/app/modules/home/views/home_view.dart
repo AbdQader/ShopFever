@@ -160,7 +160,7 @@ class HomeView extends GetView<HomeController> {
           buildText(
             text: firstWord,
             size: 24.0,
-            color: Get.theme.accentColor,
+            color: Get.theme.colorScheme.secondary,
             weight: FontWeight.bold,
           ),
           const SizedBox(width: 5.0),
