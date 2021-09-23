@@ -65,7 +65,7 @@ class ProductItem extends StatelessWidget {
                   buildText(
                     text: '${productModel.price} ILS',
                     size: 16.0,
-                    color: Get.theme.accentColor,
+                    color: Get.theme.colorScheme.secondary,
                     weight: FontWeight.bold,
                     overflow: TextOverflow.ellipsis
                   ),

@@ -43,7 +43,7 @@ class AddProductView extends GetView<AddProductController> {
                         height: 60.0,
                         clipBehavior: Clip.antiAliasWithSaveLayer,
                         decoration: BoxDecoration(
-                          color: Get.theme.accentColor,
+                          color: Get.theme.colorScheme.secondary,
                           borderRadius: BorderRadius.circular(15.0),
                         ),
                         child: const Icon(
@@ -72,7 +72,7 @@ class AddProductView extends GetView<AddProductController> {
                                 height: 100.0,
                                 clipBehavior: Clip.antiAliasWithSaveLayer,
                                 decoration: BoxDecoration(
-                                  color: Get.theme.accentColor,
+                                  color: Get.theme.colorScheme.secondary,
                                   borderRadius: BorderRadius.circular(15.0),
                                 ),
                                 child: Image.file(
@@ -174,19 +174,16 @@ class AddProductView extends GetView<AddProductController> {
                       onChanged: (value) => controller.category = value,
                       items: controller.getCategories(),
                     ),
-                    // const SizedBox(height: 30.0),
-                    //
-                    // ElevatedButton(
-                    //   onPressed: (){
-                    //     controller.pickLocation(context);
-                    //   },
-                    //   child: Text('أختر الموقع')
-                    // ),
-                    // const SizedBox(height: 10.0),
-                    // Visibility(
-                    // visible: controller.address != null
-                    //     ,child: Text(controller.address ?? "UNKNOWN"),),
-
+                    const SizedBox(height: 30.0),
+                    ElevatedButton(
+                      onPressed: () => controller.pickLocation(context),
+                      child: Text('أختر الموقع')
+                    ),
+                    const SizedBox(height: 10.0),
+                    Visibility(
+                      visible: controller.address != null,
+                      child: Text(controller.address ?? "غير معروف"),
+                    ),
                     const SizedBox(height: 30.0),
                     buildMaterialButton(
                       onPressed: () => controller.submit(),

@@ -40,8 +40,6 @@ class UserModel {
     return UserModel(
       name: json[Constants.NAME],
       id: json[Constants.ID],
-      // TODO: Remind emad/nigga to edit his fucking url
-      // the fucking token is not in the fucking response
       token: json[Constants.TOKEN] ?? 'emad is a bitch',
       photo: json[Constants.PHOTO],
       phone: json[Constants.PHONE],
@@ -56,5 +54,7 @@ class UserModel {
     Constants.NAME: name,
     Constants.PHONE: phone,
     Constants.PHOTO: photo,
+    Constants.PRODUCTS_COUNT: productsCount,
+    Constants.PRODUCT_PHOTO: productPhoto,
   };
 }

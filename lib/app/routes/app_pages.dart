@@ -6,12 +6,13 @@ import 'package:shop_fever/app/modules/auth/views/login_view.dart';
 import 'package:shop_fever/app/modules/auth/views/register_view.dart';
 import 'package:shop_fever/app/modules/category/bindings/category_binding.dart';
 import 'package:shop_fever/app/modules/category/views/category_view.dart';
+import 'package:shop_fever/app/modules/favorite/bindings/favorite_binding.dart';
+import 'package:shop_fever/app/modules/favorite/views/favorite_view.dart';
 import 'package:shop_fever/app/modules/home/bindings/home_binding.dart';
 import 'package:shop_fever/app/modules/home/views/home_view.dart';
 import 'package:shop_fever/app/modules/product_details/bindings/product_details_binding.dart';
 import 'package:shop_fever/app/modules/product_details/views/product_details_view.dart';
 import 'package:shop_fever/app/modules/profile/bindings/profile_binding.dart';
-import 'package:shop_fever/app/modules/profile/views/favorites_view.dart';
 import 'package:shop_fever/app/modules/profile/views/profile_view.dart';
 import 'package:shop_fever/app/modules/search/bindings/search_binding.dart';
 import 'package:shop_fever/app/modules/search/views/search_view.dart';
@@ -54,8 +55,8 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.FAVORITES,
-      page: () => FavoritesView(),
-      binding: ProfileBinding(),
+      page: () => FavoriteView(),
+      binding: FavoriteBinding(),
     ),
     GetPage(
       name: _Paths.PRODUCT_DETAILS,

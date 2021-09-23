@@ -67,7 +67,7 @@ Widget buildMaterialButton({
         color: Colors.white,
         weight: FontWeight.bold
       ),
-      color: Get.theme.accentColor,
+      color: Get.theme.colorScheme.secondary,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
       ),
@@ -218,7 +218,7 @@ Widget buildListTile({
     leading: Icon(
       icon,
       size: 25,
-      color: Get.theme.accentColor,
+      color: Get.theme.colorScheme.secondary,
     ),
   );
 }
@@ -236,7 +236,7 @@ Widget buildFloatingActionButton({
       width: width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.0),
-        color: Get.theme.accentColor,
+        color: Get.theme.colorScheme.secondary,
       ),
       child: TextButton.icon(
         label: buildText(

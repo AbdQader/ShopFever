@@ -10,34 +10,33 @@ import 'package:shop_fever/app/utils/constants.dart';
 import 'package:shop_fever/app/utils/helperFunctions.dart';
 
 class ProductDetailsController extends GetxController {
-  // for image slider
-  int currentIndex = 0;
+  //home controller
+  HomeController homeController = Get.find<HomeController>();
+
+  //current user
+  late UserModel currentUser;
 
   //product
   late ProductModel product;
+
+  // for image slider
+  int currentIndex = 0;
 
   //watch and fav times for the product
   var favTimes = 0;
   var watchedTimes = 0;
 
-  //home controller
-  HomeController homeController = Get.find();
-
   // for favorites icon
   bool isFavorites = false;
-
-  //current user
-  late UserModel currentUser;
 
   //to show loading when user mark/remove from favourite
   var isFavLoading = true;
 
   @override
   void onInit() {
-    product = homeController.currentProduct;
-    Logger().e(product.user.name);
-    markProductAsWatched(product.id);
     currentUser = homeController.currentUser;
+    product = homeController.currentProduct;
+    markProductAsWatched();
     checkIfProductIsFavourite();
     getWatchedTimes();
     getFavTimes();
@@ -45,44 +44,58 @@ class ProductDetailsController extends GetxController {
   }
 
   ///check if the product is in favourite
-  checkIfProductIsFavourite() async {
+  void checkIfProductIsFavourite() async {
     var headers = {Constants.API_AUTHORIZATION : currentUser.token};
-    HelperFunctions.safeApiCall(execute: () {
-      return BaseClient.get(Constants.CHECK_IF_FAVOURITE+'/'+product.id,headers: headers);
-    }, onSuccess: (response) {
-      isFavorites = response['isFavorite'];
-      isFavLoading = false;
-      update(['Favorites']);
-    },onError: (error){
-      isFavLoading = false;
-      update(['Favorites']);
-    });
+    HelperFunctions.safeApiCall(
+        execute: () {
+          return BaseClient.get(Constants.CHECK_IF_PRODUCT_FAVOURITE+'/'+product.id,headers: headers);
+        },
+        onSuccess: (response) {
+          isFavorites = response['isFavorite'];
+          isFavLoading = false;
+          update(['Favorites']);
+        },
+        onError: (error){
+          isFavLoading = false;
+          update(['Favorites']);
+        }
+    );
   }
 
   ///get watched time
-  getWatchedTimes() {
-    HelperFunctions.safeApiCall(execute: () {
-      var headers = {Constants.API_AUTHORIZATION : currentUser.token};
-      return BaseClient.get(Constants.WATCHED_COUNT+'/'+product.id,headers: headers);
-    }, onSuccess: (response) {
-      watchedTimes = response['count'];
-      update(['WatchedTimes']);
-    },onError: (error){
-      Logger().e(error);
-    });
+  void getWatchedTimes() {
+    HelperFunctions.safeApiCall(
+        execute: () {
+          var headers = {Constants.API_AUTHORIZATION : currentUser.token};
+          return BaseClient.get(Constants.WATCHED_COUNT+'/'+product.id,headers: headers);
+        },
+        onSuccess: (response) {
+          watchedTimes = response['count'];
+          update(['WatchedTimes']);
+        },
+        onError: (error){
+          ErrorHandler.handleError(error);
+          Logger().e(error);
+        }
+    );
   }
 
   ///get favourite time
-  getFavTimes() {
-    HelperFunctions.safeApiCall(execute: () {
-      var headers = {Constants.API_AUTHORIZATION : currentUser.token};
-      return BaseClient.get(Constants.FAVOURITE_COUNT+'/'+product.id,headers: headers);
-    }, onSuccess: (response) {
-      favTimes = response['count'];
-      update(['FavTimes']);
-    },onError: (error){
-      Logger().e(error);
-    });
+  void getFavTimes() {
+    HelperFunctions.safeApiCall(
+        execute: () {
+          var headers = {Constants.API_AUTHORIZATION : currentUser.token};
+          return BaseClient.get(Constants.FAVOURITE_PRODUCTS_COUNT+'/'+product.id,headers: headers);
+        },
+        onSuccess: (response) {
+          favTimes = response['count'];
+          update(['FavTimes']);
+        },
+        onError: (error){
+          ErrorHandler.handleError(error);
+          Logger().e(error);
+        }
+    );
   }
 
   ///to change image slider index
@@ -106,23 +119,24 @@ class ProductDetailsController extends GetxController {
   }
 
   ///to add the product to the favorites
-  void markProductAsFavorites(String productId) {
+  void markProductAsFavorites() {
     HelperFunctions.safeApiCall(
         execute: () async {
-          return isFavorites ?
-          BaseClient.delete(
-              Constants.DELETE_FROM_FAVOURITE + '/$productId',
+          return isFavorites
+              ? BaseClient.delete(
+              Constants.DELETE_FROM_FAVOURITE + '/${product.id}',
               headers: {
                 Constants.API_AUTHORIZATION:
                 Get.find<HomeController>().currentUser.token
-              })
-              :
-          BaseClient.post(
-              Constants.FAVORITE_PRODUCTS_URL + '/$productId',
+              }
+          )
+              : BaseClient.post(
+              Constants.FAVORITE_PRODUCTS_URL + '/${product.id}',
               headers: {
                 Constants.API_AUTHORIZATION:
                 Get.find<HomeController>().currentUser.token
-              });
+              }
+          );
         },
         onSuccess: (response) {
           isFavorites = !isFavorites;
@@ -130,8 +144,9 @@ class ProductDetailsController extends GetxController {
           update(['Favorites']);
         },
         onError: (error) {
-          ErrorHandler.handleError(error);
           isFavLoading = false;
+          update(['Favorites']);
+          ErrorHandler.handleError(error);
         },
         onLoading: () {
           isFavLoading = true;
@@ -140,19 +155,21 @@ class ProductDetailsController extends GetxController {
   }
 
   ///to mark the product as watched
-  void markProductAsWatched(String productId) {
+  void markProductAsWatched() {
     HelperFunctions.safeApiCall(
       execute: () async {
         return await BaseClient.post(
-            Constants.WATCHED_PRODUCTS_URL + '/$productId',
+            Constants.WATCHED_PRODUCTS_URL + '/${product.id}',
             headers: {
               Constants.API_AUTHORIZATION:
               Get.find<HomeController>().currentUser.token
-            });
+            }
+        );
       },
       onSuccess: (response) {
         print('abd => Response: $response');
-      },);
+      },
+    );
   }
 
 }
