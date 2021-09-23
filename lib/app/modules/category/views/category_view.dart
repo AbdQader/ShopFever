@@ -34,8 +34,8 @@ class CategoryView extends GetView<CategoryController> {
               ? EmptyView(text: 'عذراً هذه الفئة لا تحتوي على اي سلع!')
               : GridView.builder(
                   physics: const BouncingScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200.0,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                   crossAxisCount: 2,
                     childAspectRatio: 2/3.2,
                     crossAxisSpacing: 5.0,
                     mainAxisSpacing: 5.0,

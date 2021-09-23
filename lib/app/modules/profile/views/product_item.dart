@@ -44,18 +44,18 @@ class ProductItem extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 5.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.favorite_border, size: 15.0),
-                      const SizedBox(width: 10.0),
-                      Text('23'),
-                      const SizedBox(width: 50.0),
-                      const Icon(Icons.remove_red_eye_outlined, size: 15.0),
-                      const SizedBox(width: 10.0),
-                      Text('2078'),
-                    ],
-                  ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     const Icon(Icons.favorite_border, size: 15.0),
+                  //     const SizedBox(width: 10.0),
+                  //     Text('23'),
+                  //     const SizedBox(width: 50.0),
+                  //     const Icon(Icons.remove_red_eye_outlined, size: 15.0),
+                  //     const SizedBox(width: 10.0),
+                  //     Text('2078'),
+                  //   ],
+                  // ),
                   buildText(
                     text: productModel.name,
                     size: 18.0,

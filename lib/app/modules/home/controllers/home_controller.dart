@@ -13,6 +13,7 @@ import 'package:shop_fever/app/utils/helperFunctions.dart';
 class HomeController extends GetxController {
   // For Current User
   UserModel? _currentUser;
+
   UserModel get currentUser => _currentUser!;
 
   late UserModel currentClickedUser;
@@ -28,39 +29,49 @@ class HomeController extends GetxController {
 
   // For Categories
   List<CategoryModel> _categories = [];
+
   List<CategoryModel> get categories => _categories;
 
   // For Special Users
   List<UserModel> _users = [];
+
   List<UserModel> get users => _users;
 
   // For Products
   List<ProductModel> _products = [];
+
   List<ProductModel> get products => _products;
 
   // For Special Products
   List<ProductModel> _specialProducts = [];
+
   List<ProductModel> get specialProducts => _specialProducts;
 
   // For Recent Products
   List<ProductModel> _recentProducts = [];
+
   List<ProductModel> get recentProducts => _recentProducts;
 
   // For Close Products
   List<ProductModel> _closeProducts = [];
+
   List<ProductModel> get closeProducts => _closeProducts;
 
   @override
   void onInit() {
     super.onInit();
     getCurrentUser().then((_) {
-      getUserLocation();
-      getCategories();
-      getProducts();
-      getSpecialUsers();
-      getSpecialProducts();
-      getRecentProducts();
+      getData();
     });
+  }
+
+  Future<void> getData() async {
+    await getUserLocation();
+    await getCategories();
+    await getProducts();
+    await getSpecialUsers();
+    await getSpecialProducts();
+    await getRecentProducts();
   }
 
   ///to get current user from local db
@@ -73,7 +84,7 @@ class HomeController extends GetxController {
   }
 
   ///to get the user location
-  void getUserLocation() async {
+  Future<void> getUserLocation() async {
     // check if the service is enabled
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
@@ -95,156 +106,140 @@ class HomeController extends GetxController {
   ///to update the user location
   Future<void> updateUserLocation(double lat, double lon) async {
     HelperFunctions.safeApiCall(
-      execute: () async
-      {
-        return await BaseClient.post(
-          Constants.USER_LOCATION_URL,
-          body: {'location': [lon, lat]},
-          headers: {
+        execute: () async {
+          Logger().e('UPDATE LOCATION => ${lat} || ${lon}');
+          return await BaseClient.post(Constants.USER_LOCATION_URL, body: {
+            'location': [lon, lat]
+          }, headers: {
             Constants.API_AUTHORIZATION: _currentUser!.token,
             Constants.API_CONTENT_TYPE: Constants.API_APPLICATION_JSON,
-          }
-        );
-      },
-      onSuccess: (response) => getCloseProducts(),
-      onError: (error) {
-        Logger().e('updateUserLocation => Error: $error');
-        ErrorHandler.handleError(error);
-      },
-      onLoading: () {}
-    );
+          });
+        },
+        onSuccess: (response) {
+          Logger().e(response);
+          getCloseProducts();
+        },
+        onError: (error) {
+          Logger().e('updateUserLocation => Error: $error');
+          ErrorHandler.handleError(error);
+        },
+        onLoading: () {});
   }
 
   ///to fetch the categories
-  void getCategories() async {
+  Future<void> getCategories() async {
     HelperFunctions.safeApiCall(
-      execute: () async
-      {
-        return BaseClient.get(Constants.CATEGORIES_URL, headers: {Constants.API_AUTHORIZATION: _currentUser!.token});
-      },
-      onSuccess: (response)
-      {
-        response['data']['categories'].forEach((category) {
-          _categories.add(CategoryModel.fromJson(category));
-        });
-        update(['Category']);
-      },
-      onError: (error) {
-        Logger().e('getCategories => Error: $error');
-        ErrorHandler.handleError(error);
-      },
-      onLoading: () {}
-    );
+        execute: () async {
+          return BaseClient.get(Constants.CATEGORIES_URL,
+              headers: {Constants.API_AUTHORIZATION: _currentUser!.token});
+        },
+        onSuccess: (response) {
+          response['data']['categories'].forEach((category) {
+            _categories.add(CategoryModel.fromJson(category));
+          });
+          update(['Category']);
+        },
+        onError: (error) {
+          Logger().e('getCategories => Error: $error');
+          ErrorHandler.handleError(error);
+        },
+        onLoading: () {});
   }
 
   ///to fetch the products
-  void getProducts() async {
+  Future<void> getProducts() async {
     HelperFunctions.safeApiCall(
-      execute: () async
-      {
-        return await BaseClient.get(Constants.PRODUCTS_URL, headers: {Constants.API_AUTHORIZATION: _currentUser!.token});
-      },
-      onSuccess: (response)
-      {
-        response['products'].forEach((product) {
-          _products.add(ProductModel.fromJson(product));
-        });
-        update(['Products']);
-      },
-      onError: (error) => ErrorHandler.handleError(error),
-      onLoading: () {}
-    );
+        execute: () async {
+          return await BaseClient.get(Constants.PRODUCTS_URL,
+              headers: {Constants.API_AUTHORIZATION: _currentUser!.token});
+        },
+        onSuccess: (response) {
+          response['products'].forEach((product) {
+            _products.add(ProductModel.fromJson(product));
+          });
+          update(['Products']);
+        },
+        onError: (error) => ErrorHandler.handleError(error),
+        onLoading: () {});
   }
 
   ///to fetch the special users
-  void getSpecialUsers() async {
+  Future<void> getSpecialUsers() async {
     HelperFunctions.safeApiCall(
-      execute: () async
-      {
-        return await BaseClient.get(Constants.SPECIAL_USERS_URL, headers: {Constants.API_AUTHORIZATION: _currentUser!.token});
-      },
-      onSuccess: (response)
-      {
-        response['users'].forEach((user) {
-          _users.add(UserModel.fromJson(user));
-        });
-        update(['SpecialUsers']);
-      },
-      onError: (error) {
-        Logger().e('getSpecialUsers => Error: $error');
-        ErrorHandler.handleError(error);
-      },
-      onLoading: () {}
-    );
+        execute: () async {
+          return await BaseClient.get(Constants.SPECIAL_USERS_URL,
+              headers: {Constants.API_AUTHORIZATION: _currentUser!.token});
+        },
+        onSuccess: (response) {
+          response['users'].forEach((user) {
+            _users.add(UserModel.fromJson(user));
+          });
+          update(['SpecialUsers']);
+        },
+        onError: (error) {
+          Logger().e('getSpecialUsers => Error: $error');
+          ErrorHandler.handleError(error);
+        },
+        onLoading: () {});
   }
 
   ///to fetch the special products
-  void getSpecialProducts() async {
+  Future<void> getSpecialProducts() async {
     HelperFunctions.safeApiCall(
-      execute: () async
-      {
-        return await BaseClient.get(Constants.SPECIAL_PRODUCTS_URL, headers: {Constants.API_AUTHORIZATION: _currentUser!.token});
-      },
-      onSuccess: (response)
-      {
-        response['products'].forEach((product) {
-          _specialProducts.add(ProductModel.fromJson(product));
-        });
-        update(['SpecialProducts']);
-      },
-      onError: (error) {
-        Logger().e('getSpecialProducts => Error: $error');
-        ErrorHandler.handleError(error);
-      },
-      onLoading: () {}
-    );
+        execute: () async {
+          return await BaseClient.get(Constants.SPECIAL_PRODUCTS_URL,
+              headers: {Constants.API_AUTHORIZATION: _currentUser!.token});
+        },
+        onSuccess: (response) {
+          response['products'].forEach((product) {
+            _specialProducts.add(ProductModel.fromJson(product));
+          });
+          update(['SpecialProducts']);
+        },
+        onError: (error) {
+          Logger().e('getSpecialProducts => Error: $error');
+          ErrorHandler.handleError(error);
+        },
+        onLoading: () {});
   }
 
   ///to fetch the products
-  void getRecentProducts() async {
+  Future<void> getRecentProducts() async {
     HelperFunctions.safeApiCall(
-      execute: () async
-      {
-        return await BaseClient.get(Constants.RECENT_PRODUCTS_URL, headers: {Constants.API_AUTHORIZATION: _currentUser!.token});
-      },
-      onSuccess: (response)
-      {
-        response['products'].forEach((product) {
-          _recentProducts.add(ProductModel.fromJson(product));
-        });
-        update(['Products']);
-      },
-      onError: (error) {
-        Logger().e('getRecentProducts => Error: $error');
-        ErrorHandler.handleError(error);
-      },
-      onLoading: () {}
-    );
+        execute: () async {
+          return await BaseClient.get(Constants.RECENT_PRODUCTS_URL,
+              headers: {Constants.API_AUTHORIZATION: _currentUser!.token});
+        },
+        onSuccess: (response) {
+          response['products'].forEach((product) {
+            _recentProducts.add(ProductModel.fromJson(product));
+          });
+          update(['Products']);
+        },
+        onError: (error) {
+          Logger().e('getRecentProducts => Error: $error');
+          ErrorHandler.handleError(error);
+        },
+        onLoading: () {});
   }
 
   ///to fetch the close products
   void getCloseProducts() async {
     HelperFunctions.safeApiCall(
-      execute: () async
-      {
-        return await BaseClient.get(
-          Constants.CLOSE_PRODUCTS_URL,
-          headers: {Constants.API_AUTHORIZATION: _currentUser!.token}
-        );
-      },
-      onSuccess: (response)
-      {
-        response['products'].forEach((product) {
-          _closeProducts.add(ProductModel.fromJson(product));
-        });
-        update(['CloseProducts']);
-      },
-      onError: (error) {
-        Logger().e('getCloseProducts => Error: $error');
-        ErrorHandler.handleError(error);
-      },
-      onLoading: () {}
-    );
+        execute: () async {
+          return await BaseClient.get(Constants.CLOSE_PRODUCTS_URL,
+              headers: {Constants.API_AUTHORIZATION: _currentUser!.token});
+        },
+        onSuccess: (response) {
+          response['products'].forEach((product) {
+            _closeProducts.add(ProductModel.fromJson(product));
+          });
+          update(['CloseProducts']);
+        },
+        onError: (error) {
+          Logger().e('getCloseProducts => Error: $error');
+          ErrorHandler.handleError(error);
+        },
+        onLoading: () {});
   }
-
 }
