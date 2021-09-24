@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:shop_fever/app/data/local/my_hive.dart';
 import 'package:shop_fever/app/data/models/category_model.dart';
+import 'package:shop_fever/app/data/models/product_model.dart';
 import 'package:shop_fever/app/modules/home/controllers/home_controller.dart';
 import 'package:shop_fever/app/services/base_client.dart';
 import 'package:shop_fever/app/utils/components.dart';
@@ -16,11 +17,15 @@ import 'package:shop_fever/app/utils/helperFunctions.dart';
 
 class AddProductController extends GetxController {
   //home controller
-  HomeController _homeController = Get.put(HomeController());
+  HomeController _homeController = Get.find<HomeController>();
+ 
+  // For Edit Product
+  ProductModel? product;
 
   // For ImagePicker
   ImagePicker _picker = ImagePicker();
   List<File> images = <File>[];
+  List<dynamic> urlImages = <dynamic>[];
 
   // For DropdownButton
   late final List<CategoryModel> categoryList;
@@ -34,9 +39,9 @@ class AddProductController extends GetxController {
   final priceController = TextEditingController();
 
   // For DropdownButton
-  late String category;
-  late String status;
-  late String currency;
+  String? category;
+  String? status;
+  String? currency;
 
   //for location
   double? lon;
@@ -45,6 +50,17 @@ class AddProductController extends GetxController {
 
   @override
   void onInit() {
+    if (Get.arguments != null)
+    {
+      product = Get.arguments;
+      urlImages = product!.photos;
+      nameController.text = product!.name;
+      descriptionController.text = product!.description;
+      priceController.text = product!.price.toString();
+      category = getCategoryName(product!.categoryId);
+      status = product!.isItUsed ? 'مستخدم' : 'جديد';
+      currency = product!.currency == 'd' ? 'USD دولار' : 'ILS شيكل';
+    }
     categoryList = _homeController.categories;
     super.onInit();
   }
@@ -66,8 +82,14 @@ class AddProductController extends GetxController {
     return cate;
   }
 
+  ///to get category name
+  String getCategoryName(String categoryId) {
+    return _homeController.categories
+      .firstWhere((cate) => cate.id == product!.categoryId).name;
+  }
+
   ///Submit the product data to the database
-  submit() async {
+  Future<void> submit() async {
     // Close the keyboard
     Get.focusScope!.unfocus();
 
@@ -95,7 +117,7 @@ class AddProductController extends GetxController {
         Constants.NAME: nameController.value.text,
         Constants.DESCRIPTION: descriptionController.value.text,
         Constants.PRICE: int.parse(priceController.value.text),
-        Constants.CURRENCY: currency.contains('USD') ? 'd' : 's',
+        Constants.CURRENCY: currency!.contains('USD') ? 'd' : 's',
         Constants.IS_IT_USED: statusList.indexWhere((element) => element == status) == 0 ? false : true,
         Constants.PHOTOS: photos
       });
@@ -126,6 +148,12 @@ class AddProductController extends GetxController {
   ///remove selected image
   removeImage(int index) {
     images.removeAt(index);
+    update();
+  }
+
+  ///remove selected image url
+  removeImageUrl(int index) {
+    urlImages.removeAt(index);
     update();
   }
 

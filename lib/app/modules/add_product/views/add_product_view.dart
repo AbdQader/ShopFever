@@ -12,7 +12,7 @@ class AddProductView extends GetView<AddProductController> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: buildText(
-            text: 'إضافة سلعة',
+            text: controller.product == null ? 'إضافة سلعة' : 'تعديل السلعة',
             size: 20.0,
             color: Colors.black,
             weight: FontWeight.bold
@@ -55,7 +55,9 @@ class AddProductView extends GetView<AddProductController> {
                     ) else GridView.builder(
                       shrinkWrap: true,
                       padding: EdgeInsets.all(10),
-                      itemCount: controller.images.length,
+                      itemCount: controller.product == null
+                        ? controller.images.length
+                        : controller.urlImages.length,
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 5,
                         crossAxisSpacing: 10.0,
@@ -75,8 +77,13 @@ class AddProductView extends GetView<AddProductController> {
                                   color: Get.theme.colorScheme.secondary,
                                   borderRadius: BorderRadius.circular(15.0),
                                 ),
-                                child: Image.file(
+                                child: controller.product == null
+                                  ? Image.file(
                                       controller.images[index],
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.network(
+                                      controller.urlImages[index],
                                       fit: BoxFit.cover,
                                     )
                               ),
@@ -84,7 +91,9 @@ class AddProductView extends GetView<AddProductController> {
                                 top: -7,
                                 left: -7,
                                 child: InkWell(
-                                  onTap: () => controller.removeImage(index),
+                                  onTap: () => controller.product == null
+                                    ? controller.removeImage(index)
+                                    : controller.removeImageUrl(index),
                                   child: Container(
                                     decoration: BoxDecoration(
                                       color: Colors.redAccent,
@@ -145,6 +154,7 @@ class AddProductView extends GetView<AddProductController> {
                       weight: FontWeight.bold
                     ),
                     buildDropdownButton(
+                      value: controller.currency,
                       hint: 'اختر العملة',
                       validate: (value) => controller.validateValue(value),
                       onChanged: (value) => controller.currency = value,
@@ -157,6 +167,7 @@ class AddProductView extends GetView<AddProductController> {
                       weight: FontWeight.bold
                     ),
                     buildDropdownButton(
+                      value: controller.status,
                       hint: 'اختار حالة السلعة',
                       validate: (value) => controller.validateValue(value),
                       onChanged: (value) => controller.status = value,
@@ -169,6 +180,7 @@ class AddProductView extends GetView<AddProductController> {
                       weight: FontWeight.bold
                     ),
                     buildDropdownButton(
+                      value: controller.category,
                       hint: 'اختار فئة السلعة',
                       validate: (value) => controller.validateValue(value),
                       onChanged: (value) => controller.category = value,
@@ -187,7 +199,9 @@ class AddProductView extends GetView<AddProductController> {
                     const SizedBox(height: 30.0),
                     buildMaterialButton(
                       onPressed: () => controller.submit(),
-                      text: 'إضافة السلعة'
+                      text: controller.product == null
+                        ? 'إضافة السلعة'
+                        : 'حفظ التغييرات'
                     ),
                   ],
                 ),

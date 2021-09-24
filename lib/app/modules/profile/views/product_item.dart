@@ -17,8 +17,8 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Get.find<HomeController>().currentProduct = productModel;
-        Get.toNamed(AppPages.PRODUCT_DETAILS);
+        //Get.find<HomeController>().currentProduct = productModel;
+        Get.toNamed(AppPages.PRODUCT_DETAILS, arguments: productModel);
       },
       child: Column(
         children: [
@@ -37,10 +37,13 @@ class ProductItem extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
-                    child: Image(
-                      height: 170,
-                      image: NetworkImage(productModel.photos[0]),
-                      fit: BoxFit.cover,
+                    child: Hero(
+                      tag: productModel.id,
+                      child: Image(
+                        height: 170,
+                        image: NetworkImage(productModel.photos[0]),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 5.0),
@@ -63,7 +66,7 @@ class ProductItem extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   buildText(
-                    text: '${productModel.price} ILS',
+                    text: '${productModel.price} ${productModel.currency == 's' ? 'ILS' : '\$'}',
                     size: 16.0,
                     color: Get.theme.colorScheme.secondary,
                     weight: FontWeight.bold,

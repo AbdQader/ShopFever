@@ -14,8 +14,8 @@ class SpecialProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Get.find<HomeController>().currentProduct = productModel;
-        Get.toNamed(AppPages.PRODUCT_DETAILS);
+        //Get.find<HomeController>().currentProduct = productModel;
+        Get.toNamed(AppPages.PRODUCT_DETAILS, arguments: productModel);
       },
       child: Column(
         children: [
@@ -34,10 +34,13 @@ class SpecialProductItem extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
-                    child: Image(
-                      height: 220,
-                      image: NetworkImage(productModel.photos[0]),
-                      fit: BoxFit.cover,
+                    child: Hero(
+                      tag: productModel.id,
+                      child: Image(
+                        height: 220,
+                        image: NetworkImage(productModel.photos[0]),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 5.0),

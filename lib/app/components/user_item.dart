@@ -14,9 +14,8 @@ class UserItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Get.find<HomeController>().currentClickedUser = userModel;
-        //Get.put(ProfileController());
-        Get.toNamed(AppPages.PROFILE);
+        //Get.find<HomeController>().currentClickedUser = userModel;
+        Get.toNamed(AppPages.PROFILE, arguments: userModel);
       },
       child: Stack(
         children: [

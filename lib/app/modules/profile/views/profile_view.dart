@@ -210,14 +210,15 @@ class ProfileView extends GetView<ProfileController> {
             ],
           ),
         ),
-        floatingActionButton: !controller.isTheCurrent()
-          ? buildFloatingActionButton(
-              title: 'تواصل معي',
-              icon: Icons.phone,
-              width: 150.0,
-              onPressed: () {}
-            )
-          : null
+        floatingActionButton: Visibility(
+          visible: !controller.isTheCurrent(),
+          child: buildFloatingActionButton(
+            title: 'تواصل معي',
+            icon: Icons.phone,
+            width: 150.0,
+            onPressed: () {}
+          )
+        ),
       ),
     );
   }

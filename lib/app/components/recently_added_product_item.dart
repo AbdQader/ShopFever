@@ -13,8 +13,8 @@ class RecentlyAddedProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Get.find<HomeController>().currentProduct = productModel;
-        Get.toNamed(AppPages.PRODUCT_DETAILS);
+        //Get.find<HomeController>().currentProduct = productModel;
+        Get.toNamed(AppPages.PRODUCT_DETAILS, arguments: productModel);
       },
       child: Container(
         width: 110.0,

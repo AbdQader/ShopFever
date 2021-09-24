@@ -21,11 +21,10 @@ class FavoriteItem extends GetView<FavoriteController> {
     return InkWell(
       onTap: () {
         if (userModel != null) {
-          Get.find<HomeController>().currentClickedUser = userModel!;
-          Get.toNamed(AppPages.PROFILE);
+          Get.toNamed(AppPages.PROFILE, arguments: userModel);
         } else {
-          Get.find<HomeController>().currentProduct = productModel!;
-          Get.toNamed(AppPages.PRODUCT_DETAILS);
+          //Get.find<HomeController>().currentProduct = productModel!;
+          Get.toNamed(AppPages.PRODUCT_DETAILS, arguments: productModel);
         }
       },
       child: Card(
@@ -38,15 +37,18 @@ class FavoriteItem extends GetView<FavoriteController> {
             children: [
               Stack(
                 children: [
-                  Image(
-                    image: NetworkImage(
-                      userModel != null
-                        ? userModel!.photo
-                        : productModel!.photos[0]
+                  Hero(
+                    tag: productModel != null ? productModel!.id : '',
+                    child: Image(
+                      image: NetworkImage(
+                        userModel != null
+                          ? userModel!.photo
+                          : productModel!.photos[0]
+                      ),
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: 200.0,
                     ),
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    height: 200.0,
                   ),
                   Container(
                     width: 60.0,

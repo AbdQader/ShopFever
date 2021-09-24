@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:logger/logger.dart';
 import 'package:shop_fever/app/data/models/product_model.dart';
 import 'package:shop_fever/app/data/models/user_model.dart';
 import 'package:shop_fever/app/modules/home/controllers/home_controller.dart';
@@ -18,7 +17,8 @@ class ProfileController extends GetxController with SingleGetTickerProviderMixin
   HomeController homeController = Get.find<HomeController>();
 
   // For Users
-  UserModel currentUser = Get.find<HomeController>().currentClickedUser;
+  //UserModel currentUser = Get.find<HomeController>().currentClickedUser;
+  UserModel currentUser = Get.arguments;
 
   // For Current User Products
   List<ProductModel> _userProducts = [];
@@ -107,8 +107,6 @@ class ProfileController extends GetxController with SingleGetTickerProviderMixin
           return BaseClient.get(Constants.FAVOURITE_USERS_COUNT, query: query, headers: headers);
         },
         onSuccess: (response) {
-          Logger().e('res: $response');
-          favTimes = response['count'];
           update(['FavTimes']);
         },
         onError: (error) {

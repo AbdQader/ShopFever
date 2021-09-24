@@ -27,10 +27,8 @@ class DrawerView extends GetView<HomeController> {
             flex: 0,
             child: ListTile(
               onTap: () {
-                //TODO PROFILE
-                Get.find<HomeController>().currentClickedUser = Get.find<HomeController>().currentUser;
-                //Get.put(ProfileController());
-                Get.toNamed(AppPages.PROFILE);
+                //Get.find<HomeController>().currentClickedUser = Get.find<HomeController>().currentUser;
+                Get.toNamed(AppPages.PROFILE, arguments: Get.find<HomeController>().currentUser);
               },
               title: buildText(
                 text: controller.currentUser.name,
@@ -59,10 +57,7 @@ class DrawerView extends GetView<HomeController> {
                 buildListTile(
                   title: 'جميع اعجاباتي',
                   icon: Icons.favorite_border,
-                  onTap: () {
-                    Get.find<HomeController>().currentClickedUser = Get.find<HomeController>().currentUser;
-                    Get.toNamed(AppPages.FAVORITES);
-                  }
+                  onTap: () => Get.toNamed(AppPages.FAVORITES),
                 ),
                 buildListTile(
                   title: 'شارك التطبيق',

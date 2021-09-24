@@ -15,10 +15,10 @@ class HomeController extends GetxController {
   UserModel? _currentUser;
   UserModel get currentUser => _currentUser!;
 
-  late UserModel currentClickedUser;
+  //late UserModel currentClickedUser;
 
   //the product that user clicked on to go to the detailes
-  late ProductModel currentProduct;
+  //late ProductModel currentProduct;
 
   // For User Location
   Location location = Location();

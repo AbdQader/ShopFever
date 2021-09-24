@@ -17,7 +17,8 @@ class ProductDetailsController extends GetxController {
   late UserModel currentUser;
 
   //product
-  late ProductModel product;
+  //late ProductModel product;
+  ProductModel product = Get.arguments;
 
   // for image slider
   int currentIndex = 0;
@@ -35,7 +36,7 @@ class ProductDetailsController extends GetxController {
   @override
   void onInit() {
     currentUser = homeController.currentUser;
-    product = homeController.currentProduct;
+    //product = homeController.currentProduct;
     markProductAsWatched();
     checkIfProductIsFavourite();
     getWatchedTimes();
@@ -106,10 +107,8 @@ class ProductDetailsController extends GetxController {
 
   ///to get the product category name
   String productCategory(String categoryId) {
-    return Get.find<HomeController>()
-        .categories
-        .firstWhere((category) => categoryId == category.id)
-        .name;
+    return homeController.categories
+      .firstWhere((category) => categoryId == category.id).name;
   }
 
   ///to change product publish date format
@@ -121,37 +120,37 @@ class ProductDetailsController extends GetxController {
   ///to add the product to the favorites
   void markProductAsFavorites() {
     HelperFunctions.safeApiCall(
-        execute: () async {
-          return isFavorites
-              ? BaseClient.delete(
+      execute: () async {
+        return isFavorites
+          ? BaseClient.delete(
               Constants.DELETE_FROM_FAVOURITE + '/${product.id}',
               headers: {
                 Constants.API_AUTHORIZATION:
                 Get.find<HomeController>().currentUser.token
               }
-          )
-              : BaseClient.post(
+            )
+          : BaseClient.post(
               Constants.FAVORITE_PRODUCTS_URL + '/${product.id}',
               headers: {
                 Constants.API_AUTHORIZATION:
                 Get.find<HomeController>().currentUser.token
               }
-          );
-        },
-        onSuccess: (response) {
-          isFavorites = !isFavorites;
-          isFavLoading = false;
-          update(['Favorites']);
-        },
-        onError: (error) {
-          isFavLoading = false;
-          update(['Favorites']);
-          ErrorHandler.handleError(error);
-        },
-        onLoading: () {
-          isFavLoading = true;
-          update(['Favorites']);
-        });
+            );
+      },
+      onSuccess: (response) {
+        isFavorites = !isFavorites;
+        isFavLoading = false;
+        update(['Favorites']);
+      },
+      onError: (error) {
+        isFavLoading = false;
+        update(['Favorites']);
+        ErrorHandler.handleError(error);
+      },
+      onLoading: () {
+        isFavLoading = true;
+        update(['Favorites']);
+      });
   }
 
   ///to mark the product as watched
@@ -159,11 +158,11 @@ class ProductDetailsController extends GetxController {
     HelperFunctions.safeApiCall(
       execute: () async {
         return await BaseClient.post(
-            Constants.WATCHED_PRODUCTS_URL + '/${product.id}',
-            headers: {
-              Constants.API_AUTHORIZATION:
-              Get.find<HomeController>().currentUser.token
-            }
+          Constants.WATCHED_PRODUCTS_URL + '/${product.id}',
+          headers: {
+            Constants.API_AUTHORIZATION:
+            Get.find<HomeController>().currentUser.token
+          }
         );
       },
       onSuccess: (response) {

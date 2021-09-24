@@ -56,10 +56,13 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                       id: 'ImageSlider',
                       builder: (controller) => CarouselSlider(
                         items: controller.product.photos.map((image) {
-                          return Image(
-                            image: NetworkImage(image),
-                            width: double.infinity,
-                            fit: BoxFit.cover,
+                          return Hero(
+                            tag: controller.product.id,
+                            child: Image(
+                              image: NetworkImage(image),
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
                           );
                         }).toList(),
                         options: CarouselOptions(
@@ -191,8 +194,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                       const Divider(height: 40.0, color: Colors.grey),
                       ListTile(
                         onTap: () {
-                          Get.find<HomeController>().currentClickedUser = controller.product.user;
-                          Get.toNamed(AppPages.PROFILE);
+                          Get.toNamed(AppPages.PROFILE, arguments: controller.product.user);
                         },
                         leading: CircleAvatar(
                           radius: 30.0,
@@ -228,14 +230,16 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
           ],
         ),
         floatingActionButton: buildFloatingActionButton(
-            title: controller.currentUser.id == controller.product.user.id
-                ? 'تعديل المنتج'
-                : 'تواصل معي',
-            icon: controller.currentUser.id == controller.product.user.id
-                ? Icons.edit
-                : Icons.phone,
-            width: 150.0,
-            onPressed: () {}
+          title: controller.currentUser.id == controller.product.user.id
+            ? 'تعديل المنتج'
+            : 'تواصل معي',
+          icon: controller.currentUser.id == controller.product.user.id
+            ? Icons.edit
+            : Icons.phone,
+          width: 150.0,
+          onPressed: () => controller.currentUser.id == controller.product.user.id
+            ? Get.toNamed(AppPages.ADD_PRODUCT, arguments: controller.product)
+            : null
         ),
       ),
     );

@@ -16,8 +16,8 @@ class CloseProductItem extends StatelessWidget {
     return InkWell(
       onTap: () {
         Logger().e(productModel.toJson());
-        Get.find<HomeController>().currentProduct = productModel;
-        Get.toNamed(AppPages.PRODUCT_DETAILS);
+        //Get.find<HomeController>().currentProduct = productModel;
+        Get.toNamed(AppPages.PRODUCT_DETAILS, arguments: productModel);
       },
       child: Container(
         width: 190.0,
@@ -30,10 +30,13 @@ class CloseProductItem extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image(
-              image: NetworkImage(productModel.photos[0]),
-              fit: BoxFit.cover,
-              height: 220,
+            Hero(
+              tag: productModel.id,
+              child: Image(
+                image: NetworkImage(productModel.photos[0]),
+                fit: BoxFit.cover,
+                height: 220,
+              ),
             ),
             const SizedBox(height: 5.0),
             buildText(

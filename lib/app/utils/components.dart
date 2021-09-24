@@ -112,6 +112,7 @@ Widget buildFormField({
 
 // For DropdownButtonFormField
 Widget buildDropdownButton({
+  required String? value,
   required String hint,
   required Function validate,
   required Function onChanged,
@@ -122,7 +123,7 @@ Widget buildDropdownButton({
     child: DropdownButtonFormField<String>(
       style: TextStyle(fontSize: 20.0, height: 1.1, color: Colors.grey[700]),
       validator: (value) => validate(value),
-      //value: value,
+      value: value,
       hint: Text(hint),
       isExpanded: true,
       items: items.map((category) => DropdownMenuItem<String>(
