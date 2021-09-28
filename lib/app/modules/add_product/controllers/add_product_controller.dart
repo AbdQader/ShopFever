@@ -11,6 +11,7 @@ import 'package:shop_fever/app/data/models/category_model.dart';
 import 'package:shop_fever/app/data/models/product_model.dart';
 import 'package:shop_fever/app/modules/home/controllers/home_controller.dart';
 import 'package:shop_fever/app/services/base_client.dart';
+import 'package:shop_fever/app/services/error_handler.dart';
 import 'package:shop_fever/app/utils/components.dart';
 import 'package:shop_fever/app/utils/constants.dart';
 import 'package:shop_fever/app/utils/helperFunctions.dart';
@@ -62,6 +63,7 @@ class AddProductController extends GetxController {
       currency = product!.currency == 'd' ? 'USD دولار' : 'ILS شيكل';
     }
     categoryList = _homeController.categories;
+    update();
     super.onInit();
   }
 
@@ -71,6 +73,80 @@ class AddProductController extends GetxController {
     descriptionController.dispose();
     priceController.dispose();
     super.onClose();
+  }
+
+  ///Submit the product data to the database
+  Future<void> submit() async {
+    // Close the keyboard
+    Get.focusScope!.unfocus();
+
+    // Check images picked
+    if (images.isEmpty && urlImages.isEmpty) {
+      showSnackbar('لم تختار اي صور', 'يرجى اختيار بعض الصور للسلعة');
+      return;
+    }
+
+    // Check form validation
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
+      if (product != null &&
+          product!.name == nameController.text &&
+          product!.description == descriptionController.text &&
+          product!.price.toString() == priceController.text &&
+          getCategoryName(product!.categoryId) == category &&
+          getStatus(product!.isItUsed) == status &&
+          getCurrency(product!.currency) == currency
+      ) {
+        showSnackbar('لم تقم بتغيير اي شيء', 'لم تقم باجراء اي تعديلات على المنتج');
+        return;
+      }
+      await addProductToDatabase();
+    }
+  }
+
+  ///to add the product to the database
+  Future<void> addProductToDatabase() async {
+    //photos
+    List<MultipartFile> photos = <MultipartFile>[];
+    images.forEach((element) {
+      photos.add(
+        MultipartFile(
+          element,
+          filename: DateTime.now().millisecondsSinceEpoch.toString()
+        )
+      );
+    });
+
+    // send the data to the database
+    var formData = FormData({
+      Constants.USER_ID: (await MyHive.getCurrentUser())!.id,
+      Constants.CATEGORY_ID: categoryList.firstWhere((element) => element.name == category).id,
+      Constants.NAME: nameController.value.text,
+      Constants.DESCRIPTION: descriptionController.value.text,
+      Constants.PRICE: int.parse(priceController.value.text),
+      Constants.CURRENCY: currency!.contains('USD') ? 'd' : 's',
+      Constants.IS_IT_USED: statusList.indexWhere((element) => element == status) == 0 ? false : true,
+      Constants.PHOTOS: photos
+    });
+
+    var headers = {
+      Constants.API_ACCEPT: Constants.API_MULTIPART_DATA,
+      Constants.API_AUTHORIZATION :(await MyHive.getCurrentUser())!.token
+    };
+
+    HelperFunctions.safeApiCall(
+      execute: () {
+        return BaseClient.post(Constants.CREATE_PRODUCT_URL, headers: headers, body: formData);
+      },
+      onSuccess: (response) {
+        Logger().e('Response => $response');
+        Get.back();
+      },
+      onError: (error) {
+        Logger().e('Error => ${error.message}');
+        ErrorHandler.handleError(error);
+      },
+    );
   }
 
   ///to get categories names
@@ -88,71 +164,24 @@ class AddProductController extends GetxController {
       .firstWhere((cate) => cate.id == product!.categoryId).name;
   }
 
-  ///Submit the product data to the database
-  Future<void> submit() async {
-    // Close the keyboard
-    Get.focusScope!.unfocus();
+  ///to get product status "new" or "used"
+  String getStatus(bool isItUsed) {
+    return isItUsed ? 'مستخدم' : 'جديد';
+  }
 
-    // Check images picked
-    if (images.isEmpty) {
-      showSnackbar('لم تختار اي صور', 'يرجى اختيار بعض الصور للسلعة');
-      return;
-    }
-
-    // Check form validation
-    if (formKey.currentState!.validate()) {
-      formKey.currentState!.save();
-
-      //photos
-      List<MultipartFile> photos = <MultipartFile>[];
-      images.forEach((element) {
-        photos.add(MultipartFile(element,
-            filename: DateTime.now().millisecondsSinceEpoch.toString()));
-      });
-
-      // send the data to the database
-      var formData = FormData({
-        Constants.USER_ID: (await MyHive.getCurrentUser())!.id,
-        Constants.CATEGORY_ID: categoryList.firstWhere((element) => element.name == category).id,
-        Constants.NAME: nameController.value.text,
-        Constants.DESCRIPTION: descriptionController.value.text,
-        Constants.PRICE: int.parse(priceController.value.text),
-        Constants.CURRENCY: currency!.contains('USD') ? 'd' : 's',
-        Constants.IS_IT_USED: statusList.indexWhere((element) => element == status) == 0 ? false : true,
-        Constants.PHOTOS: photos
-      });
-
-      var headers = {
-        Constants.API_ACCEPT: Constants.API_MULTIPART_DATA,
-        Constants.API_AUTHORIZATION :(await MyHive.getCurrentUser())!.token
-      };
-
-      Logger().e('Token => ${(await MyHive.getCurrentUser())!.token}');
-      Logger().e('Url => ${Constants.CREATE_PRODUCT_URL}');
-
-      HelperFunctions.safeApiCall(
-        execute: () {
-          return BaseClient.post(Constants.CREATE_PRODUCT_URL, headers: headers, body: formData);
-        },
-        onSuccess: (response) {
-          //showSnackbar('تمت الاضافة', 'تم اضافة المنتج بنجاح');
-          Get.back();
-        },
-        onError: (error) {
-          Logger().e('Error => ${error.message}');
-        },
-      );
-    }
+  ///to get product currency "$" or "ILS"
+  String getCurrency(String currency) {
+    return currency == 'd' ? 'USD دولار' : 'ILS شيكل';
   }
 
   ///remove selected image
-  removeImage(int index) {
+  void removeImage(int index) {
     images.removeAt(index);
     update();
   }
 
   ///remove selected image url
-  removeImageUrl(int index) {
+  void removeImageUrl(int index) {
     urlImages.removeAt(index);
     update();
   }

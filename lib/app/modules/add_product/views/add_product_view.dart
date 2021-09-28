@@ -36,79 +36,81 @@ class AddProductView extends GetView<AddProductController> {
                       size: 24.0,
                       weight: FontWeight.bold
                     ),
-                    if (controller.images.length <= 0) InkWell(
-                      onTap: () => controller.pickImage(),
-                      child: Container(
-                        width: 60.0,
-                        height: 60.0,
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        decoration: BoxDecoration(
-                          color: Get.theme.colorScheme.secondary,
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        child: const Icon(
-                            Icons.add,
-                            size: 30.0,
-                            color: Colors.white
-                        ),
-                      ),
-                    ) else GridView.builder(
-                      shrinkWrap: true,
-                      padding: EdgeInsets.all(10),
-                      itemCount: controller.product == null
-                        ? controller.images.length
-                        : controller.urlImages.length,
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 5,
-                        crossAxisSpacing: 10.0,
-                        mainAxisSpacing: 10.0
-                      ),
-                      itemBuilder: (BuildContext context, int index) {
-                        return InkWell(
+                    controller.images.length <= 0 && controller.urlImages.length <= 0
+                      ? InkWell(
                           onTap: () => controller.pickImage(),
-                          child: Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              Container(
-                                width: 100.0,
-                                height: 100.0,
-                                clipBehavior: Clip.antiAliasWithSaveLayer,
-                                decoration: BoxDecoration(
-                                  color: Get.theme.colorScheme.secondary,
-                                  borderRadius: BorderRadius.circular(15.0),
+                          child: Container(
+                            width: 60.0,
+                            height: 60.0,
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            decoration: BoxDecoration(
+                              color: Get.theme.colorScheme.secondary,
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            child: const Icon(
+                              Icons.add,
+                              size: 30.0,
+                              color: Colors.white
+                            ),
+                          ),
+                        )
+                      : GridView.builder(
+                        shrinkWrap: true,
+                        padding: EdgeInsets.all(10),
+                        itemCount: controller.product == null
+                          ? controller.images.length
+                          : controller.urlImages.length,
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 5,
+                          crossAxisSpacing: 10.0,
+                          mainAxisSpacing: 10.0
+                        ),
+                        itemBuilder: (BuildContext context, int index) {
+                          return InkWell(
+                            onTap: () => controller.pickImage(),
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                Container(
+                                  width: 100.0,
+                                  height: 100.0,
+                                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                                  decoration: BoxDecoration(
+                                    color: Get.theme.colorScheme.secondary,
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  child: controller.product == null
+                                    ? Image.file(
+                                        controller.images[index],
+                                        fit: BoxFit.cover,
+                                      )
+                                    : Image.network(
+                                        controller.urlImages[index],
+                                        fit: BoxFit.cover,
+                                      )
                                 ),
-                                child: controller.product == null
-                                  ? Image.file(
-                                      controller.images[index],
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Image.network(
-                                      controller.urlImages[index],
-                                      fit: BoxFit.cover,
-                                    )
-                              ),
-                              Positioned(
-                                top: -7,
-                                left: -7,
-                                child: InkWell(
-                                  onTap: () => controller.product == null
-                                    ? controller.removeImage(index)
-                                    : controller.removeImageUrl(index),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.redAccent,
-                                      borderRadius: BorderRadius.circular(100.0),
+                                Positioned(
+                                  top: -7,
+                                  left: -7,
+                                  child: InkWell(
+                                    onTap: () => controller.product == null
+                                      ? controller.removeImage(index)
+                                      : controller.removeImageUrl(index),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.redAccent,
+                                        borderRadius: BorderRadius.circular(100.0),
+                                      ),
+                                      child: const Icon(Icons.close, size: 13, color: Colors.white),
+                                      padding: const EdgeInsets.all(8.0)
                                     ),
-                                    child: const Icon(Icons.close, size: 13, color: Colors.white),
-                                    padding: const EdgeInsets.all(8.0)
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
                     const SizedBox(height: 20.0),
                     buildText(
                       text: 'الاسم',

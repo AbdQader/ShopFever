@@ -23,15 +23,16 @@ void main() async {
       debugShowCheckedModeBanner: false,
       title: "Application",
       theme: ThemeData(
+        colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Color(0xFF57bf72)),
         appBarTheme: AppBarTheme(
-          backwardsCompatibility: false,
+          //backwardsCompatibility: false,
           systemOverlayStyle: SystemUiOverlayStyle(
             statusBarColor: Colors.white,
             statusBarIconBrightness: Brightness.dark
           ),
           backgroundColor: Colors.white,
           elevation: 0.0,
-        ), colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Color(0xFF57bf72)),
+        ),
       ),
       initialRoute: SharedPref.isUserLogged() ? AppPages.INITIAL : AppPages.LOGIN,
       getPages: AppPages.routes,

@@ -42,7 +42,7 @@ class LoginView extends GetView<AuthController> {
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       child: CountryCodePicker(
-                        padding: EdgeInsets.all(10.0),
+                        padding: const EdgeInsets.all(10.0),
                         initialSelection: 'PS',
                         alignLeft: true,
                         onChanged: (code) {
@@ -71,6 +71,7 @@ class LoginView extends GetView<AuthController> {
                         return null;
                       },
                       hint: 'رقم الهاتف',
+                      lines: 1,
                     ),
                     const SizedBox(height: 20.0),
                     Obx(() => controller.isLoading

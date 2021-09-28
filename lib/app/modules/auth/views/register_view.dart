@@ -80,6 +80,7 @@ class RegisterView extends GetView<AuthController> {
                         return null;
                       },
                       hint: 'الاسم الكامل',
+                      lines: 1,
                     ),
                     const SizedBox(height: 20.0),
                     Obx(() => controller.isLoading

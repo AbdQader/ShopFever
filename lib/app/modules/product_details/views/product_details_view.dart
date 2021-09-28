@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
-import 'package:shop_fever/app/modules/home/controllers/home_controller.dart';
 import 'package:shop_fever/app/routes/app_pages.dart';
 import 'package:shop_fever/app/utils/components.dart';
 import '../controllers/product_details_controller.dart';
@@ -23,8 +22,8 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
               backgroundColor: Colors.black.withOpacity(0.2),
               leading: IconButton(
                 icon: const Icon(
-                    Icons.arrow_back,
-                    color: Colors.white
+                  Icons.arrow_back,
+                  color: Colors.white
                 ),
                 onPressed: () => Get.back(),
               ),
@@ -32,21 +31,21 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                 GetBuilder<ProductDetailsController>(
                   id: 'Favorites',
                   builder: (controller) => controller.isFavLoading
-                      ? Transform.scale(
-                    scale: 0.5,
-                    child: showProgressIndicator(),
-                  )
-                      : IconButton(
-                    onPressed: () => controller.markProductAsFavorites(),
-                    icon: Icon(
-                        controller.isFavorites
+                    ? Transform.scale(
+                        scale: 0.5,
+                        child: showProgressIndicator(),
+                      )
+                    : IconButton(
+                        onPressed: () => controller.markProductAsFavorites(),
+                        icon: Icon(
+                          controller.isFavorites
                             ? Icons.favorite
                             : Icons.favorite_border,
-                        color: controller.isFavorites
+                          color: controller.isFavorites
                             ? Colors.redAccent
                             : Colors.white
-                    ),
-                  ),
+                        ),
+                      ),
                 ),
               ],
               flexibleSpace: FlexibleSpaceBar(
@@ -110,36 +109,36 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           buildText(
-                              text: controller.product.currency.startsWith('s') ? '${controller.product.price} ILS' : "${controller.product.price} Dollar",
-                              size: 24.0,
-                              color: Get.theme.colorScheme.secondary,
-                              weight: FontWeight.bold
+                            text: controller.product.currency.startsWith('s') ? '${controller.product.price} ILS' : "${controller.product.price} Dollar",
+                            size: 24.0,
+                            color: Get.theme.colorScheme.secondary,
+                            weight: FontWeight.bold
                           ),
                           const Spacer(),
                           const Icon(Icons.favorite_border, size: 20.0),
                           const SizedBox(width: 10.0),
                           GetBuilder<ProductDetailsController>(
-                              id: 'FavTimes',
-                              builder: (controller) => Text(
-                                  controller.favTimes.toString()
-                              )
+                            id: 'FavTimes',
+                            builder: (controller) => Text(
+                              controller.favTimes.toString()
+                            )
                           ),
                           const SizedBox(width: 20.0),
                           const Icon(Icons.remove_red_eye_outlined, size: 20.0),
                           const SizedBox(width: 10.0),
                           GetBuilder<ProductDetailsController>(
-                              id: 'WatchedTimes',
-                              builder: (controller) => Text(
-                                  controller.watchedTimes.toString()
-                              )
+                            id: 'WatchedTimes',
+                            builder: (controller) => Text(
+                              controller.watchedTimes.toString()
+                            )
                           ),
                         ],
                       ),
                       const SizedBox(height: 20.0),
                       const Divider(height: 40.0),
                       buildText(
-                          text: controller.product.description,
-                          size: 20.0
+                        text: controller.product.description,
+                        size: 20.0
                       ),
                       const SizedBox(height: 20.0),
                       Row(

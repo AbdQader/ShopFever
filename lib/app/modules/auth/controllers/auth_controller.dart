@@ -118,6 +118,7 @@ class AuthController extends GetxController {
 
   // This function to verify the phone number "OTP"
   void _verifyOTP(String smsCode) async {
+    _isLoading.value = true;
     try {
       var credential = await _auth.signInWithCredential(
         PhoneAuthProvider.credential(
@@ -128,9 +129,9 @@ class AuthController extends GetxController {
       // If the user credential != null, Call "_loginToApi" fun
       if (credential.user != null)
         _loginToApi();
-
+      
     } catch (error) {
-      print('abd => verifyOTP: catch: $error');
+      _isLoading.value = false;
       showAlertDialog('الرمز غير صحيح', 'تحقق من الرمز ثم حاول مجدداً');
       codeController.clear();
     }
@@ -154,6 +155,7 @@ class AuthController extends GetxController {
       onSuccess: (response)
       {
         saveUserToLocal(UserModel.fromJson(response['user']));
+        _isLoading.value = false;
       },
       onError: (error)
       {
@@ -212,7 +214,7 @@ class AuthController extends GetxController {
   Future<void> saveUserToLocal(UserModel user) async {
     await MyHive.saveUser(user);
     SharedPref.setUserAsLogged();
-    Get.offAndToNamed(Routes.HOME);
+    Get.offAllNamed(Routes.HOME);
   }
 
 }

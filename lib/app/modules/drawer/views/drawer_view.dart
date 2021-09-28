@@ -27,7 +27,6 @@ class DrawerView extends GetView<HomeController> {
             flex: 0,
             child: ListTile(
               onTap: () {
-                //Get.find<HomeController>().currentClickedUser = Get.find<HomeController>().currentUser;
                 Get.toNamed(AppPages.PROFILE, arguments: Get.find<HomeController>().currentUser);
               },
               title: buildText(

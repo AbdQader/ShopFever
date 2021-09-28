@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:shop_fever/app/data/models/product_model.dart';
 import 'package:shop_fever/app/data/models/user_model.dart';
 import 'package:shop_fever/app/modules/favorite/controllers/favorite_controller.dart';
-import 'package:shop_fever/app/modules/home/controllers/home_controller.dart';
 import 'package:shop_fever/app/routes/app_pages.dart';
 import 'package:shop_fever/app/utils/components.dart';
 
@@ -23,7 +22,6 @@ class FavoriteItem extends GetView<FavoriteController> {
         if (userModel != null) {
           Get.toNamed(AppPages.PROFILE, arguments: userModel);
         } else {
-          //Get.find<HomeController>().currentProduct = productModel!;
           Get.toNamed(AppPages.PRODUCT_DETAILS, arguments: productModel);
         }
       },

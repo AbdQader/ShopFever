@@ -107,38 +107,6 @@ class ProfileView extends GetView<ProfileController> {
                   ],
                 ),
               ),
-              // Padding(
-              //   padding: const EdgeInsets.only(left: 20.0, right: 40.0),
-              //   child: Row(
-              //     children: [
-              //       // TextButton.icon(
-              //       //   onPressed: null,
-              //       //   icon: Icon(
-              //       //     Icons.favorite_border,
-              //       //     size: 30.0,
-              //       //     color: Get.theme.colorScheme.secondary,
-              //       //   ),
-              //       //   label: buildText(
-              //       //     text: '0',
-              //       //     size: 25.0,
-              //       //     color: Get.theme.colorScheme.secondary,
-              //       //   )
-              //       // ),
-              //       const Spacer(),
-              //       // buildStarRating(
-              //       //   starCount: 5,
-              //       //   rating: 0.0,
-              //       //   onRatingChanged: (rating) {},
-              //       //   color: Colors.amber,
-              //       // ),
-              //       // const SizedBox(width: 5.0),
-              //       // buildText(
-              //       //   text: '(0)',
-              //       //   size: 20.0,
-              //       // ),
-              //     ],
-              //   ),
-              // ),
               Container(
                 margin: const EdgeInsets.only(top: 20.0),
                 padding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 20.0),
@@ -202,11 +170,6 @@ class ProfileView extends GetView<ProfileController> {
                         },
                       ),
               ),
-              // Container(
-              //   height: 680.0,
-              //   padding: const EdgeInsets.only(top: 10.0),
-              //   child: buildTabBar(),
-              // ),
             ],
           ),
         ),
@@ -223,94 +186,6 @@ class ProfileView extends GetView<ProfileController> {
     );
   }
 
-  // For Tab Bar
-  Widget buildTabBar() {
-    return GetBuilder<ProfileController>(
-      id: 'UserProduct',
-      builder: (controller) => Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0),
-            child: TabBar(
-              labelColor: Colors.black,
-              unselectedLabelColor: Colors.grey[600],
-              tabs: [
-                Container(
-                  height: 70.0,
-                  child: Tab(
-                    child: Column(
-                      children: [
-                        buildText(text: '${controller.userProducts.length}', size: 24.0),
-                        buildText(text: 'سلع للبيع', size: 20.0),
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-                  height: 70.0,
-                  child: Tab(
-                    child: Column(
-                      children: [
-                        const Icon(Icons.add, size: 30.0),
-                        buildText(text: 'المنتجات المفضلة', size: 20.0),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-              controller: controller.tabController,
-              indicatorSize: TabBarIndicatorSize.tab,
-            ),
-          ),
-          Expanded(
-            child: TabBarView(
-              children: [
-                controller.userProducts.isEmpty
-                  ? Container(
-                      padding: const EdgeInsets.only(top: 30.0),
-                      alignment: Alignment.topCenter,
-                      child: buildText(
-                        text: 'لم تعرض شيء للبيع حتى هذه اللحظة!',
-                        size: 24.0,
-                        weight: FontWeight.bold
-                      ),
-                    )
-                  : GridView.builder(
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.all(0.0),
-                      physics: const BouncingScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 2/3,
-                        crossAxisSpacing: 0.0,
-                        mainAxisSpacing: 0.0,
-                      ),
-                      itemCount: controller.userProducts.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return ProductItem(
-                          productModel: controller.userProducts[index],
-                          isCurrentUser: controller.isTheCurrent()
-                        );
-                      },
-                    ),
-                Container(
-                  padding: const EdgeInsets.only(top: 30.0),
-                  alignment: Alignment.topCenter,
-                  child: buildText(
-                    text: 'لا يوجد بيانات حتى الان!',
-                    size: 24.0,
-                    weight: FontWeight.bold
-                  ),
-                ),
-              ],
-              controller: controller.tabController,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   // For Profile Settings
   void showBottomSheet() {
     Get.bottomSheet(
@@ -321,22 +196,32 @@ class ProfileView extends GetView<ProfileController> {
               ListTile(
                 onTap: () => Get.back(),
                 title: buildText(
-                    text: 'ادارة صفحتي', size: 24.0, weight: FontWeight.bold),
-                trailing:
-                    const Icon(Icons.close, size: 35.0, color: Colors.black),
+                  text: 'ادارة صفحتي',
+                  size: 24.0,
+                  weight: FontWeight.bold
+                ),
+                trailing: const Icon(
+                  Icons.close,
+                  size: 35.0,
+                  color: Colors.black
+                ),
               ),
               buildListTile(
                 title: 'تعديل معلوماتي',
                 icon: Icons.edit_outlined,
-                onPressed: () => Get.back(),
+                onPressed: () {
+                  Get.back();
+                  Get.toNamed(AppPages.EDIT_PROFILE);
+                }
               ),
               buildListTile(
-                  title: 'السلع والصفحات المفضلة',
-                  icon: Icons.favorite_border,
-                  onPressed: () {
-                    Get.back();
-                    Get.toNamed(AppPages.FAVORITES);
-                  }),
+                title: 'السلع والصفحات المفضلة',
+                icon: Icons.favorite_border,
+                onPressed: () {
+                  Get.back();
+                  Get.toNamed(AppPages.FAVORITES);
+                }
+              ),
               buildListTile(
                 title: 'ترقية الصفحة',
                 icon: Icons.local_fire_department_outlined,

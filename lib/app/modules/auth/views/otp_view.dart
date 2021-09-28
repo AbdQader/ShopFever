@@ -2,9 +2,10 @@ import 'package:custom_timer/custom_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pin_put/pin_put.dart';
+import 'package:shop_fever/app/modules/auth/controllers/auth_controller.dart';
 import 'package:shop_fever/app/utils/components.dart';
 
-class OtpView extends StatelessWidget {
+class OtpView extends GetView<AuthController> {
 
   final TextEditingController codeController;
   final Function(String) verifyOTP;
@@ -95,20 +96,23 @@ class OtpView extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 20.0),
-                  Container(
-                    height: 50.0,
-                    child: buildMaterialButton(
-                      text: 'تأكيد',
-                      onPressed: () {
-                        if (codeController.text.trim().length == 6)
-                        {
-                          verifyOTP(codeController.text);
-                          Get.focusScope!.unfocus();
-                        } else {
-                          showAlertDialog('الرمز قصير!', 'الرمز يتكون من 6 ارقام');
-                        }
-                      },
-                    ),
+                  Obx(() => controller.isLoading
+                    ? showProgressIndicator()
+                    : Container(
+                        height: 50.0,
+                        child: buildMaterialButton(
+                          text: 'تأكيد',
+                          onPressed: () {
+                            if (codeController.text.trim().length == 6)
+                            {
+                              verifyOTP(codeController.text);
+                              Get.focusScope!.unfocus();
+                            } else {
+                              showAlertDialog('الرمز قصير!', 'الرمز يتكون من 6 ارقام');
+                            }
+                          },
+                        ),
+                      ),
                   ),
                   const SizedBox(height: 20.0),
                   Row(

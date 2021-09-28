@@ -13,6 +13,7 @@ import 'package:shop_fever/app/modules/home/views/home_view.dart';
 import 'package:shop_fever/app/modules/product_details/bindings/product_details_binding.dart';
 import 'package:shop_fever/app/modules/product_details/views/product_details_view.dart';
 import 'package:shop_fever/app/modules/profile/bindings/profile_binding.dart';
+import 'package:shop_fever/app/modules/profile/views/edit_profile_view.dart';
 import 'package:shop_fever/app/modules/profile/views/profile_view.dart';
 import 'package:shop_fever/app/modules/search/bindings/search_binding.dart';
 import 'package:shop_fever/app/modules/search/views/search_view.dart';
@@ -26,6 +27,7 @@ class AppPages {
   static const LOGIN = Routes.LOGIN;
   static const REGISTER = Routes.REGISTER;
   static const PROFILE = Routes.PROFILE;
+  static const EDIT_PROFILE = Routes.EDIT_PROFILE;
   static const FAVORITES = Routes.FAVORITES;
   static const PRODUCT_DETAILS = Routes.PRODUCT_DETAILS;
   static const ADD_PRODUCT = Routes.ADD_PRODUCT;
@@ -51,6 +53,11 @@ class AppPages {
     GetPage(
       name: _Paths.PROFILE,
       page: () => ProfileView(),
+      binding: ProfileBinding(),
+    ),
+    GetPage(
+      name: _Paths.EDIT_PROFILE,
+      page: () => EditProfileView(),
       binding: ProfileBinding(),
     ),
     GetPage(
