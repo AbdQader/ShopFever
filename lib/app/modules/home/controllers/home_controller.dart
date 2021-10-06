@@ -48,18 +48,19 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    getCurrentUser().then((_) {
-      getUserLocation();
-      getCategories();
-      getProducts();
-      getSpecialUsers();
-      getSpecialProducts();
-      getRecentProducts();
+    getCurrentUser().then((_) async {
+      await getUserLocation();
+      await getCategories();
+      await getProducts();
+      await getSpecialUsers();
+      await getSpecialProducts();
+      await getRecentProducts();
     });
   }
 
   ///to get current user from local db
   Future<void> getCurrentUser() async {
+    print('abd => inside getCurrentUser');
     try {
       _currentUser = await MyHive.getCurrentUser();
     } catch (error) {
@@ -68,7 +69,8 @@ class HomeController extends GetxController {
   }
 
   ///to get the user location
-  void getUserLocation() async {
+  Future<void> getUserLocation() async {
+    print('abd => inside getUserLocation');
     // check if the service is enabled
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
@@ -89,6 +91,7 @@ class HomeController extends GetxController {
 
   ///to update the user location
   Future<void> updateUserLocation(double lat, double lon) async {
+    print('abd => inside updateUserLocation');
     HelperFunctions.safeApiCall(
         execute: () async
         {
@@ -111,7 +114,8 @@ class HomeController extends GetxController {
   }
 
   ///to fetch the categories
-  void getCategories() async {
+  Future<void> getCategories() async {
+    print('abd => inside getCategories');
     HelperFunctions.safeApiCall(
         execute: () async
         {
@@ -133,7 +137,8 @@ class HomeController extends GetxController {
   }
 
   ///to fetch the products
-  void getProducts() async {
+  Future<void> getProducts() async {
+    print('abd => inside getProducts');
     HelperFunctions.safeApiCall(
         execute: () async
         {
@@ -152,7 +157,8 @@ class HomeController extends GetxController {
   }
 
   ///to fetch the special users
-  void getSpecialUsers() async {
+  Future<void> getSpecialUsers() async {
+    print('abd => inside getSpecialUsers');
     HelperFunctions.safeApiCall(
         execute: () async
         {
@@ -173,7 +179,8 @@ class HomeController extends GetxController {
   }
 
   ///to fetch the special products
-  void getSpecialProducts() async {
+  Future<void> getSpecialProducts() async {
+    print('abd => inside getSpecialProducts');
     HelperFunctions.safeApiCall(
         execute: () async
         {
@@ -195,7 +202,8 @@ class HomeController extends GetxController {
   }
 
   ///to fetch the products
-  void getRecentProducts() async {
+  Future<void> getRecentProducts() async {
+    print('abd => inside getRecentProducts');
     HelperFunctions.safeApiCall(
         execute: () async
         {
@@ -217,12 +225,14 @@ class HomeController extends GetxController {
   }
 
   ///to fetch the close products
-  void getCloseProducts() async {
+  Future<void> getCloseProducts() async {
+    print('abd => inside getCloseProducts');
     HelperFunctions.safeApiCall(
         execute: () async
         {
           return await BaseClient.get(
               Constants.CLOSE_PRODUCTS_URL,
+              //query: { Constants.MAX_DISTANCE: 2000 },
               headers: {Constants.API_AUTHORIZATION: _currentUser!.token}
           );
         },

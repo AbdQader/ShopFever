@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shop_fever/app/data/models/product_model.dart';
 import 'package:shop_fever/app/modules/home/controllers/home_controller.dart';
@@ -14,6 +15,8 @@ class SearchController extends GetxController {
   // For Searched Products
   var products = <ProductModel>[];
 
+  final searchController = TextEditingController();
+
   // For Search Text
   Rx<String> search = ''.obs;
 
@@ -26,11 +29,18 @@ class SearchController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    // call "getProducts" method when "search" variable change with 5 seconds
     debounce(search, (_) => getProducts(), time: Duration(seconds: 5));
   }
 
+  ///to get the searched products
   void getProducts() {
-    isLoading.value = true;
+    if (search.value.trim().isEmpty)
+    {
+      products.clear();
+      isLoading.value = false;
+      return;
+    }  
     HelperFunctions.safeApiCall(
       execute: () async
       {
@@ -48,7 +58,6 @@ class SearchController extends GetxController {
       {
         products.clear();
         response['products'].forEach((product) {
-          print('abd => Search Products: ${ProductModel.fromJson(product).toJson()}');
           products.add(ProductModel.fromJson(product));
         });
         isListEmpty.value = products.isEmpty;
@@ -56,11 +65,23 @@ class SearchController extends GetxController {
         update();
       },
       onError: (error) {
-        isLoading.value = false;
         ErrorHandler.handleError(error);
+        isLoading.value = false;
+        update();
       },
-      onLoading: () {}
+      onLoading: () {
+        isLoading.value = true;
+        update();
+      }
     );
+  }
+
+  ///to clear the search field and search result
+  void clearSearch() {
+    searchController.clear();
+    products.clear();
+    isLoading.value = false;
+    update();
   }
 
 }

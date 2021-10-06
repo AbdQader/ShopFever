@@ -82,7 +82,7 @@ class ProfileController extends GetxController {
   }
 
   ///check if the product is in favourite
-  void checkIfUserIsFavourite() async {
+  Future<void> checkIfUserIsFavourite() async {
     var headers = {Constants.API_AUTHORIZATION : homeController.currentUser.token};
     HelperFunctions.safeApiCall(
         execute: () {

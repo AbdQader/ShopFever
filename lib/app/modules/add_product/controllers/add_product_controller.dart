@@ -220,23 +220,26 @@ class AddProductController extends GetxController {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => PlacePicker(
-          apiKey: 'AIzaSyCpG3MH8zjWJpX7X-pWKAotpclwF1I2-e0',
-          autocompleteLanguage: 'ar',
-          enableMapTypeButton: true,
-          onPlacePicked: (result) {
-            if (result.geometry == null) return;
-
-            lat = result.geometry!.location.lat;
-            lon = result.geometry!.location.lng;
-
-            address = result.formattedAddress ?? 'موقع غير معروف';
-            print('abd => address: $address');
-            print('abd => lat: $lat || lon: $lon');
-            update();
-          },
-          initialPosition: cameraPosition.target,
-          useCurrentLocation: false,
+        builder: (context) => Directionality(
+          textDirection: TextDirection.rtl,
+          child: PlacePicker(
+            apiKey: 'AIzaSyCpG3MH8zjWJpX7X-pWKAotpclwF1I2-e0',
+            autocompleteLanguage: 'ar',
+            enableMapTypeButton: true,
+            onPlacePicked: (result) {
+              if (result.geometry == null) return;
+        
+              lat = result.geometry!.location.lat;
+              lon = result.geometry!.location.lng;  
+        
+              address = result.formattedAddress ?? 'موقع غير معروف';
+              print('abd => address: $address');
+              print('abd => lat: $lat || lon: $lon');
+              update();
+            },
+            initialPosition: cameraPosition.target,
+            useCurrentLocation: true,
+          ),
         ),
       ),
     );

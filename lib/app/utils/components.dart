@@ -79,8 +79,8 @@ Widget buildMaterialButton({
 Widget buildFormField({
   required TextEditingController controller,
   required TextInputType type,
-  required Function validate,
   required String? hint,
+  Function? validate,
   Function? onChange,
   bool isPassword = false,
   IconData? prefix,
@@ -92,16 +92,16 @@ Widget buildFormField({
     keyboardType: type,
     obscureText: isPassword,
     style: TextStyle(fontSize: 20.0, height: 1.1),
-    validator: (value) => validate(value),
-    onChanged: (value) => onChange != null ? onChange(value) : (change){},
+    validator: (value) => validate != null ? validate(value) : null,
+    onChanged: (value) => onChange != null ? onChange(value) : null,
     maxLines: lines,
     decoration: InputDecoration(
       hintText: hint,
       fillColor: Colors.grey[200],
       filled: true,
       isDense: true,
-      //prefix: Icon(prefix),
-      //suffix: suffix,
+      prefix: Icon(prefix),
+      suffix: suffix,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(15.0),
         borderSide: BorderSide.none

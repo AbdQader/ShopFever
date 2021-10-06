@@ -31,15 +31,23 @@ class SearchView extends GetView<SearchController> {
           child: Column(
             children: [
               buildFormField(
-                controller: TextEditingController(),
+                controller: controller.searchController,
                 type: TextInputType.text,
-                validate: () {},
+                suffix: Container(
+                  height: 30.0,
+                  child: IconButton(
+                    onPressed: () => controller.clearSearch(),
+                    icon: const Icon(Icons.close),
+                  ),
+                ),
                 onChange: (String value) {
-                  if (value.trim().isNotEmpty)
-                  {
-                    controller.search.value = value.trim();
-                    controller.isLoading.value = true;
-                  }
+                  controller.search.value = value.trim();
+                  controller.isLoading.value = true;
+                  // if (value.trim().isNotEmpty)
+                  // {
+                  //   controller.search.value = value.trim();
+                  //   controller.isLoading.value = true;
+                  // }
                 },
                 hint: 'ابحث...'
               ),
